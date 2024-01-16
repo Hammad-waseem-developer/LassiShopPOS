@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Artisan;
 
 $installed = Storage::disk('public')->exists('installed');
 
-if ($installed === true) {
+if ($installed === false) {
 
     Auth::routes(['register' => false]);
 
