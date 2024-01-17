@@ -1,6 +1,6 @@
 <?php
 
-$languageDirection = $_COOKIE['language'] == 'ar' ? 'rtl' : 'ltr';
+// $languageDirection = $_COOKIE['language'] == 'ar' ? 'rtl' : 'ltr';
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +31,8 @@ $languageDirection = $_COOKIE['language'] == 'ar' ? 'rtl' : 'ltr';
         <div class="info">
           <h2 class="text-center">@{{setting.CompanyName}}</h2>
 
-          <p dir="{{ $languageDirection }}"> 
+          {{-- <p dir="{{ $languageDirection }}">  --}}
+          <p> 
             <span>{{ __('translate.date') }} : @{{sale.date}} <br></span>
             <span>{{ __('translate.Sale') }}: @{{sale.Ref}} <br></span>
             <span v-show="pos_settings.show_address">{{ __('translate.Address') }} : @{{setting.CompanyAdress}}
