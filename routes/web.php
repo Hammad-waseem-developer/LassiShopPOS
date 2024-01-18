@@ -174,6 +174,7 @@ if ($installed === false) {
                 Route::get('pos', 'PosController@index');
                 Route::post('pos/create_pos', 'PosController@CreatePOS');
                 Route::get('pos/get_products_pos', 'PosController@GetProductsByParametre');
+                Route::get('pos/get_products', 'PosController@GetProductsAjax')->name('get_products');
                 Route::get('pos/data_create_pos', 'PosController@GetELementPos');
                 Route::get('pos/autocomplete_product_pos/{id}', 'PosController@autocomplete_product_pos');
                 Route::get('invoice_pos/{id}', 'PosController@Print_Invoice_POS');

@@ -26,6 +26,7 @@ use App\Models\Client;
 use App\Models\Setting;
 use App\Models\PosSetting;
 use App\Models\Currency;
+use App\Models\NewProduct;
 use Carbon\Carbon;
 use DataTables;
 use Stripe;
@@ -55,6 +56,7 @@ class PosController extends Controller
      {
 
         $user_auth = auth()->user();
+        $products = NewProduct::all();
 
        if ($user_auth->can('pos')){
 
@@ -99,6 +101,7 @@ class PosController extends Controller
            
             return view('sales.pos',[
                 'clients'            => $clients,
+                'products'            => $products,
                 'payment_methods'    => $payment_methods,
                 'accounts'           => $accounts,
                 'warehouses'         => $warehouses,
@@ -112,6 +115,11 @@ class PosController extends Controller
         }else{
             return abort('403', __('You are not authorized'));
         }
+     }
+
+     public function getProducts()
+     {
+        $products = NewProduct::get();
      }
 
     //------------ Create New  POS --------------\\
@@ -400,6 +408,13 @@ class PosController extends Controller
     }
 
 
+    //------------ Get Products By Ajax -----------------\\
+
+    public function GetProductsAjax()
+    {
+        $products = NewProduct::all();
+        return response()->json($products);
+    }
     //------------ autocomplete_product_pos -----------------\\
 
     public function autocomplete_product_pos(request $request, $id)
