@@ -95,7 +95,7 @@
                       <h6 class="fw-semibold m-0">{{ __('translate.Cart') }}</h6>
                     </div>
                    
-                    <div class="card-items">
+                    <div class="card-items" id="cart-items">
                       {{-- <div class="cart-item box-shadow-3" v-for="(detail, index) in details" :key="index">
                         <div class="d-flex align-items-center">
                           <img :src="'/images/products/'+detail.image" alt="">
@@ -584,10 +584,16 @@
         addToCart(id, price, name, img_path);
     });
 
+    // Add To Cart
     function addToCart(id, price, name, img_path) {
       $.ajax({
         url: "{{ route('add_to_cart') }}",
         type: "POST",
+        token: "{{ csrf_token() }}",
+        dataType: "json",
+        headers: {
+          "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
         data: {
           id: id,
           price: price,
@@ -595,7 +601,33 @@
           img_path: img_path
         },
         success: function(data) {
-          console.log(data);
+            console.log("Cart data: ",data.cart);
+            $("#cart-items").empty();
+            for (const detailId in data.cart) {
+                if (data.cart.hasOwnProperty(detailId)) {
+                    const detail = data.cart[detailId];
+                    $("#cart-items").append(`
+                        <div class="cart-item box-shadow-3">
+                            <div class="d-flex align-items-center">
+                                <img src="/images/products/${detail.img_path}" alt="">
+                                <div>
+                                    <p class="text-gray-600 m-0 font_12">${detail.name}</p>
+                                        <h6 class="fw-semibold m-0 font_16">{{$currency}} ${detail.price*detail.quantity}</h6>
+                                    <a title="Delete" id="DeleteProduct" data-id="${detail.productId}"
+                                        class="cursor-pointer ul-link-action text-danger">
+                                        <i class="i-Close-Window"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="increment-decrement btn btn-light rounded-circle">-</span>
+                                <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
+                                <span class="increment-decrement btn btn-light rounded-circle">+</span>
+                            </div>
+                        </div>
+                    `);
+                }
+            }
         },
         error: function(data) {
           console.log(data);
@@ -603,6 +635,33 @@
       });
       console.log(id, price, name, img_path);
     }
+
+    $("body").on("click", "#DeleteProduct", function(){
+      console.log("delete");
+        var id = $(this).data("id");
+        delete_Product_from_cart(id);
+    });
+
+    // delete product from cart
+    function delete_Product_from_cart(id) {
+      console.log("delete"+id);
+        $.ajax({
+            url: "{{ route('delete_product_from_cart') }}",
+            type: "POST",
+            token: "{{ csrf_token() }}",
+            dataType: "json",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            data: {
+                id: id
+            },
+            success: function(data) {
+                console.log(data);
+            }
+        })
+    }
+
 });
 
   </script>

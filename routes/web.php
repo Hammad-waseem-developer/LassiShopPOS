@@ -351,7 +351,11 @@ if ($installed === false) {
           Route::get('sell_url/{id}', 'SalesController@Sale_PDF');
           Route::get('purchase_url/{id}', 'PurchasesController@Purchase_pdf');
           Route::get('quotation_url/{id}', 'QuotationsController@Quote_PDF');
-   
+          
+          //------------------------------- Add To Cart --------------------------\\
+            Route::post('add_to_cart', 'AddToCartController@add_to_cart')->name('add_to_cart');
+            Route::post('delete_product_from_cart', 'AddToCartController@deleteProductFromCart')->name('delete_product_from_cart');
+
 
     });
 
