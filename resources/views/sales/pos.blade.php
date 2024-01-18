@@ -613,16 +613,16 @@
                                 <div>
                                     <p class="text-gray-600 m-0 font_12">${detail.name}</p>
                                         <h6 class="fw-semibold m-0 font_16">{{$currency}} ${detail.price*detail.quantity}</h6>
-                                    <a title="Delete" id="DeleteProduct" data-id="${detail.productId}"
+                                    <a title="Delete" id="DeleteProduct" data-id="${detail.id}"
                                         class="cursor-pointer ul-link-action text-danger">
                                         <i class="i-Close-Window"></i>
                                     </a>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
-                                <span class="increment-decrement btn btn-light rounded-circle">-</span>
+                                <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id} ${detail.quantity <= 1 ? 'disabled' : ''}">-</span>
                                 <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
-                                <span class="increment-decrement btn btn-light rounded-circle">+</span>
+                                <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
                             </div>
                         </div>
                     `);
@@ -636,15 +636,9 @@
       console.log(id, price, name, img_path);
     }
 
-    $("body").on("click", "#DeleteProduct", function(){
-      console.log("delete");
-        var id = $(this).data("id");
-        delete_Product_from_cart(id);
-    });
-
     // delete product from cart
     function delete_Product_from_cart(id) {
-      console.log("delete"+id);
+        console.log("delete" + id);
         $.ajax({
             url: "{{ route('delete_product_from_cart') }}",
             type: "POST",
@@ -656,11 +650,105 @@
             data: {
                 id: id
             },
-            success: function(data) {
+            success: function (data) {
+                console.log(data);
+                updateCartBox(data.cart);
+            }
+        });
+    }
+
+    // Function to update the "Add to Cart" box
+    function updateCartBox(cart) {
+        console.log("Updating cart box: ", cart);
+        $("#cart-items").empty();
+    
+        for (const detailId in cart) {
+            if (cart.hasOwnProperty(detailId)) {
+                const detail = cart[detailId];
+                $("#cart-items").append(`
+                    <div class="cart-item box-shadow-3">
+                        <div class="d-flex align-items-center">
+                            <img src="/images/products/${detail.img_path}" alt="">
+                            <div>
+                                <p class="text-gray-600 m-0 font_12">${detail.name}</p>
+                                <h6 class="fw-semibold m-0 font_16">{{$currency}} ${detail.price * detail.quantity}</h6>
+                                <a title="Delete" id="DeleteProduct" data-id="${detail.id}"
+                                    class="cursor-pointer ul-link-action text-danger">
+                                    <i class="i-Close-Window"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id} ${detail.quantity <= 1 ? 'disabled' : ''}">-</span>
+                            <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
+                            <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
+                        </div>
+                    </div>
+                `);
+            }
+        }
+    }
+    $("body").on("click", "#DeleteProduct", function () {
+        console.log("delete");
+        var id = $(this).data("id");
+        delete_Product_from_cart(id);
+    });
+
+    $("body").on("click", "#addQty", function () {
+        var id = $(this).data("id");
+        AddQty(id);
+    });
+
+    $("body").on("click", "#removeQty", function () {
+        var id = $(this).data("id");
+        RemoveQty(id);
+    });
+
+    function AddQty(id) {
+        $.ajax({
+            url: "{{ route('add_qty') }}",
+            type: "POST",
+            token: "{{ csrf_token() }}",
+            dataType: "json",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            data: {
+                id: id
+            },
+            success: function (data) {
+                console.log(data);
+                updateCartBox(data.cart);
+            },
+            error: function (data) {
                 console.log(data);
             }
         })
     }
+
+    function RemoveQty(id) {
+        $.ajax({
+            url: "{{ route('remove_qty') }}",
+            type: "POST",
+            token: "{{ csrf_token() }}",
+            dataType: "json",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            data: {
+                id: id
+            },
+            success: function (data) {
+                console.log(data);
+                updateCartBox(data.cart);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+});
+
+    }
+
 
 });
 
