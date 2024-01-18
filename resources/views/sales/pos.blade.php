@@ -620,12 +620,16 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
-                                <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id} ${detail.quantity <= 1 ? 'disabled' : ''}">-</span>
+                                <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
                                 <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
                                 <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
                             </div>
                         </div>
                     `);
+                    // Disable the button if the quantity is 1 or less
+if (detail.quantity <= 1) {
+    $("#removeQty[data-id='" + detail.id + "']").prop('disabled', true);
+}
                 }
             }
         },
@@ -679,12 +683,16 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id} ${detail.quantity <= 1 ? 'disabled' : ''}">-</span>
+                            <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
                             <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
                             <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
                         </div>
                     </div>
                 `);
+                // Disable the button if the quantity is 1 or less
+if (detail.quantity <= 1) {
+    $("#removeQty[data-id='" + detail.id + "']").prop('disabled', true);
+}
             }
         }
     }
@@ -700,7 +708,7 @@
     });
 
     $("body").on("click", "#removeQty", function () {
-        var id = $(this).data("id");
+      var id = $(this).data("id");
         RemoveQty(id);
     });
 
