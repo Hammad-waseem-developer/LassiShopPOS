@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/nprogress.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/flatpickr.min.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 @endsection
 
@@ -35,271 +36,129 @@
                                 <th>{{ __('translate.Action') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($departments as $department)
-                                <tr>
-                                    <td>{{ $department->id }}</td>
-                                    <td>{{ $department->name }}</td>
-                                    <td>{{ $department->dept_head }}</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-info btn-rounded dropdown-toggle"
-                                                id="dropdownMenuButton" type="button" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false"
-                                                fdprocessedid="d4xzwx">Action</button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                x-placement="top-start"
-                                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -88px, 0px);">
-                                               <a class="dropdown-item" href="{{ route('department.edit', $department) }}"><i
-                                                        class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit
-                                                    Departments</a>
-                                                    {{-- <a
-                                                    class="dropdown-item delete cursor-pointer" data-id="{{ $department->id }}"{{ route("department.destroy", $department)}}> <i
-                                                        class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
-                                                    Delete Departments</a> --}}
-                                                     <a
+                        <tbody id="tbody">
+                            @if (count($departments) > 0)
+                                @foreach ($departments as $department)
+                                    <tr>
+                                        <td>{{ $department->id }}</td>
+                                        <td>{{ $department->name }}</td>
+                                        <td>{{ $department->dept_head }}</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-info btn-rounded dropdown-toggle"
+                                                    id="dropdownMenuButton" type="button" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false"
+                                                    fdprocessedid="d4xzwx">Action</button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                    x-placement="top-start"
+                                                    style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -88px, 0px);">
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('department.edit', $department) }}"><i
+                                                            class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit
+                                                        Departments</a>
+
+                                                    {{-- <a data-toggle="modal" data-target="#deleteModal"
                                                     class="dropdown-item delete cursor-pointer" data-id="{{ $department->id }}"> <i
                                                         class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
-                                                    Delete Departments</a>
+                                                        Delete Departments</a> --}}
+
+                                                    <a data-toggle="modal" data-target="#deleteModal"
+                                                        class="dropdown-item delete cursor-pointer"
+                                                        onclick="deleteDepartment({{ $department->id }})"
+                                                        data-id="{{ $department->id }}">
+                                                        <i
+                                                            class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete
+                                                        Departments
+                                                    </a>
+
+
+
+                                                    {{-- <a data-toggle="modal" data-target="#deleteModal" class="dropdown-item delete cursor-pointer"
+                                                    data-id="{{ $department->id }}"> <i
+                                                        class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
+                                                    Delete Departments</a> --}}
                                                 </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    {{-- Delete Modal --}}
+    {{-- @component('hrm.deletemodal.delete') 
+    @endcomponent --}}
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div style="background-color: white; border:0px;" class="modal-content">
 
-    
-    <!-- Modal add sale payment -->
-    <validation-observer ref="add_payment_sale">
-        <div class="modal fade" id="add_payment_sale" tabindex="-1" role="dialog" aria-labelledby="add_payment_sale"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('translate.pay_all_sell_due_at_a_time') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form @submit.prevent="Submit_Payment()">
-                            <div class="row">
+                <div style="display: flex;
+        flex-direction: column;
+        align-items: center; padding-top: 20px;"
+                    class="modal-body">
+                    <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
+                    <h2
+                        style="color: #595959;
+            font-size: 30px;
+            font-weight: 600;
+            text-transform: none;
+            margin: 0;
+            padding: 0;
+            line-height: 60px;
+            display: block;">
+                        Are you sure ?</h2>
+                    <div class="swal2-content"
+                        style="font-size: 18px;
+            text-align: center;
+            font-weight: 300;
+            position: relative;
+            float: none;
+            margin: 0;
+            padding: 0;
+            line-height: normal;
+            color: #545454;">
+                        You wont be able to revert this !</div>
 
-                                <!-- Date -->
-                                <div class="col-md-6">
-                                    <validation-provider name="date" rules="required" v-slot="validationContext">
-                                        <div class="form-group">
-                                            <label for="picker3">{{ __('translate.Date') }}</label>
-
-                                            <input type="text" :state="getValidationState(validationContext)"
-                                                aria-describedby="date-feedback" class="form-control"
-                                                placeholder="{{ __('translate.Select_Date') }}" id="datetimepicker"
-                                                v-model="payment.date">
-                                            <span class="error">@{{ validationContext.errors[0] }}</span>
-                                        </div>
-                                    </validation-provider>
-                                </div>
-
-                                <!-- Paying_Amount -->
-                                <div class="form-group col-md-6">
-                                    <validation-provider name="Montant à payer"
-                                        :rules="{ required: true, regex: /^\d*\.?\d*$/ }" v-slot="validationContext">
-                                        <label for="Paying_Amount">{{ __('translate.Paying_Amount') }}
-                                            <span class="field_required">*</span></label>
-                                        <input @keyup="Verified_paidAmount(payment.montant)"
-                                            :state="getValidationState(validationContext)"
-                                            aria-describedby="Paying_Amount-feedback" v-model.number="payment.montant"
-                                            placeholder="{{ __('translate.Paying_Amount') }}" type="text"
-                                            class="form-control">
-                                        <div class="error">@{{ validationContext.errors[0] }}</div>
-                                        <span class="badge badge-danger">reste à payer : {{ $currency }}
-                                            @{{ sell_due }}</span>
-                                    </validation-provider>
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <validation-provider name="Payment choice" rules="required"
-                                        v-slot="{ valid, errors }">
-                                        <label> {{ __('translate.Payment_choice') }}<span
-                                                class="field_required">*</span></label>
-                                        <v-select @input="Selected_Payment_Method"
-                                            placeholder="{{ __('translate.Choose_Payment_Choice') }}"
-                                            :class="{ 'is-invalid': !!errors.length }"
-                                            :state="errors[0] ? false : (valid ? true : null)"
-                                            v-model="payment.payment_method_id" :reduce="(option) => option.value"
-                                            :options="payment_methods.map(payment_methods => ({ label: payment_methods.title,
-                                                value: payment_methods.id }))">
-
-                                        </v-select>
-                                        <span class="error">@{{ errors[0] }}</span>
-                                    </validation-provider>
-                                </div>
-
-
-                                <div class="form-group col-md-6">
-                                    <label> {{ __('translate.Account') }} </label>
-                                    <v-select placeholder="{{ __('translate.Choose_Account') }}"
-                                        v-model="payment.account_id" :reduce="(option) => option.value"
-                                        :options="accounts.map(accounts => ({ label: accounts.account_name, value: accounts.id }))">
-
-                                    </v-select>
-                                </div>
-
-
-                                <div class="form-group col-md-12">
-                                    <label for="note">{{ __('translate.Please_provide_any_details') }}
-                                    </label>
-                                    <textarea type="text" v-model="payment.notes" class="form-control" name="note" id="note"
-                                        placeholder="{{ __('translate.Please_provide_any_details') }}"></textarea>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <button type="submit" class="btn btn-primary" :disabled="paymentProcessing">
-                                        <span v-if="paymentProcessing" class="spinner-border spinner-border-sm"
-                                            role="status" aria-hidden="true"></span> <i
-                                            class="i-Yes me-2 font-weight-bold"></i>
-                                        {{ __('translate.Submit') }}
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </form>
-                    </div>
                 </div>
+                <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
+                    @if ($departments->count() == 0)
+                    @else
+                        <button type="button" onclick="Delete()" class="swal2-confirm btn btn-primary me-5 btn-ok"
+                            id="{{ $department->id }}">Yes, delete
+                            it</button>
+                        <button data-dismiss="modal" aria-label="Close" type="button"
+                            class="swal2-cancel btn btn-danger" @endif
+                            style="display: inline-block;">No, cancel!</button>
+                </div>
+                <input type="hidden" id="deleteDepartmentId" value="">
             </div>
         </div>
-    </validation-observer>
-
-    <!-- Modal add return payment -->
-    <validation-observer ref="add_payment_return">
-        <div class="modal fade" id="add_payment_return" tabindex="-1" role="dialog"
-            aria-labelledby="add_payment_return" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('translate.pay_all_sell_return_due_at_a_time') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form @submit.prevent="Submit_Payment_sell_return_due()">
-                            <div class="row">
-
-
-                                <!-- Date -->
-                                <div class="col-md-6">
-                                    <validation-provider name="date" rules="required" v-slot="validationContext">
-                                        <div class="form-group">
-                                            <label for="picker3">{{ __('translate.Date') }}</label>
-
-                                            <input type="text" :state="getValidationState(validationContext)"
-                                                aria-describedby="date-feedback" class="form-control"
-                                                placeholder="{{ __('translate.Select_Date') }}" id="datetimepicker"
-                                                v-model="payment_return.date">
-                                            <span class="error">@{{ validationContext.errors[0] }}</span>
-                                        </div>
-                                    </validation-provider>
-                                </div>
-
-                                <!-- Paying_Amount -->
-                                <div class="form-group col-md-6">
-                                    <validation-provider name="Montant à payer"
-                                        :rules="{ required: true, regex: /^\d*\.?\d*$/ }" v-slot="validationContext">
-                                        <label for="Paying_Amount">{{ __('translate.Paying_Amount') }}
-                                            <span class="field_required">*</span></label>
-                                        <input @keyup="Verified_return_paidAmount(payment_return.montant)"
-                                            :state="getValidationState(validationContext)"
-                                            aria-describedby="Paying_Amount-feedback"
-                                            v-model.number="payment_return.montant"
-                                            placeholder="{{ __('translate.Paying_Amount') }}" type="text"
-                                            class="form-control">
-                                        <div class="error">@{{ validationContext.errors[0] }}</div>
-                                        <span class="badge badge-danger">reste à payer : {{ $currency }}
-                                            @{{ return_due }}</span>
-                                    </validation-provider>
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <validation-provider name="Payment choice" rules="required"
-                                        v-slot="{ valid, errors }">
-                                        <label> {{ __('translate.Payment_choice') }}<span
-                                                class="field_required">*</span></label>
-                                        <v-select @input="Selected_return_Payment_Method"
-                                            placeholder="{{ __('translate.Choose_Payment_Choice') }}"
-                                            :class="{ 'is-invalid': !!errors.length }"
-                                            :state="errors[0] ? false : (valid ? true : null)"
-                                            v-model="payment_return.payment_method_id"
-                                            :reduce="(option) => option.value"
-                                            :options="payment_methods.map(payment_methods => ({ label: payment_methods.title,
-                                                value: payment_methods.id }))">
-
-                                        </v-select>
-                                        <span class="error">@{{ errors[0] }}</span>
-                                    </validation-provider>
-                                </div>
-
-
-                                <div class="form-group col-md-6">
-                                    <label> {{ __('translate.Account') }} </label>
-                                    <v-select placeholder="{{ __('translate.Choose_Account') }}"
-                                        v-model="payment_return.account_id" :reduce="(option) => option.value"
-                                        :options="accounts.map(accounts => ({ label: accounts.account_name, value: accounts.id }))">
-
-                                    </v-select>
-                                </div>
-
-
-                                <div class="form-group col-md-12">
-                                    <label for="note">{{ __('translate.Please_provide_any_details') }}
-                                    </label>
-                                    <textarea type="text" v-model="payment_return.notes" class="form-control" name="note" id="note"
-                                        placeholder="{{ __('translate.Please_provide_any_details') }}"></textarea>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <button type="submit" class="btn btn-primary"
-                                        :disabled="payment_return_Processing">
-                                        <span v-if="payment_return_Processing"
-                                            class="spinner-border spinner-border-sm" role="status"
-                                            aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
-                                        {{ __('translate.Submit') }}
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </validation-observer>
+    </div>
+    <!-- Modal End-->
 </div>
-
-
 @endsection
-
 @section('page-js')
-
 <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
 <script src="{{ asset('assets/js/nprogress.js') }}"></script>
 <script src="{{ asset('assets/js/flatpickr.min.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Add these lines to include DataTables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
 
 
 <script type="text/javascript">
-
-
     $(function() {
         "use strict";
-
         $(document).ready(function() {
-
             flatpickr("#datetimepicker", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i"
@@ -307,4 +166,80 @@
 
         });
     });
+</script>
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable with AJAX
+        $('#client_list_table').DataTable({
+            "ajax": {
+                "url": '{{ route('department.getData') }}',
+                "type": "GET",
+                "dataSrc": "data"
+            },
+            "columns": [{
+                    "data": "id"
+                },
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "dept_head"
+                },
+                {
+                    "data": null,
+                    "render": function(data, type, row) {
+                        // Render the action dropdown
+                        return '<div class="dropdown">' +
+                            '<button class="btn btn-outline-info btn-rounded dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
+                            '<div class="dropdown-menu" x-placement="top-start" style="position: absolute; will-change: transform;">' +
+                            '<a class="dropdown-item" href="{{ url('/departments') }}/' + row
+                            .id +
+                            '/edit"><i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Departments</a>' +
+                            '<a class="dropdown-item delete cursor-pointer" data-toggle="modal" data-target="#deleteModal" data-id="' +
+                            row.id + '" onclick="deleteDepartment(' + row.id +
+                            ')"><i class="nav-icon i-Close-Window font-weight-bold mr-2"></i> Delete Departments</a>' +
+                            '</div>' +
+                            '</div>';
+                    }
+                }
+            ]
+        });
+    });
+
+    function deleteDepartment(id) {
+        console.log(id);
+        $("#deleteDepartmentId").val(id);
+    }
+    // deete js code
+    function Delete() {
+        var id = $("#deleteDepartmentId").val();
+        console.log(id);
+        $.ajax({
+            url: '{{ route('department.delete', ['department' => ':id']) }}'.replace(':id', id),
+            type: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+              // Trigger the modal hide event
+              $('#deleteModal').trigger('hidden.bs.modal');
+
+// Optionally reset modal content after the modal is fully hidden
+$("#deleteModal .modal-body").empty();
+            },
+            error: function(error) {
+                // Handle errors
+                console.log(error);
+                // Display an error message to the user
+
+            }
+
+        });
+    }
+    $('#deleteModal').on('hidden.bs.modal', function (e) {
+    // Hide the modal using jQuery
+    $('#deleteModal').hide();
+    // Optionally reset modal content after the modal is fully hidden
+    $("#deleteModal .modal-body").empty();
+});
 </script>
