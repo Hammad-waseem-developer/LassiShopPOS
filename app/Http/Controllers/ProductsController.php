@@ -1774,7 +1774,7 @@ class ProductsController extends Controller
             [
                 'products' => $products
             ]
-        )
+        );
     }
 
 }
