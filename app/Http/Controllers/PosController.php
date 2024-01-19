@@ -617,6 +617,12 @@ class PosController extends Controller
         }
     }
 
-   
+
+    //-------------- Get Categories ---------------\\
+    public function GetCategories()
+    {
+        $categories = Category::where('deleted_at', '=', null)->get();
+        return response()->json($categories);
+    }
 
 }

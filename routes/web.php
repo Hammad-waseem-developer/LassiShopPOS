@@ -123,6 +123,9 @@ if ($installed === false) {
                 Route::get('import_products', 'ProductsController@import_products_page');
                 Route::post('import_products', 'ProductsController@import_products');
 
+                
+                Route::post('ProductByCategory', 'ProductsController@ProductByCategory')->name('ProductByCategory');
+
                 //------------------------------- categories--------------------------\\
                 Route::resource('categories', 'CategoriesController');
 
@@ -180,6 +183,7 @@ if ($installed === false) {
             Route::get('pos/data_create_pos', 'PosController@GetELementPos');
             Route::get('pos/autocomplete_product_pos/{id}', 'PosController@autocomplete_product_pos');
             Route::get('invoice_pos/{id}', 'PosController@Print_Invoice_POS');
+            Route::get('GetCategories', 'PosController@GetCategories')->name('GetCategories');
 
             //------------------------------- transfers --------------------------\\
             Route::resource('transfer/transfers', 'TransfersController');

@@ -171,271 +171,12 @@
 
                             </form>
 
-                            <!-- Modal Update Detail Product -->
-                            {{-- <validation-observer ref="Update_Detail">
-                <div class="modal fade" id="form_Update_Detail" tabindex="-1" role="dialog"
-                  aria-labelledby="form_Update_Detail" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">@{{ detail.name }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form @submit.prevent="submit_Update_Detail">
-                          <div class="row">
-
-                            <!-- Unit Price -->
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Product Price"
-                                :rules="{ required: true , regex: /^\d*\.?\d*$/}" v-slot="validationContext">
-                                <label for="Unit_price">{{ __('translate.Product_Price') }}
-                                  <span class="field_required">*</span></label>
-                                <input :state="getValidationState(validationContext)"
-                                  aria-describedby="Unit_price-feedback"v-model.number="detail.Unit_price" type="text"
-                                  class="form-control">
-                                <span class="error">@{{ validationContext.errors[0] }}</span>
-                              </validation-provider>
-                            </div>
-
-                            <!-- Tax Method -->
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Tax Method" rules="required" v-slot="{ valid, errors }">
-                                <label>{{ __('translate.Tax_Method') }} <span class="field_required">*</span></label>
-                                <v-select placeholder="{{ __('translate.Choose_Method') }}" v-model="detail.tax_method"
-                                  :reduce="(option) => option.value" :options="
-                        [
-                          {label: 'Exclusive', value: '1'},
-                          {label: 'Inclusive', value: '2'}
-                        ]">
-                                </v-select>
-                                <span class="error">@{{ errors[0] }}</span>
-                              </validation-provider>
-                            </div>
-
-                            <!-- Tax Rate -->
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Order Tax" :rules="{ required: true , regex: /^\d*\.?\d*$/}"
-                                v-slot="validationContext">
-                                <label for="ordertax">{{ __('translate.Order_Tax') }}
-                                  <span class="field_required">*</span></label>
-                                <div class="input-group">
-                                  <input :state="getValidationState(validationContext)"
-                                    aria-describedby="OrderTax-feedback" v-model="detail.tax_percent" type="text"
-                                    class="form-control">
-                                  <div class="input-group-append">
-                                    <span class="input-group-text">%</span>
-                                  </div>
-                                </div>
-                                <span class="error">@{{ validationContext.errors[0] }}</span>
-                              </validation-provider>
-                            </div>
-
-                            <!-- Discount Method -->
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Discount_Method" rules="required" v-slot="{ valid, errors }">
-                                <label>{{ __('translate.Discount_Method') }} <span
-                                    class="field_required">*</span></label>
-                                <v-select placeholder="{{ __('translate.Choose_Method') }}"
-                                  v-model="detail.discount_Method" :reduce="(option) => option.value" :options="
-                        [
-                          {label: 'Percent %', value: '1'},
-                          {label: 'Fixed', value: '2'}
-                        ]">
-                                </v-select>
-                                <span class="error">@{{ errors[0] }}</span>
-                              </validation-provider>
-                            </div>
-
-                            <!-- Discount Rate -->
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Discount" :rules="{ required: true , regex: /^\d*\.?\d*$/}"
-                                v-slot="validationContext">
-                                <label for="discount">{{ __('translate.Discount') }}
-                                  <span class="field_required">*</span></label>
-                                <input :state="getValidationState(validationContext)"
-                                  aria-describedby="Discount-feedback" v-model="detail.discount" type="text"
-                                  class="form-control">
-                                <span class="error">@{{ validationContext.errors[0] }}</span>
-                              </validation-provider>
-                            </div>
-
-                            <!-- Unit Sale -->
-                            <div class="form-group col-md-6" v-if="detail.product_type != 'is_service'">
-                              <validation-provider name="UnitSale" rules="required" v-slot="{ valid, errors }">
-                                <label>{{ __('translate.Unit_Sale') }} <span class="field_required">*</span></label>
-                                <v-select v-model="detail.sale_unit_id" :reduce="label => label.value"
-                                  placeholder="{{ __('translate.Choose_Unit_Sale') }}"
-                                  :options="units.map(units => ({label: units.name, value: units.id}))">
-                                </v-select>
-                                <span class="error">@{{ errors[0] }}</span>
-                              </validation-provider>
-                            </div>
-
-                            <!-- imei_number -->
-                            <div class="form-group col-md-12" v-show="detail.is_imei">
-                              <label for="imei_number">{{ __('translate.Add_product_IMEI_Serial_number') }}</label>
-                              <input v-model="detail.imei_number" type="text" class="form-control"
-                                placeholder="{{ __('translate.Add_product_IMEI_Serial_number') }}">
-                            </div>
-
-                            <div class="col-lg-12">
-                              <button type="submit" :disabled="Submit_Processing_detail" class="btn btn-primary">
-                                <span v-if="Submit_Processing_detail" class="spinner-border spinner-border-sm"
-                                  role="status" aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
-                                {{ __('translate.Submit') }}
-                              </button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </validation-observer> --}}
-
-                            <!-- Modal add sale payment -->
-                            {{-- <validation-observer ref="add_payment_sale">
-                <div class="modal fade" id="add_payment_sale" tabindex="-1" role="dialog"
-                  aria-labelledby="add_payment_sale" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">{{ __('translate.AddPayment') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form @submit.prevent="Submit_Payment()">
-                          <div class="row">
-
-                              <div class="col-md-6">
-                                  <validation-provider name="date" rules="required" v-slot="validationContext">
-                                    <div class="form-group">
-                                      <label for="picker3">{{ __('translate.Date') }}</label>
-                  
-                                      <input type="text" 
-                                        :state="getValidationState(validationContext)" 
-                                        aria-describedby="date-feedback" 
-                                        class="form-control" 
-                                        placeholder="{{ __('translate.Select_Date') }}"  
-                                        id="datetimepicker" 
-                                        v-model="payment.date">
-                  
-                                      <span class="error">@{{ validationContext.errors[0] }}</span>
-                                    </div>
-                                  </validation-provider>
-                                </div>
-
-                            <!-- Paying_Amount -->
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Montant à payer"
-                                :rules="{ required: true , regex: /^\d*\.?\d*$/}" v-slot="validationContext">
-                                <label for="Paying_Amount">{{ __('translate.Paying_Amount') }}
-                                  <span class="field_required">*</span></label>
-                                <input @keyup="Verified_paidAmount(payment.montant)"
-                                  :state="getValidationState(validationContext)"
-                                  aria-describedby="Paying_Amount-feedback" v-model.number="payment.montant"
-                                  placeholder="{{ __('translate.Paying_Amount') }}" type="text" class="form-control">
-                                <div class="error">
-                                  @{{ validationContext.errors[0] }}</div>
-
-                                @if ($symbol_placement == 'before')
-                                   <span class="badge badge-danger mt-2">{{ __('translate.Total') }} : {{$currency}}  @{{ GrandTotal.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-}) }} </span>
-                                @else
-                                   <span class="badge badge-danger mt-2">{{ __('translate.Total') }} : @{{ GrandTotal.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-}) }} {{$currency}}</span>
-                                @endif
-
-                              </validation-provider>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                              <validation-provider name="Payment choice" rules="required"
-                                  v-slot="{ valid, errors }">
-                                  <label> {{ __('translate.Payment_choice') }}<span
-                                          class="field_required">*</span></label>
-                                  <v-select @input="Selected_Payment_Method" 
-                                        placeholder="{{ __('translate.Choose_Payment_Choice') }}"
-                                      :class="{'is-invalid': !!errors.length}"
-                                      :state="errors[0] ? false : (valid ? true : null)"
-                                      v-model="payment.payment_method_id" :reduce="(option) => option.value" 
-                                      :options="payment_methods.map(payment_methods => ({label: payment_methods.title, value: payment_methods.id}))">
-
-                                  </v-select>
-                                  <span class="error">@{{ errors[0] }}</span>
-                              </validation-provider>
-                          </div>
-
-                          <div class="form-group col-md-6">
-                              <label> {{ __('translate.Account') }} </label>
-                              <v-select 
-                                    placeholder="{{ __('translate.Choose_Account') }}"
-                                  v-model="payment.account_id" :reduce="(option) => option.value" 
-                                  :options="accounts.map(accounts => ({label: accounts.account_name, value: accounts.id}))">
-
-                              </v-select>
-                          </div>
-
-                            <div class="form-group col-md-6">
-                              <label for="note">{{ __('translate.Payment_note') }}
-                              </label>
-                              <textarea type="text" v-model="payment.notes" class="form-control" name="note" id="note"
-                                placeholder="{{ __('translate.Payment_note') }}"></textarea>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                              <label for="note">{{ __('translate.sale_note') }}
-                              </label>
-                              <textarea type="text" v-model="sale.notes" class="form-control" name="note" id="note"
-                                placeholder="{{ __('translate.sale_note') }}"></textarea>
-                            </div>
-                          </div>
-
-                          <div class="row mt-3">
-
-                            <div class="col-lg-6">
-                              <button type="submit" class="btn btn-primary" :disabled="paymentProcessing">
-                                <span v-if="paymentProcessing" class="spinner-border spinner-border-sm" role="status"
-                                  aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
-                                {{ __('translate.Submit') }}
-                              </button>
-
-                            </div>
-
-                          </div>
-
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </validation-observer> --}}
-
                         </div>
 
                         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-3">
                             <div class="row">
                                 <div class="col-12 col-lg-8">
                                     <div class="row" id="products-box">
-                                        {{-- @foreach ($products as $product)
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                      <div class="card product-card cursor-pointer">
-                        <img src="'/images/products/'"{{ $product->img_path ? $product->img_path : 'default' }} alt="">
-                        <div class="card-body pos-card-product">
-                          <p class="text-gray-600">{{$product->name}}</p>
-                          <h6 class="title m-0"> {{$product->price}}</h6>
-                        </div>
-                        <div class="quantity">
-                          <span></span>
-                        </div>
-                      </div>
-                    </div>
-                    @endforeach --}}
 
                                         <div class="d-flex justify-content-center">
                                         </div>
@@ -448,18 +189,10 @@
                                         <div class="category-head">
                                             <h5 class="fw-semibold m-0">{{ __('translate.All_Category') }}</h5>
                                         </div>
-                                        <ul class="p-0">
-                                            <li class="category-item" @click="Selected_Category('')"
-                                                :class="{ 'active': category_id === '' }">
-                                                <i class="i-Bookmark"></i> {{ __('translate.All_Category') }}
-                                            </li>
-                                            <li class="category-item" @click="Selected_Category(category.id)"
-                                                v-for="category in categories" :key="category.id"
-                                                :class="{ 'active': category.id === category_id }">
-                                                <i class="i-Bookmark"></i> @{{ category.name }}
-                                            </li>
+                                        <ul class="p-0" id="CategoryUl">
+                                            {{-- Category Print Here Using Ajax --}}
                                         </ul>
-                                        <nav aria-label="Page navigation example mt-3">
+                                        {{-- <nav aria-label="Page navigation example mt-3">
                                             <ul class="pagination justify-content-center">
                                                 <li class="page-item" :class="{ 'disabled': currentPage_cat == 1 }">
                                                     <a class="page-link" href="#" aria-label="Previous"
@@ -480,7 +213,7 @@
                                                     </a>
                                                 </li>
                                             </ul>
-                                        </nav>
+                                        </nav> --}}
 
                                     </div>
 
@@ -596,256 +329,6 @@
         });
     </script>
 
-    {{-- <script>
-        var data;
-        $(document).ready(function() {
-            // Define routes and elements
-            const routes = {
-                getProducts: "{{ route('get_products') }}",
-                addToCart: "{{ route('add_to_cart') }}",
-                deleteProductFromCart: "{{ route('delete_product_from_cart') }}",
-                addQuantity: "{{ route('add_qty') }}",
-                removeQuantity: "{{ route('remove_qty') }}",
-            };
-
-            const elements = {
-                productsBox: $("#products-box"),
-                cartItems: $("#cart-items"),
-            };
-
-            initialize();
-
-            function initialize() {
-                fetchAndRenderProducts();
-
-                // Handle click events
-                elements.productsBox.on("click", ".product-card", function() {
-                    const {
-                        id,
-                        price,
-                        name,
-                        img_path
-                    } = $(this).data();
-                    addToCart(id, price, name, img_path);
-                    playClickSound();
-                });
-
-                $("body").on("click", "#DeleteProduct", function() {
-                    const id = $(this).data("id");
-                    deleteProductFromCart(id);
-                    updateGrandTotalWithShipping();
-                });
-
-                $("body").on("click", "#addQty", function() {
-                    const id = $(this).data("id");
-                    updateQuantity(id, 'add');
-                    updateGrandTotalWithShipping();
-                });
-
-                $("body").on("click", "#removeQty", function() {
-                    const id = $(this).data("id");
-                    updateQuantity(id, 'remove');
-                    updateGrandTotalWithShipping();
-                });
-                $("#shipping").on("input", function() {
-                    updateGrandTotalWithShipping();
-                });
-            }
-
-            function fetchAndRenderProducts() {
-                // Fetch and render products
-                $.ajax({
-                    url: routes.getProducts,
-                    type: "GET",
-                    dataType: "json",
-                    success: renderProducts,
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function renderProducts(data) {
-                // Render products
-                data.forEach(renderProduct);
-            }
-
-            function renderProduct(element) {
-                // Render individual product
-                if (element.img_path == null) {
-                    element.img_path = 'no_image.png';
-                }
-                elements.productsBox.append(`
-                    <div class="col-lg-4 col-md-6 col-sm-6 product-card" data-id="${element.id}" data-price="${element.price}" data-name="${element.name}" data-img="${element.img_path}">
-                        <div class="card cursor-pointer">
-                            <img src="/images/products/${element.img_path}" class="card-img-top" alt="">
-                            <div class="card-body pos-card-product">
-                                <p class="text-gray-600">${element.name}</p>
-                                <h6 class="title m-0"> {{ $currency }} ${element.price}</h6>
-                            </div>
-                            <div class="quantity"></div>
-                        </div>
-                    </div>
-                `);
-            }
-
-            function playClickSound() {
-                // Play click sound
-                const clickSound = document.getElementById("clickSound");
-                if (clickSound) {
-                    clickSound.play();
-                }
-            }
-
-            function addToCart(id, price, name, img_path) {
-                // Add to cart
-                $.ajax({
-                    url: routes.addToCart,
-                    type: "POST",
-                    token: "{{ csrf_token() }}",
-                    dataType: "json",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    data: {
-                        id,
-                        price,
-                        name,
-                        img_path
-                    },
-                    success: updateCartBox,
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function deleteProductFromCart(id) {
-                // Delete product from cart
-                $.ajax({
-                    url: routes.deleteProductFromCart,
-                    type: "POST",
-                    token: "{{ csrf_token() }}",
-                    dataType: "json",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    data: {
-                        id
-                    },
-                    success: updateCartBox
-                });
-            }
-
-            function updateQuantity(id, action) {
-                // Update quantity
-                const route = action === 'add' ? routes.addQuantity : routes.removeQuantity;
-
-                $.ajax({
-                    url: route,
-                    type: "POST",
-                    token: "{{ csrf_token() }}",
-                    dataType: "json",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    data: {
-                        id
-                    },
-                    success: function(responseData) {
-                        updateCartBox(responseData); // Call updateCartBox with the response data
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function updateCartBox(responseData) {
-                // Update cart box
-                elements.cartItems.empty();
-
-                // Assign the responseData to the global data variable
-                data = responseData;
-
-                let grandTotal = 0;
-
-                for (const detailId in data.cart) {
-                    if (data.cart.hasOwnProperty(detailId)) {
-                        const detail = data.cart[detailId];
-                        renderCartItem(detail);
-                        grandTotal += detail.price * detail.quantity;
-                    }
-                }
-
-                updateGrandTotal(grandTotal);
-                updateGrandTotalWithShipping();
-            }
-
-            function updateGrandTotal(total) {
-                // Update grand total
-                total = total.toFixed(2);
-                $("#GrandTotal").text(total);
-            }
-
-            function renderCartItem(detail) {
-                // Render cart item
-                if (detail.img_path == null) {
-                    detail.img_path = 'no_image.png';
-                }
-                elements.cartItems.append(`
-                    <div class="cart-item box-shadow-3">
-                        <div class="d-flex align-items-center">
-                            <img src="/images/products/${detail.img_path}" alt="">
-                            <div>
-                                <p class="text-gray-600 m-0 font_12">${detail.name}</p>
-                                <h6 class="fw-semibold m-0 font_16">{{ $currency }} ${detail.price * detail.quantity}</h6>
-                                <a title="Delete" id="DeleteProduct" data-id="${detail.id}"
-                                    class="cursor-pointer ul-link-action text-danger">
-                                    <i class="i-Close-Window"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
-                            <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
-                            <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
-                        </div>
-                    </div>
-                `);
-                // Disable the button if the quantity is 1 or less
-                if (detail.quantity <= 1) {
-                    $(`#removeQty[data-id='${detail.id}']`).prop('disabled', true);
-                }
-            }
-
-
-
-            function updateGrandTotalWithShipping() {
-                // Get the shipping amount from the "shipping" field
-                const shippingAmount = parseFloat($("#shipping").val()) || 0;
-
-                // Update cart box including shipping amount
-                elements.cartItems.empty();
-
-                let grandTotal = shippingAmount; // Start with the shipping amount
-
-                for (const detailId in data.cart) {
-                    if (data.cart.hasOwnProperty(detailId)) {
-                        const detail = data.cart[detailId];
-                        renderCartItem(detail);
-                        grandTotal += detail.price * detail.quantity;
-                    }
-                }
-
-                updateGrandTotal(grandTotal);
-            }
-
-        });
-    </script> --}}
-
-
-
     <script>
         var data;
         var grandTotal = 0;
@@ -863,6 +346,8 @@
             const elements = {
                 productsBox: $("#products-box"),
                 cartItems: $("#cart-items"),
+                discountInput: $("#discount"),
+                discountSelect: $("#inputGroupSelect02"),
             };
 
             initialize();
@@ -901,6 +386,10 @@
                 });
 
                 $("#shipping, #orderTax").on("input", function() {
+                    updateGrandTotalWithShippingAndTax();
+                });
+
+                $("#shipping, #orderTax, #discount, #inputGroupSelect02").on("input change", function() {
                     updateGrandTotalWithShippingAndTax();
                 });
             }
@@ -1078,11 +567,17 @@
                 // Get the order tax percentage from the "orderTax" field
                 const orderTaxPercentage = parseFloat($("#orderTax").val()) || 0;
 
-                // Calculate tax amount
-                const taxAmount = (grandTotal * orderTaxPercentage) / 100;
+                // Get the discount amount based on user input
+                const discountType = elements.discountSelect.val();
+                const discountInput = parseFloat(elements.discountInput.val()) || 0;
+                const discountAmount = calculateDiscountAmount(grandTotal, discountType, discountInput);
 
-                // Update grand total including both shipping, tax, and product amounts
-                const newGrandTotal = grandTotal + shippingAmount + taxAmount;
+                // Calculate tax amount only if the product amount is not zero after discount
+                const productAmountAfterDiscount = Math.max(grandTotal - discountAmount, 0);
+                const taxAmount = (productAmountAfterDiscount * orderTaxPercentage) / 100;
+
+                // Update grand total including shipping, tax, and product amounts
+                const newGrandTotal = productAmountAfterDiscount + shippingAmount + taxAmount;
 
                 // Update cart box including shipping, tax, and product amounts
                 elements.cartItems.empty();
@@ -1096,6 +591,70 @@
 
                 updateGrandTotal(newGrandTotal);
             }
+
+            function calculateDiscountAmount(total, type, value) {
+                if (type === "percent") {
+                    return (total * value) / 100;
+                } else if (type === "fixed") {
+                    return value;
+                } else {
+                    return 0;
+                }
+            }
+
+
+            // Print Category
+
+            function GetCategories() {
+                $.ajax({
+                    url: "{{ route('GetCategories') }}",
+                    type: "GET",
+                    success: function(data) {
+                        $("#CategoryUl").empty();
+                        $.each(data, function(key, value) {
+                            $("#CategoryUl").append(`
+                                <li class="category-item" data-id="${value.id}" id="Category">
+                                    <i class="i-Bookmark"></i>${value.name}
+                                </li>
+                        `);
+                        });
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+            }
+
+            GetCategories();
+
+            $("body").on("click", "#Category", function() {
+                const id = $(this).data("id");
+                console.log(id);
+                ProductByCategory(id);
+            });
+
+
+            function ProductByCategory(id) {
+                $.ajax({
+                    url: "{{ route('ProductByCategory') }}",
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id
+                    },
+                    success: function(data) {
+                        console.log(data);
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+
         });
     </script>
 

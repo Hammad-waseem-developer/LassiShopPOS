@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use App\Imports\ProductImport;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\product_warehouse;
-use App\Models\Unit;
-use App\Models\Warehouse;
-use App\Models\UserWarehouse;
-use App\Models\Currency;
-use DataTables;
-use Excel;
 use DB;
+use Excel;
+use DataTables;
 use Carbon\Carbon;
+use App\Models\Unit;
+use App\Models\Brand;
 use App\utils\helpers;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Currency;
+use App\Models\Warehouse;
+use App\Models\NewProduct;
+use Illuminate\Http\Request;
+use App\Models\UserWarehouse;
+use App\Imports\ProductImport;
+use App\Models\ProductVariant;
 use Illuminate\Validation\Rule;
+use App\Models\product_warehouse;
+use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -1762,5 +1763,18 @@ class ProductsController extends Controller
         }
     }
 
+    //-------------- product By Category ---------------\\
+
+    public function ProductByCategory(request $request)
+    {
+        $category = Category::where('id', $request->id)->first();
+        dd($category);
+        $products = NewProduct::where('category_id', $category->id)->get();
+        return response()->json(
+            [
+                'products' => $products
+            ]
+        )
+    }
 
 }
