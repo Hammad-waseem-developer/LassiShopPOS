@@ -110,26 +110,19 @@ $setting = DB::table('settings')
 
             {{-- HRM --}}
             <li>
-                <div @click="selectCollapse('HRM')" :class="selected == 'HRM' ? 'collapse-active' : 'collapse-deactive'"
-                    class="collapse-button">
+                <div @click="selectCollapse('HRM')" :class="selected == 'HRM' ? 'collapse-active' : 'collapse-deactive'" class="collapse-button">
                     <div class="d-flex align-items-center">
-                        <svg class="" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7 10C9.20938 10 11 8.20906 11 6C11 3.79094 9.20938 2 7 2C4.79063 2 3 3.79094 3 6C3 8.20906 4.79063 10 7 10ZM8.58438 11.5H5.41563C2.42406 11.5 0 13.925 0 16.9156C0 17.5156 0.485 18 1.08312 18H12.9156C13.5156 18 14 17.5156 14 16.9156C14 13.925 11.575 11.5 8.58438 11.5Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M14.9647 12H12.6536C14.0916 13.1781 14.9929 14.9406 14.9929 16.9156C14.9929 17.3156 14.874 17.6844 14.6799 18H18.9986C19.5525 18 20 17.55 20 16.9719C20 14.2375 17.7593 12 14.9647 12ZM13.4907 10C15.4279 10 16.9957 8.43437 16.9957 6.5C16.9957 4.56562 15.4279 3 13.4907 3C12.7049 3 11.9873 3.26734 11.4028 3.70344C11.7633 4.39469 11.9886 5.16875 11.9886 6C11.9886 7.11 11.6153 8.12938 11 8.95969C11.635 9.6 12.5143 10 13.4907 10Z"
-                                fill="#4B566B"></path>
+                        <!-- HRM SVG -->
+                        <svg class="" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20C15.5228 20 20 15.5228 20 10C20 4.47715 15.5228 0 10 0ZM10.25 17H9.75C9.33579 17 9 16.6642 9 16.25C9 15.8708 9.28215 15.5565 9.64823 15.5068L9.75 15.5H10.25C10.6642 15.5 11 15.8358 11 16.25C11 16.6292 10.7178 16.9435 10.3518 16.9932L10.25 17ZM11.4435 14.0355C11.254 14.2564 10.991 14.4165 10.7162 14.5H9.28378C9.00897 14.4165 8.746 14.2564 8.55647 14.0355L4.94975 10.3412C4.59724 9.90648 4.54941 9.23965 4.88315 8.76035C5.23056 8.26569 5.88942 8 6.57033 8C7.5737 8 8.45158 8.417 8.94975 9.05878L10 10.4473L11.0502 9.05878C11.5484 8.417 12.4263 8 13.4297 8C14.1106 8 14.7694 8.26569 15.1169 8.76035C15.4506 9.23965 15.4028 9.90648 15.0503 10.3412L11.4435 14.0355ZM5.32641 7.5H14.6736C15.0625 7.5 15.3943 7.77614 15.4947 8.14624L16.4947 12.1462C16.6109 12.5617 16.3631 13 15.923 13H4.07701C3.63689 13 3.3891 12.5617 3.50527 12.1462L4.50527 8.14624C4.60572 7.77614 4.93753 7.5 5.32641 7.5Z" fill="currentColor"/>
                         </svg>
                         <span class="item-name">HRM</span>
                     </div>
-                    <svg class="collapse-icon" width="5" height="8" viewBox="0 0 5 8" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 7L4 4L1 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
-                            stroke-linejoin="round"></path>
+                    <svg class="collapse-icon" width="5" height="8" viewBox="0 0 5 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 7L4 4L1 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                 </div>
+                
                 <div x-ref="HRM" x-bind:style="activeCollapse($refs, 'HRM', selected)" class="collapse-content"
                     style="">
                     <ul class="list-group">
