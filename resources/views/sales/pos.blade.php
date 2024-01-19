@@ -151,6 +151,7 @@
                                             <h5 class="summery-item m-0">
                                                 <span>{{ __('translate.Total') }}</span>
                                                 <span id="GrandTotal"></span>
+                                                <input type="hidden" name="GrandTotal1" id="GrandTotal1">
                                                 {{-- @if ($symbol_placement == 'before')
                                                     <span></span>
                                                 @else
@@ -544,8 +545,60 @@
         });
     </script>
 
-    <script>
-      $(document).ready(function() {
+    {{-- vue js --}}
+    <script src="{{ asset('assets/js/vue.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-vue.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/vee-validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vee-validate-rules.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/moment.min.js') }}"></script>
+
+    {{-- sweetalert2 --}}
+    <script src="{{ asset('assets/js/vendor/sweetalert2.min.js') }}"></script>
+
+
+    {{-- common js --}}
+    <script src="{{ asset('assets/js/common-bundle-script.js') }}"></script>
+    {{-- page specific javascript --}}
+    @yield('page-js')
+
+    <script src="{{ asset('assets/js/script.js') }}"></script>
+
+    <script src="{{ asset('assets/js/vendor/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/toastr.script.js') }}"></script>
+
+    <script src="{{ asset('assets/js/customizer.script.js') }}"></script>
+    <script src="{{ asset('assets/js/nprogress.js') }}"></script>
+
+
+    <script src="{{ asset('assets/js/tooltip.script.js') }}"></script>
+    <script src="{{ asset('assets/js/script_2.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/flatpickr.min.js') }}"></script>
+
+
+    <script src="{{ asset('assets/js/compact-layout.js') }}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            "use strict";
+
+            $(document).ready(function() {
+
+                flatpickr("#datetimepicker", {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i"
+                });
+
+            });
+
+        });
+    </script>
+
+    {{-- <script>
+        var data;
+        $(document).ready(function() {
             // Define routes and elements
             const routes = {
                 getProducts: "{{ route('get_products') }}",
@@ -580,16 +633,22 @@
                 $("body").on("click", "#DeleteProduct", function() {
                     const id = $(this).data("id");
                     deleteProductFromCart(id);
+                    updateGrandTotalWithShipping();
                 });
 
                 $("body").on("click", "#addQty", function() {
                     const id = $(this).data("id");
                     updateQuantity(id, 'add');
+                    updateGrandTotalWithShipping();
                 });
 
                 $("body").on("click", "#removeQty", function() {
                     const id = $(this).data("id");
                     updateQuantity(id, 'remove');
+                    updateGrandTotalWithShipping();
+                });
+                $("#shipping").on("input", function() {
+                    updateGrandTotalWithShipping();
                 });
             }
 
@@ -693,16 +752,21 @@
                     data: {
                         id
                     },
-                    success: updateCartBox,
+                    success: function(responseData) {
+                        updateCartBox(responseData); // Call updateCartBox with the response data
+                    },
                     error: function(data) {
                         console.log(data);
                     }
                 });
             }
 
-            function updateCartBox(data) {
+            function updateCartBox(responseData) {
                 // Update cart box
                 elements.cartItems.empty();
+
+                // Assign the responseData to the global data variable
+                data = responseData;
 
                 let grandTotal = 0;
 
@@ -715,11 +779,13 @@
                 }
 
                 updateGrandTotal(grandTotal);
+                updateGrandTotalWithShipping();
             }
 
             function updateGrandTotal(total) {
                 // Update grand total
-                $("#GrandTotal").text(total.toFixed(2));
+                total = total.toFixed(2);
+                $("#GrandTotal").text(total);
             }
 
             function renderCartItem(detail) {
@@ -752,8 +818,287 @@
                     $(`#removeQty[data-id='${detail.id}']`).prop('disabled', true);
                 }
             }
-      });
+
+
+
+            function updateGrandTotalWithShipping() {
+                // Get the shipping amount from the "shipping" field
+                const shippingAmount = parseFloat($("#shipping").val()) || 0;
+
+                // Update cart box including shipping amount
+                elements.cartItems.empty();
+
+                let grandTotal = shippingAmount; // Start with the shipping amount
+
+                for (const detailId in data.cart) {
+                    if (data.cart.hasOwnProperty(detailId)) {
+                        const detail = data.cart[detailId];
+                        renderCartItem(detail);
+                        grandTotal += detail.price * detail.quantity;
+                    }
+                }
+
+                updateGrandTotal(grandTotal);
+            }
+
+        });
+    </script> --}}
+
+
+
+    <script>
+        var data;
+        var grandTotal = 0;
+
+        $(document).ready(function() {
+            // Define routes and elements
+            const routes = {
+                getProducts: "{{ route('get_products') }}",
+                addToCart: "{{ route('add_to_cart') }}",
+                deleteProductFromCart: "{{ route('delete_product_from_cart') }}",
+                addQuantity: "{{ route('add_qty') }}",
+                removeQuantity: "{{ route('remove_qty') }}",
+            };
+
+            const elements = {
+                productsBox: $("#products-box"),
+                cartItems: $("#cart-items"),
+            };
+
+            initialize();
+
+            function initialize() {
+                fetchAndRenderProducts();
+
+                // Handle click events
+                elements.productsBox.on("click", ".product-card", function() {
+                    const {
+                        id,
+                        price,
+                        name,
+                        img_path
+                    } = $(this).data();
+                    addToCart(id, price, name, img_path);
+                    playClickSound();
+                });
+
+                $("body").on("click", "#DeleteProduct", function() {
+                    const id = $(this).data("id");
+                    deleteProductFromCart(id);
+                    updateGrandTotalWithShippingAndTax();
+                });
+
+                $("body").on("click", "#addQty", function() {
+                    const id = $(this).data("id");
+                    updateQuantity(id, 'add');
+                    updateGrandTotalWithShippingAndTax();
+                });
+
+                $("body").on("click", "#removeQty", function() {
+                    const id = $(this).data("id");
+                    updateQuantity(id, 'remove');
+                    updateGrandTotalWithShippingAndTax();
+                });
+
+                $("#shipping, #orderTax").on("input", function() {
+                    updateGrandTotalWithShippingAndTax();
+                });
+            }
+
+            function fetchAndRenderProducts() {
+                // Fetch and render products
+                $.ajax({
+                    url: routes.getProducts,
+                    type: "GET",
+                    dataType: "json",
+                    success: renderProducts,
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+
+            function renderProducts(data) {
+                // Render products
+                data.forEach(renderProduct);
+            }
+
+            function renderProduct(element) {
+                // Render individual product
+                if (element.img_path == null) {
+                    element.img_path = 'no_image.png';
+                }
+                elements.productsBox.append(`
+                    <div class="col-lg-4 col-md-6 col-sm-6 product-card" data-id="${element.id}" data-price="${element.price}" data-name="${element.name}" data-img="${element.img_path}">
+                        <div class="card cursor-pointer">
+                            <img src="/images/products/${element.img_path}" class="card-img-top" alt="">
+                            <div class="card-body pos-card-product">
+                                <p class="text-gray-600">${element.name}</p>
+                                <h6 class="title m-0"> {{ $currency }} ${element.price}</h6>
+                            </div>
+                            <div class="quantity"></div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            function playClickSound() {
+                // Play click sound
+                const clickSound = document.getElementById("clickSound");
+                if (clickSound) {
+                    clickSound.play();
+                }
+            }
+
+            function addToCart(id, price, name, img_path) {
+                // Add to cart
+                $.ajax({
+                    url: routes.addToCart,
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id,
+                        price,
+                        name,
+                        img_path
+                    },
+                    success: updateCartBox,
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+
+            function deleteProductFromCart(id) {
+                // Delete product from cart
+                $.ajax({
+                    url: routes.deleteProductFromCart,
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id
+                    },
+                    success: updateCartBox
+                });
+            }
+
+            function updateQuantity(id, action) {
+                // Update quantity
+                const route = action === 'add' ? routes.addQuantity : routes.removeQuantity;
+
+                $.ajax({
+                    url: route,
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id
+                    },
+                    success: function(responseData) {
+                        updateCartBox(responseData); // Call updateCartBox with the response data
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+
+            function updateCartBox(responseData) {
+                // Update cart box
+                elements.cartItems.empty();
+
+                // Assign the responseData to the global data variable
+                data = responseData;
+
+                grandTotal = 0;
+
+                for (const detailId in data.cart) {
+                    if (data.cart.hasOwnProperty(detailId)) {
+                        const detail = data.cart[detailId];
+                        renderCartItem(detail);
+                        grandTotal += detail.price * detail.quantity;
+                    }
+                }
+
+                updateGrandTotalWithShippingAndTax();
+            }
+
+            function updateGrandTotal(total) {
+                // Update grand total
+                total = total.toFixed(2);
+                $("#GrandTotal").text(total);
+            }
+
+            function renderCartItem(detail) {
+                // Render cart item
+                if (detail.img_path == null) {
+                    detail.img_path = 'no_image.png';
+                }
+                elements.cartItems.append(`
+                    <div class="cart-item box-shadow-3">
+                        <div class="d-flex align-items-center">
+                            <img src="/images/products/${detail.img_path}" alt="">
+                            <div>
+                                <p class="text-gray-600 m-0 font_12">${detail.name}</p>
+                                <h6 class="fw-semibold m-0 font_16">{{ $currency }} ${detail.price * detail.quantity}</h6>
+                                <a title="Delete" id="DeleteProduct" data-id="${detail.id}"
+                                    class="cursor-pointer ul-link-action text-danger">
+                                    <i class="i-Close-Window"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
+                            <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
+                            <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
+                        </div>
+                    </div>
+                `);
+                // Disable the button if the quantity is 1 or less
+                if (detail.quantity <= 1) {
+                    $(`#removeQty[data-id='${detail.id}']`).prop('disabled', true);
+                }
+            }
+
+            function updateGrandTotalWithShippingAndTax() {
+                // Get the shipping amount from the "shipping" field
+                const shippingAmount = parseFloat($("#shipping").val()) || 0;
+
+                // Get the order tax percentage from the "orderTax" field
+                const orderTaxPercentage = parseFloat($("#orderTax").val()) || 0;
+
+                // Calculate tax amount
+                const taxAmount = (grandTotal * orderTaxPercentage) / 100;
+
+                // Update grand total including both shipping, tax, and product amounts
+                const newGrandTotal = grandTotal + shippingAmount + taxAmount;
+
+                // Update cart box including shipping, tax, and product amounts
+                elements.cartItems.empty();
+
+                for (const detailId in data.cart) {
+                    if (data.cart.hasOwnProperty(detailId)) {
+                        const detail = data.cart[detailId];
+                        renderCartItem(detail);
+                    }
+                }
+
+                updateGrandTotal(newGrandTotal);
+            }
+        });
     </script>
+
 
 </body>
 
