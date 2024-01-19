@@ -9,7 +9,7 @@
 @endsection
 
 <div class="breadcrumb">
-    <h1>{{ __('translate.Client_List') }}</h1>
+<h1>{{ __('translate.Client_List') }} </h1>
 </div>
 
 <div class="separator-breadcrumb border-top"></div>
