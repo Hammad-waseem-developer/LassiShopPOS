@@ -53,8 +53,12 @@
                                                <a class="dropdown-item" href="{{ route('department.edit', $department) }}"><i
                                                         class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit
                                                     Departments</a>
-                                                    <a
+                                                    {{-- <a
                                                     class="dropdown-item delete cursor-pointer" data-id="{{ $department->id }}"{{ route("department.destroy", $department)}}> <i
+                                                        class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
+                                                    Delete Departments</a> --}}
+                                                     <a
+                                                    class="dropdown-item delete cursor-pointer" data-id="{{ $department->id }}"> <i
                                                         class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
                                                     Delete Departments</a>
                                                 </div>
