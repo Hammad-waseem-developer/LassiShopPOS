@@ -212,34 +212,27 @@
     }
     // deete js code
     function Delete() {
-        var id = $("#deleteDepartmentId").val();
-        console.log(id);
-        $.ajax({
-            url: '{{ route('department.delete', ['department' => ':id']) }}'.replace(':id', id),
-            type: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-              // Trigger the modal hide event
-              $('#deleteModal').trigger('hidden.bs.modal');
+    var id = $("#deleteDepartmentId").val();
+    console.log(id);
 
-// Optionally reset modal content after the modal is fully hidden
-$("#deleteModal .modal-body").empty();
-            },
-            error: function(error) {
-                // Handle errors
-                console.log(error);
-                // Display an error message to the user
+    $.ajax({
+        url: '{{ route('department.delete', ['department' => ':id']) }}'.replace(':id', id),
+        type: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            // Hide the modal using Bootstrap's modal('hide') method
+            $('#deleteModal').modal('hide');
+            $('#deleteModal').remove();
+        },
+        error: function(error) {
+            // Handle errors
+            console.log(error);
+            // Display an error message to the user
+        }
+    });
+}
 
-            }
 
-        });
-    }
-    $('#deleteModal').on('hidden.bs.modal', function (e) {
-    // Hide the modal using jQuery
-    $('#deleteModal').hide();
-    // Optionally reset modal content after the modal is fully hidden
-    $("#deleteModal .modal-body").empty();
-});
 </script>
