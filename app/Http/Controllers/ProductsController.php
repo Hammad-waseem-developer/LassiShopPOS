@@ -1764,17 +1764,34 @@ class ProductsController extends Controller
     }
 
     //-------------- product By Category ---------------\\
-
+    
     public function ProductByCategory(request $request)
     {
-        $category = Category::where('id', $request->id)->first();
-        dd($category);
-        $products = NewProduct::where('category_id', $category->id)->get();
+        if($request->id == 'all'){
+            $products = NewProduct::get();
+        }else{
+            $category = Category::where('id', $request->id)->first();
+            $products = NewProduct::where('category_id', $category->id)->get();
+        }
         return response()->json(
             [
                 'products' => $products
             ]
         );
     }
-
+    
+    //-------------- Searching Products ---------------\\
+    public function search_products(request $request)
+    {
+        if($request->term == ''){
+            $products = [];
+        }else{
+            $products = NewProduct::where('name', 'like', '%' . $request->term . '%')->get();
+        }
+        return response()->json(
+            [
+                'products' => $products
+            ]
+        );
+    }
 }

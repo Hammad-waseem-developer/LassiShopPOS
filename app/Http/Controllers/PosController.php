@@ -57,6 +57,7 @@ class PosController extends Controller
 
         $user_auth = auth()->user();
         $products = NewProduct::all();
+        $units = Unit::where('deleted_at', '=', null)->get();
 
        if ($user_auth->can('pos')){
 
@@ -101,6 +102,7 @@ class PosController extends Controller
            
             return view('sales.pos',[
                 'clients'            => $clients,
+                'units'              => $units,
                 'products'            => $products,
                 'payment_methods'    => $payment_methods,
                 'accounts'           => $accounts,
@@ -126,6 +128,7 @@ class PosController extends Controller
 
     public function CreatePOS(Request $request)
     {
+        dd($request->all());
         request()->validate([
             'client_id' => 'required',
             'warehouse_id' => 'required',
@@ -139,7 +142,7 @@ class PosController extends Controller
             $order->date = $request->date;
             $order->Ref = 'SO-' . date("Ymd") . '-'. date("his");
             $order->client_id = $request->client_id;
-            $order->warehouse_id = $request->warehouse_id;
+            // $order->warehouse_id = $request->warehouse_id;
             $order->tax_rate = $request->tax_rate;
             $order->TaxNet = $request->TaxNet;
             $order->discount = $request->discount;

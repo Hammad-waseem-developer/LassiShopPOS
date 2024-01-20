@@ -127,7 +127,7 @@ if ($installed === false) {
                 Route::get('print_labels', 'ProductsController@print_labels')->name('print_labels');
                 Route::get('import_products', 'ProductsController@import_products_page');
                 Route::post('import_products', 'ProductsController@import_products');
-
+                Route::get('search_products', 'ProductsController@search_products')->name('search_products');
                 
                 Route::post('ProductByCategory', 'ProductsController@ProductByCategory')->name('ProductByCategory');
 

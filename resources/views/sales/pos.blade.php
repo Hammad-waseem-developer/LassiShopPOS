@@ -81,7 +81,8 @@
                                     <select name="customer_id" class="form-control" id="">
                                         <option value="">Select Customer</option>
                                         @foreach ($clients as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->username }}</option>
+                                            <option selected value="{{ $customer->id }}">{{ $customer->username }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -163,7 +164,7 @@
                                         <div class="half-circle half-circle-right"></div>
                                     </div>
 
-                                    <button class="cart-btn btn btn-primary">
+                                    <button class="cart-btn btn btn-primary" id="PayNow">
                                         {{ __('translate.Pay_Now') }}
                                     </button>
 
@@ -171,6 +172,98 @@
 
                             </form>
 
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="form_Update_Detail" tabindex="-1" role="dialog"
+                            aria-labelledby="form_Update_Detail" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Create Payment</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="row">
+
+                                                <!-- Date -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="Unit_price">Date
+                                                        <span class="field_required">*</span></label>
+                                                    <input type="date" name="date" class="form-control">
+                                                    <span class="error"></span>
+                                                </div>
+
+                                                <!-- Paying Amount -->
+                                                <div class="form-group col-md-6">
+                                                    <label>Paying Amount <span
+                                                            class="field_required">*</span></label>
+                                                            <input type="text" name="paying_amount" class="form-control">
+                                                            <span class="badge badge-danger mt-2" id="paying_amount_badge">Grand Total: </span>
+                                                    <span class="error"></span>
+                                                </div>
+
+                                                <!-- PAyment Choice -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="ordertax">Payment Choice
+                                                        <span class="field_required">*</span></label>
+                                                    <select name="payment_choice" id="payment_choice"
+                                                        class="form-control">
+                                                        <option value="">Select Payment</option>
+                                                        <option value="1">Cash</option>
+                                                        <option value="2">Cheque</option>
+                                                        <option value="3">Credit Card</option>
+                                                        <option value="4">Bank Transfer</option>
+                                                    </select>
+                                                    <span class="error"></span>
+                                                </div>
+
+                                                <!-- Account -->
+                                                <div class="form-group col-md-6">
+                                                    <label>Account <span
+                                                            class="field_required">*</span></label>
+                                                    <select name="account" id="account"
+                                                        class="form-control">
+                                                        @foreach ($accounts as $account)
+                                                        <option value="">Select Account</option>
+                                                            <option value="{{ $account->id }}">
+                                                                {{ $account->account_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <span class="error"></span>
+                                                </div>
+
+                                                <!-- Payment Note -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="payment_note">{{ __('translate.Discount') }}
+                                                        <span class="field_required">*</span></label>
+                                                    <textarea class="form-control" name="payment_note" id="payment_note" cols="30" rows="10"></textarea>
+                                                    <span class="error"></span>
+                                                </div>
+
+                                                <!-- Sale note -->
+                                                <div class="form-group col-md-6">
+                                                    <label>Sale Note <span
+                                                            class="field_required">*</span></label>
+                                                            <textarea class="form-control" name="sale_note" id="sale_note" cols="30" rows="10"></textarea>
+                                                    <span class="error"></span>
+                                                </div>
+
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i
+                                                            class="i-Yes me-2 font-weight-bold"></i>
+                                                        {{ __('translate.Submit') }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-3">
@@ -192,71 +285,8 @@
                                         <ul class="p-0" id="CategoryUl">
                                             {{-- Category Print Here Using Ajax --}}
                                         </ul>
-                                        {{-- <nav aria-label="Page navigation example mt-3">
-                                            <ul class="pagination justify-content-center">
-                                                <li class="page-item" :class="{ 'disabled': currentPage_cat == 1 }">
-                                                    <a class="page-link" href="#" aria-label="Previous"
-                                                        @click.prevent="previousPage_Category">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-                                                <li class="page-item" v-for="i in pages_cat" :key="i"
-                                                    :class="{ 'active': currentPage_cat == i }">
-                                                    <a class="page-link" href="#"
-                                                        @click.prevent="goToPage_Category(i)">@{{ i }}</a>
-                                                </li>
-                                                <li class="page-item"
-                                                    :class="{ 'disabled': currentPage_cat == pages_cat }">
-                                                    <a class="page-link" href="#" aria-label="Next"
-                                                        @click.prevent="nextPage_Category">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </nav> --}}
-
                                     </div>
 
-                                    <div class="card category-card">
-                                        <div class="category-head">
-                                            <h5 class="fw-semibold m-0">{{ __('translate.All_brands') }}</h5>
-                                        </div>
-                                        <ul class="p-0">
-                                            <li class="category-item" @click="Selected_Brand('')"
-                                                :class="{ 'active': brand_id === '' }">
-                                                <i class="i-Bookmark"></i> {{ __('translate.All_brands') }}
-                                            </li>
-                                            <li class="category-item" @click="Selected_Brand(brand.id)"
-                                                v-for="brand in brands" :key="brand.id"
-                                                :class="{ 'active': brand.id === brand_id }">
-                                                <i class="i-Bookmark"></i> @{{ brand.name }}
-                                            </li>
-                                        </ul>
-                                        <nav aria-label="Page navigation example mt-3">
-                                            <ul class="pagination justify-content-center">
-                                                <li class="page-item" :class="{ 'disabled': currentPage_brand == 1 }">
-                                                    <a class="page-link" href="#" aria-label="Previous"
-                                                        @click.prevent="previousPage_brand">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-                                                <li class="page-item" v-for="i in pages_brand" :key="i"
-                                                    :class="{ 'active': currentPage_brand == i }">
-                                                    <a class="page-link" href="#"
-                                                        @click.prevent="goToPage_brand(i)">@{{ i }}</a>
-                                                </li>
-                                                <li class="page-item"
-                                                    :class="{ 'disabled': currentPage_brand == pages_brand }">
-                                                    <a class="page-link" href="#" aria-label="Next"
-                                                        @click.prevent="nextPage_brand">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </nav>
-
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -334,6 +364,84 @@
         var grandTotal = 0;
 
         $(document).ready(function() {
+            // Searching Product
+            const autocompleteInput = $("#autocomplete input");
+            const autocompleteResultList = $(".autocomplete-result-list");
+
+            // Handle input focus to show/hide the result list
+            autocompleteInput.on("focus", function() {
+                showSearchResults();
+            });
+
+            autocompleteInput.on("blur", function() {
+                // Use a delay to allow for the click on the result list
+                setTimeout(hideSearchResults, 200);
+            });
+
+            // Handle input changes for autocomplete
+            autocompleteInput.on("input", function() {
+                const searchTerm = $(this).val();
+                $.ajax({
+                    url: "{{ route('search_products') }}",
+                    type: "GET",
+                    data: {
+                        term: searchTerm
+                    },
+                    success: function(data) {
+                        renderSearchResults(data.products);
+                        showSearchResults
+                            (); // Ensure the list is visible when there are results
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+
+            // Handle click events on autocomplete results
+            autocompleteResultList.on("click", "li", function(event) {
+                event.stopPropagation(); // Prevent the click event from bubbling up
+
+                const id = $(this).data("id");
+                const name = $(this).text();
+                const price = $(this).data("price");
+                const img_path = $(this).data("img_path");
+
+                addToCart(id, price, name, img_path);
+                playClickSound();
+            });
+
+            function showSearchResults() {
+                autocompleteResultList.show();
+            }
+
+            function hideSearchResults() {
+                autocompleteResultList.hide();
+            }
+
+            function renderSearchResults(products) {
+                // Clear previous results
+                autocompleteResultList.empty();
+                // Render new results
+                if (products.length > 0) {
+                    products.forEach(function(product) {
+                        autocompleteResultList.append(`
+                    <li style="position: relative" class="px-3 py-2 cursor-pointer fw-semibold fs-14" data-id="${product.id}" data-price="${product.price}" data-img_path="${product.img_path}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                            ${product.name}
+                    </li>
+                `);
+                    });
+                } else {
+                    autocompleteResultList.append(`
+                <li>No results found</li>
+            `);
+                }
+            }
+
+
             // Define routes and elements
             const routes = {
                 getProducts: "{{ route('get_products') }}",
@@ -418,17 +526,17 @@
                     element.img_path = 'no_image.png';
                 }
                 elements.productsBox.append(`
-                    <div class="col-lg-4 col-md-6 col-sm-6 product-card" data-id="${element.id}" data-price="${element.price}" data-name="${element.name}" data-img="${element.img_path}">
-                        <div class="card cursor-pointer">
-                            <img src="/images/products/${element.img_path}" class="card-img-top" alt="">
-                            <div class="card-body pos-card-product">
-                                <p class="text-gray-600">${element.name}</p>
-                                <h6 class="title m-0"> {{ $currency }} ${element.price}</h6>
-                            </div>
-                            <div class="quantity"></div>
+                <div class="col-lg-4 col-md-6 col-sm-6 product-card" data-id="${element.id}" data-price="${element.price}" data-name="${element.name}" data-img_path="${element.img_path}">
+                    <div class="card cursor-pointer">
+                        <img src="/images/products/${element.img_path}" class="card-img-top" alt="">
+                        <div class="card-body pos-card-product">
+                            <p class="text-gray-600">${element.name}</p>
+                            <h6 class="title m-0"> {{ $currency }} ${element.price}</h6>
                         </div>
+                        <div class="quantity"></div>
                     </div>
-                `);
+                </div>
+            `);
             }
 
             function playClickSound() {
@@ -527,6 +635,7 @@
                 // Update grand total
                 total = total.toFixed(2);
                 $("#GrandTotal").text(total);
+                $("#paying_amount_badge").text("Grand Total: " + total);
             }
 
             function renderCartItem(detail) {
@@ -535,25 +644,25 @@
                     detail.img_path = 'no_image.png';
                 }
                 elements.cartItems.append(`
-                    <div class="cart-item box-shadow-3">
-                        <div class="d-flex align-items-center">
-                            <img src="/images/products/${detail.img_path}" alt="">
-                            <div>
-                                <p class="text-gray-600 m-0 font_12">${detail.name}</p>
-                                <h6 class="fw-semibold m-0 font_16">{{ $currency }} ${detail.price * detail.quantity}</h6>
-                                <a title="Delete" id="DeleteProduct" data-id="${detail.id}"
-                                    class="cursor-pointer ul-link-action text-danger">
-                                    <i class="i-Close-Window"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
-                            <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
-                            <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
+                <div class="cart-item box-shadow-3">
+                    <div class="d-flex align-items-center">
+                        <img src="/images/products/${detail.img_path}" alt="">
+                        <div>
+                            <p class="text-gray-600 m-0 font_12">${detail.name}</p>
+                            <h6 class="fw-semibold m-0 font_16">{{ $currency }} ${detail.price * detail.quantity}</h6>
+                            <a title="Delete" id="DeleteProduct" data-id="${detail.id}"
+                                class="cursor-pointer ul-link-action text-danger">
+                                <i class="i-Close-Window"></i>
+                            </a>
                         </div>
                     </div>
-                `);
+                    <div class="d-flex align-items-center">
+                        <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
+                        <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
+                        <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
+                    </div>
+                </div>
+            `);
                 // Disable the button if the quantity is 1 or less
                 if (detail.quantity <= 1) {
                     $(`#removeQty[data-id='${detail.id}']`).prop('disabled', true);
@@ -602,37 +711,67 @@
                 }
             }
 
-
             // Print Category
-
             function GetCategories() {
                 $.ajax({
                     url: "{{ route('GetCategories') }}",
                     type: "GET",
                     success: function(data) {
                         $("#CategoryUl").empty();
+
+                        // Add a li for showing all categories
+                        $("#CategoryUl").append(`
+                            <li class="category-item" data-id="all" id="Category">
+                                <i class="i-Bookmark"></i>All Categories
+                            </li>
+                        `);
+
+                        // Add li elements for each category
                         $.each(data, function(key, value) {
                             $("#CategoryUl").append(`
                                 <li class="category-item" data-id="${value.id}" id="Category">
                                     <i class="i-Bookmark"></i>${value.name}
                                 </li>
-                        `);
+                            `);
+                        });
+
+                        // Handle click events on category items
+                        $("#CategoryUl").on("click", ".category-item", function() {
+                            // Remove the 'selected' class from all category items
+                            $(".category-item").removeClass("CategorySelected");
+
+                            // Add the 'selected' class to the clicked category item
+                            $(this).addClass("CategorySelected");
+
+                            // Get the selected category id
+                            const categoryId = $(this).data("id");
+
+                            // Call the ProductByCategory function with the selected category id
+                            ProductByCategory(categoryId);
                         });
                     },
                     error: function(data) {
                         console.log(data);
                     }
-                })
+                });
             }
+
 
             GetCategories();
 
             $("body").on("click", "#Category", function() {
                 const id = $(this).data("id");
-                console.log(id);
                 ProductByCategory(id);
             });
 
+            function renderProductsByCategory(products) {
+                elements.productsBox.empty();
+                if (Array.isArray(products)) {
+                    products.forEach(renderProduct);
+                } else {
+                    console.error("Invalid data format: expected an array of products", products);
+                }
+            }
 
             function ProductByCategory(id) {
                 $.ajax({
@@ -647,18 +786,61 @@
                         id
                     },
                     success: function(data) {
-                        console.log(data);
+                        if (Array.isArray(data.products)) {
+                            renderProductsByCategory(data.products);
+                        } else {}
                     },
                     error: function(data) {
                         console.log(data);
                     }
                 });
             }
+        });
 
+        $("#PayNow").click(function(e) {
+            $("#form_Update_Detail").modal("show");
+            e.preventDefault();
         });
     </script>
+
 
 
 </body>
 
 </html>
+
+<style>
+    .CategorySelected {
+        background-color: #f5f5f5;
+        color: #4E97FD;
+        border-radius: 5px;
+    }
+
+    .autocomplete-result-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+        /* Start with display: none; */
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        width: 100%;
+        background-color: #fff;
+        z-index: 1;
+        transition: opacity 0.3s ease-in-out;
+        /* Apply transition on opacity */
+    }
+
+    .autocomplete-result-list li {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        /* Apply transition on background-color */
+    }
+
+    .autocomplete-result-list li:hover {
+        background-color: #f2f2f2;
+    }
+</style>
