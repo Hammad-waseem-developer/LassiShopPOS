@@ -128,7 +128,7 @@ class PosController extends Controller
 
     public function CreatePOS(Request $request)
     {
-        dd($request->all());
+        dd($request->client_id);
         request()->validate([
             'client_id' => 'required',
             'warehouse_id' => 'required',

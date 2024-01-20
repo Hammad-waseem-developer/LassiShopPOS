@@ -78,7 +78,7 @@
                                 <!-- Customer -->
                                 <div class="filter-box">
                                     <label>{{ __('translate.Customer') }} <span class="field_required">*</span></label>
-                                    <select name="customer_id" class="form-control" id="">
+                                    <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
                                         @foreach ($clients as $customer)
                                             <option selected value="{{ $customer->id }}">{{ $customer->username }}
@@ -238,7 +238,7 @@
 
                                                 <!-- Payment Note -->
                                                 <div class="form-group col-md-6">
-                                                    <label for="payment_note">{{ __('translate.Discount') }}
+                                                    <label for="payment_note">Payment Note
                                                         <span class="field_required">*</span></label>
                                                     <textarea class="form-control" name="payment_note" id="payment_note" cols="30" rows="10"></textarea>
                                                     <span class="error"></span>
@@ -253,7 +253,7 @@
                                                 </div>
 
                                                 <div class="col-lg-12">
-                                                    <button type="submit" class="btn btn-primary">
+                                                    <button type="submit" id="save_pos" class="btn btn-primary">
                                                         <i
                                                             class="i-Yes me-2 font-weight-bold"></i>
                                                         {{ __('translate.Submit') }}
@@ -801,6 +801,36 @@
             $("#form_Update_Detail").modal("show");
             e.preventDefault();
         });
+
+        $("#save_pos").click(function(e) {
+            $("#form_Update_Detail").modal("hide");
+            e.preventDefault();
+            $.ajax({
+                url: "{{ url('pos/create_pos') }}",
+                type: "POST",
+                token: "{{ csrf_token() }}",
+                dataType: "json",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                data: {
+                    client_id: $("#customer_id").val(),
+
+                },
+                success: function(data) {
+                    if (data.success) {
+                        $("#form_Update_Detail").modal("hide");
+                        $("#sale_table").DataTable().ajax.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            })
+        });
+
     </script>
 
 
