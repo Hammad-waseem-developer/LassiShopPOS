@@ -111,7 +111,7 @@
                                                         <input type="text" class="no-focus form-control pos-shipping"
                                                             id="shipping">
                                                         <span class="input-group-text cursor-pointer"
-                                                            id="basic-addon3">$</span>
+                                                            id="basic-addon3">{{ $currency }}</span>
                                                     </div>
                                                     <span class="error"></span>
                                                 </div>
@@ -141,7 +141,7 @@
                                                     <span class="error"></span>
                                                     <select class="input-group-text discount-select-type"
                                                         id="inputGroupSelect02">
-                                                        <option value="fixed">$</option>
+                                                        <option value="fixed">{{ $currency }}</option>
                                                         <option value="percent">%</option>
                                                     </select>
                                                 </div>
@@ -192,16 +192,18 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="Unit_price">Date
                                                         <span class="field_required">*</span></label>
-                                                    <input type="date" name="date" class="form-control">
+                                                    <input type="date" name="date" id="date"
+                                                        value="{{ date('Y-m-d') }}" class="form-control">
                                                     <span class="error"></span>
                                                 </div>
 
                                                 <!-- Paying Amount -->
                                                 <div class="form-group col-md-6">
-                                                    <label>Paying Amount <span
-                                                            class="field_required">*</span></label>
-                                                            <input type="text" name="paying_amount" class="form-control">
-                                                            <span class="badge badge-danger mt-2" id="paying_amount_badge">Grand Total: </span>
+                                                    <label>Paying Amount <span class="field_required">*</span></label>
+                                                    <input type="text" id="paying_amount" name="paying_amount"
+                                                        class="form-control">
+                                                    <span class="badge badge-danger mt-2"
+                                                        id="paying_amount_badge">Grand Total: </span>
                                                     <span class="error"></span>
                                                 </div>
 
@@ -209,25 +211,24 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="ordertax">Payment Choice
                                                         <span class="field_required">*</span></label>
-                                                    <select name="payment_choice" id="payment_choice"
+                                                    <select name="payment_choice" id="payment_method"
                                                         class="form-control">
                                                         <option value="">Select Payment</option>
-                                                        <option value="1">Cash</option>
-                                                        <option value="2">Cheque</option>
-                                                        <option value="3">Credit Card</option>
-                                                        <option value="4">Bank Transfer</option>
+                                                        @foreach ($payment_methods as $payment_method)
+                                                            <option value="{{ $payment_method->id }}">
+                                                                {{ $payment_method->title }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                     <span class="error"></span>
                                                 </div>
 
                                                 <!-- Account -->
                                                 <div class="form-group col-md-6">
-                                                    <label>Account <span
-                                                            class="field_required">*</span></label>
-                                                    <select name="account" id="account"
-                                                        class="form-control">
+                                                    <label>Account <span class="field_required">*</span></label>
+                                                    <select name="account" id="account" class="form-control">
                                                         @foreach ($accounts as $account)
-                                                        <option value="">Select Account</option>
+                                                            <option value="">Select Account</option>
                                                             <option value="{{ $account->id }}">
                                                                 {{ $account->account_name }}
                                                             </option>
@@ -238,24 +239,22 @@
 
                                                 <!-- Payment Note -->
                                                 <div class="form-group col-md-6">
-                                                    <label for="payment_note">Payment Note
+                                                    <label for="note">Payment Note
                                                         <span class="field_required">*</span></label>
-                                                    <textarea class="form-control" name="payment_note" id="payment_note" cols="30" rows="10"></textarea>
+                                                    <textarea class="form-control" name="note" id="note" cols="30" rows="10"></textarea>
                                                     <span class="error"></span>
                                                 </div>
 
                                                 <!-- Sale note -->
                                                 <div class="form-group col-md-6">
-                                                    <label>Sale Note <span
-                                                            class="field_required">*</span></label>
-                                                            <textarea class="form-control" name="sale_note" id="sale_note" cols="30" rows="10"></textarea>
+                                                    <label>Sale Note <span class="field_required">*</span></label>
+                                                    <textarea class="form-control" name="note" id="note" cols="30" rows="10"></textarea>
                                                     <span class="error"></span>
                                                 </div>
 
                                                 <div class="col-lg-12">
                                                     <button type="submit" id="save_pos" class="btn btn-primary">
-                                                        <i
-                                                            class="i-Yes me-2 font-weight-bold"></i>
+                                                        <i class="i-Yes me-2 font-weight-bold"></i>
                                                         {{ __('translate.Submit') }}
                                                     </button>
                                                 </div>
@@ -274,6 +273,12 @@
                                         <div class="d-flex justify-content-center">
                                         </div>
 
+                                    </div>
+                                    <!-- Add this container for pagination links -->
+                                    <div id="pagination-container"
+                                        class="mt-4 d-flex justify-content-center align-items-center mb-5">
+                                        <h4>Pagination</h4>
+                                        <!-- Pagination links will be inserted here -->
                                     </div>
                                 </div>
 
@@ -362,8 +367,49 @@
     <script>
         var data;
         var grandTotal = 0;
+        var data;
+        var currentPage = 1;
+
+        // Define routes and elements
+        const routes = {
+            getProducts: "{{ route('get_products') }}",
+            addToCart: "{{ route('add_to_cart') }}",
+            deleteProductFromCart: "{{ route('delete_product_from_cart') }}",
+            addQuantity: "{{ route('add_qty') }}",
+            removeQuantity: "{{ route('remove_qty') }}",
+        };
+
+        const elements = {
+            productsBox: $("#products-box"),
+            cartItems: $("#cart-items"),
+            discountInput: $("#discount"),
+            discountSelect: $("#inputGroupSelect02"),
+        };
 
         $(document).ready(function() {
+
+            var isFetching = false; // Flag to track AJAX request state
+
+            // Fetch and render products on page load
+            const initialPage = getInitialPageFromUrl();
+            fetchAndRenderProducts(initialPage);
+
+            // Add event listener for popstate
+            $(window).on("popstate", function(event) {
+                const state = event.originalEvent.state;
+                if (state) {
+                    const page = state.page;
+                    fetchAndRenderProducts(page);
+                }
+            });
+
+            function getInitialPageFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const initialPage = urlParams.get("page");
+                return initialPage ? parseInt(initialPage, 10) : 1; // Default to page 1 if undefined
+            }
+
+
             // Searching Product
             const autocompleteInput = $("#autocomplete input");
             const autocompleteResultList = $(".autocomplete-result-list");
@@ -441,23 +487,6 @@
                 }
             }
 
-
-            // Define routes and elements
-            const routes = {
-                getProducts: "{{ route('get_products') }}",
-                addToCart: "{{ route('add_to_cart') }}",
-                deleteProductFromCart: "{{ route('delete_product_from_cart') }}",
-                addQuantity: "{{ route('add_qty') }}",
-                removeQuantity: "{{ route('remove_qty') }}",
-            };
-
-            const elements = {
-                productsBox: $("#products-box"),
-                cartItems: $("#cart-items"),
-                discountInput: $("#discount"),
-                discountSelect: $("#inputGroupSelect02"),
-            };
-
             initialize();
 
             function initialize() {
@@ -502,22 +531,94 @@
                 });
             }
 
-            function fetchAndRenderProducts() {
+            function fetchAndRenderProducts(page) {
+                // If an AJAX request is already in progress, do nothing
+                if (isFetching) {
+                    return;
+                }
+
+                // Set the flag to indicate that a request is in progress
+                isFetching = true;
+
                 // Fetch and render products
                 $.ajax({
                     url: routes.getProducts,
                     type: "GET",
                     dataType: "json",
-                    success: renderProducts,
+                    data: {
+                        page: page, // Pass the current page to the server
+                    },
+                    success: function(data) {
+                        renderProducts(data);
+                        renderPagination(data);
+                        history.pushState({
+                            page: page
+                        }, null, `?page=${page}`);
+                    },
                     error: function(data) {
                         console.log(data);
-                    }
+                    },
+                    complete: function() {
+                        // Reset the flag when the request is complete
+                        isFetching = false;
+                    },
                 });
             }
 
+            function renderPagination(productsData) {
+                const totalPages = productsData.last_page;
+                const paginationContainer = $("#pagination-container");
+                paginationContainer.empty();
+
+                const hasPreviousPage = currentPage > 1;
+                const hasNextPage = currentPage < totalPages;
+
+                // Render "First" button and disable it if there's no previous page
+                const firstButton =
+                    `<button class="btn btn-outline-primary btn-sm mx-1 pagination-link" data-page="1" ${hasPreviousPage ? '' : 'disabled'}>First</button>`;
+                // Render "Previous" button and disable it if there's no previous page
+                const previousButton =
+                    `<button class="btn btn-outline-primary btn-sm mx-1 pagination-link" data-page="${hasPreviousPage ? currentPage - 1 : currentPage}" ${hasPreviousPage ? '' : 'disabled'}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                    </svg></button>`;
+                // Render "Next" button and disable it if there's no next page
+                const nextButton =
+                    `<button class="btn btn-outline-primary btn-sm mx-1 pagination-link" data-page="${hasNextPage ? currentPage + 1 : currentPage}" ${hasNextPage ? '' : 'disabled'}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg></button>`;
+                // Render "Last" button and disable it if there's no next page
+                const lastButton =
+                    `<button class="btn btn-outline-primary btn-sm mx-1 pagination-link" data-page="${hasNextPage ? totalPages : currentPage}" ${hasNextPage ? '' : 'disabled'}>Last</button>`;
+
+                paginationContainer.append(firstButton);
+                paginationContainer.append(previousButton);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationContainer.append(`
+            <button class="btn btn-outline-primary btn-sm mx-1 pagination-link ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>
+        `);
+                }
+
+                paginationContainer.append(nextButton);
+                paginationContainer.append(lastButton);
+
+                // Add click event for pagination links
+                paginationContainer.on("click", ".pagination-link", function() {
+                    const page = $(this).data("page");
+                    currentPage = page;
+                    fetchAndRenderProducts(page);
+                });
+            }
+
+
+
+
+            // Fetch and render products on page load
+            fetchAndRenderProducts(currentPage);
+
             function renderProducts(data) {
-                // Render products
-                data.forEach(renderProduct);
+                elements.productsBox.empty(); // Clear existing products
+                data.data.forEach(renderProduct);
             }
 
             function renderProduct(element) {
@@ -658,7 +759,7 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <span class="increment-decrement btn btn-light rounded-circle" id="removeQty" data-id="${detail.id}" ${detail.quantity <= 1 ? 'disabled' : ''}>-</span>
-                        <input class="fw-semibold cart-qty m-0 px-2" value="${detail.quantity}">
+                        <input class="fw-semibold cart-qty m-0 px-2" readonly value="${detail.quantity}">
                         <span class="increment-decrement btn btn-light rounded-circle" id="addQty" data-id="${detail.id}">+</span>
                     </div>
                 </div>
@@ -814,8 +915,18 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 data: {
+                    date: $("#date").val(),
                     client_id: $("#customer_id").val(),
-
+                    tax_rate: $("#orderTax").val(),
+                    discount: $("#discount").val(),
+                    discount_type: $("#inputGroupSelect02").val(),
+                    shipping: $("#shipping").val(),
+                    GrandTotal: $("#GrandTotal").text(),
+                    notes: $("#note").val(),
+                    paying_amount: $("#paying_amount").val(),
+                    payment_method: $("#payment_method").val(),
+                    account: $("#account").val(),
+                    sale_note: $("#sale_note").val(),
                 },
                 success: function(data) {
                     if (data.success) {
@@ -830,10 +941,7 @@
                 }
             })
         });
-
     </script>
-
-
 
 </body>
 

@@ -128,7 +128,7 @@ class PosController extends Controller
 
     public function CreatePOS(Request $request)
     {
-        dd($request->client_id);
+        dd($request);
         request()->validate([
             'client_id' => 'required',
             'warehouse_id' => 'required',
@@ -413,9 +413,11 @@ class PosController extends Controller
 
     //------------ Get Products By Ajax -----------------\\
 
-    public function GetProductsAjax()
+    public function GetProductsAjax(Request $request)
     {
-        $products = NewProduct::all();
+        $perPage = 6; // Number of products per page
+        $page = $request->input('page', 1); // Get the requested page, default to 1
+        $products = NewProduct::paginate($perPage, ['*'], 'page', $page);
         return response()->json($products);
     }
     //------------ autocomplete_product_pos -----------------\\
