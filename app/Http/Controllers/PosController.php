@@ -142,7 +142,7 @@ class PosController extends Controller
             $order->date = $request->date;
             $order->Ref = 'SO-' . date("Ymd") . '-'. date("his");
             $order->client_id = $request->client_id;
-            // $order->warehouse_id = $request->warehouse_id;
+            $order->warehouse_id = $request->warehouse_id;
             $order->tax_rate = $request->tax_rate;
             $order->TaxNet = $request->TaxNet;
             $order->discount = $request->discount;

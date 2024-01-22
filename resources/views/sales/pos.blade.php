@@ -77,6 +77,18 @@
 
                                 <!-- Customer -->
                                 <div class="filter-box">
+                                    <label>Warehouse <span class="field_required">*</span></label>
+                                    <select name="warehouse_id" class="form-control" id="warehouse_id">
+                                        <option value="">Select Warehouse</option>
+                                        @foreach ($warehouses as $warehouse)
+                                            <option selected value="{{ $warehouse->id }}">
+                                                {{ $warehouse->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="filter-box">
                                     <label>{{ __('translate.Customer') }} <span class="field_required">*</span></label>
                                     <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
@@ -124,6 +136,7 @@
                                                     <div class="input-group text-right">
                                                         <input type="text" class="no-focus form-control pos-tax"
                                                             id="orderTax">
+                                                        <input type="hidden" id="TaxNet" name="TaxNet">
                                                         <span class="input-group-text cursor-pointer"
                                                             id="basic-addon3">%</span>
                                                     </div>
@@ -144,6 +157,7 @@
                                                         <option value="fixed">{{ $currency }}</option>
                                                         <option value="percent">%</option>
                                                     </select>
+                                                    <input type="hidden" name="discountAmount" id="discountAmount">
                                                 </div>
                                             </div>
                                         </div>
@@ -732,10 +746,14 @@
                 updateGrandTotalWithShippingAndTax();
             }
 
-            function updateGrandTotal(total) {
-                // Update grand total
+            function updateGrandTotal(total, taxNet) {
+                // Update grand total without changing previous calculation
                 total = total.toFixed(2);
                 $("#GrandTotal").text(total);
+
+                // Assuming you have an element for TaxNet, update its value
+                $("#TaxNet").text(taxNet.toFixed(2));
+
                 $("#paying_amount_badge").text("Grand Total: " + total);
             }
 
@@ -780,18 +798,25 @@
                 // Get the discount amount based on user input
                 const discountType = elements.discountSelect.val();
                 const discountInput = parseFloat(elements.discountInput.val()) || 0;
+
+                // Calculate discount amount based on type (fixed or percentage)
                 const discountAmount = calculateDiscountAmount(grandTotal, discountType, discountInput);
 
-                // Calculate tax amount only if the product amount is not zero after discount
+                $("#discountAmount").text(discountAmount);
+                // Calculate product amount after discount
                 const productAmountAfterDiscount = Math.max(grandTotal - discountAmount, 0);
-                const taxAmount = (productAmountAfterDiscount * orderTaxPercentage) / 100;
+
+                // Calculate total without discount
+                const totalWithoutDiscount = productAmountAfterDiscount;
+
+                // Calculate TaxNet
+                const taxNet = (totalWithoutDiscount * orderTaxPercentage) / 100;
 
                 // Update grand total including shipping, tax, and product amounts
-                const newGrandTotal = productAmountAfterDiscount + shippingAmount + taxAmount;
+                const newGrandTotal = productAmountAfterDiscount + shippingAmount + taxNet;
 
                 // Update cart box including shipping, tax, and product amounts
                 elements.cartItems.empty();
-
                 for (const detailId in data.cart) {
                     if (data.cart.hasOwnProperty(detailId)) {
                         const detail = data.cart[detailId];
@@ -799,8 +824,11 @@
                     }
                 }
 
-                updateGrandTotal(newGrandTotal);
+                // Update grand total with TaxNet without changing the previous calculation
+                updateGrandTotal(newGrandTotal, taxNet);
             }
+
+
 
             function calculateDiscountAmount(total, type, value) {
                 if (type === "percent") {
@@ -916,10 +944,13 @@
                 },
                 data: {
                     date: $("#date").val(),
+                    warehouse_id: $("#warehouse_id").val(),
                     client_id: $("#customer_id").val(),
                     tax_rate: $("#orderTax").val(),
+                    TaxNet: $("#TaxNet").text(),
                     discount: $("#discount").val(),
                     discount_type: $("#inputGroupSelect02").val(),
+                    discount_percent_total: $("#discountAmount").text(),
                     shipping: $("#shipping").val(),
                     GrandTotal: $("#GrandTotal").text(),
                     notes: $("#note").val(),
