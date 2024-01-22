@@ -129,7 +129,7 @@
                 <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
                     @if ($departments->count() == 0)
                     @else
-                        <button type="button" onclick="Delete()" class="swal2-confirm btn btn-primary me-5 btn-ok"
+                        <button data-dismiss="modal" aria-label="Close" type="button" onclick="Delete()" class="swal2-confirm btn btn-primary me-5 btn-ok"
                             id="{{ $department->id }}">Yes, delete
                             it</button>
                         <button data-dismiss="modal" aria-label="Close" type="button"
@@ -168,43 +168,7 @@
     });
 </script>
 <script>
-    $(document).ready(function() {
-        // Initialize DataTable with AJAX
-        $('#client_list_table').DataTable({
-            "ajax": {
-                "url": '{{ route('department.getData') }}',
-                "type": "GET",
-                "dataSrc": "data"
-            },
-            "columns": [{
-                    "data": "id"
-                },
-                {
-                    "data": "name"
-                },
-                {
-                    "data": "dept_head"
-                },
-                {
-                    "data": null,
-                    "render": function(data, type, row) {
-                        // Render the action dropdown
-                        return '<div class="dropdown">' +
-                            '<button class="btn btn-outline-info btn-rounded dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
-                            '<div class="dropdown-menu" x-placement="top-start" style="position: absolute; will-change: transform;">' +
-                            '<a class="dropdown-item" href="{{ url('/departments') }}/' + row
-                            .id +
-                            '/edit"><i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Departments</a>' +
-                            '<a class="dropdown-item delete cursor-pointer" data-toggle="modal" data-target="#deleteModal" data-id="' +
-                            row.id + '" onclick="deleteDepartment(' + row.id +
-                            ')"><i class="nav-icon i-Close-Window font-weight-bold mr-2"></i> Delete Departments</a>' +
-                            '</div>' +
-                            '</div>';
-                    }
-                }
-            ]
-        });
-    });
+   
 
     function deleteDepartment(id) {
         console.log(id);

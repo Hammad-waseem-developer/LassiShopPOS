@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Log;
+use DataTables;
 use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Http\Request;
-use DataTables;
 
 
 class DesignationsController extends Controller
 {
     public function index()
     {
-        $designations = Designation::with('department')->get();
+      $designations = Designation::with('department')->first();
         return view('hrm.desig.index', compact('designations'));
     }
     public function create()
@@ -81,6 +82,27 @@ class DesignationsController extends Controller
 //     return abort(403, 'Unauthorized');
 // }
 
-
+public function getData()
+{
+    $designations = Designation::with('department')->get();
+ 
+    return response()->json($designations);
     
+}
+
+public function delete($id)
+{
+    try {
+        $designation = Designation::findOrFail($id);
+        $designation->delete();
+
+        return response()->json(['message' => 'Designation deleted successfully']);
+    } catch (\Exception $e) {
+        // Log the error for debugging purposes
+        Log::error('Error deleting designation: ' . $e->getMessage());
+
+        // Return an error response
+        return response()->json(['error' => 'Internal Server Error'], 500);
+    }
+}
 }

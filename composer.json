@@ -11,8 +11,8 @@
         "ezyang/htmlpurifier": "^4.16",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "khaled.alshamaa/ar-php": "^6.3",
         "infobip/infobip-api-php-client": "3.2.0",
+        "khaled.alshamaa/ar-php": "^6.3",
         "laravel/framework": "^8.0",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.0",
@@ -24,7 +24,7 @@
         "stripe/stripe-php": "^8.5",
         "summernote/summernote": "^0.8.8",
         "twilio/sdk": "^6.22",
-        "yajra/laravel-datatables-oracle": "~9.0"
+        "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

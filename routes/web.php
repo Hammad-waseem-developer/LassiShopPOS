@@ -253,7 +253,6 @@ if ($installed === false) {
             Route::prefix('hrm')->group(function () {
                 // departements
                 Route::resource('departments', 'DepartmentController');
-                Route::get('/departments/get-data', 'DepartmentController@getData')->name('department.getData');
                 Route::get('/departments', 'DepartmentController@index')->name('department.index');
                 Route::get('departments/create', 'DepartmentController@create')->name('department.create');
                 Route::post('departments/store', 'DepartmentController@store')->name('department.store');
@@ -261,16 +260,21 @@ if ($installed === false) {
                 Route::put('/departments/{department}', 'DepartmentController@update')->name('department.update');
                 Route::delete('/departments/{department}', 'DepartmentController@delete')->name('department.delete');
                 Route::delete('/departments/AjaxGetData', 'DepartmentController@AjaxGetData')->name('department.AjaxGetData');               
-                
+             
+             
                 // designations
                  Route::get('/designations', 'DesignationsController@index')->name('designations.index');
                  Route::get('/designations/create', 'DesignationsController@create')->name('designations.create');       
                  Route::post('/designations/store', 'DesignationsController@store')->name('designations.store');       
                  Route::get('/designations/{designation}/edit', 'DesignationsController@edit')->name('designations.edit');
                  Route::put('/designations/{designation}', 'DesignationsController@update')->name('designations.update');
-                 // Route::get('/designations', 'DesignationsController@show')->name('designations.show');
+                     Route::get('/designations/getData', 'DesignationsController@getData')->name('designations.getData');
+                 // Route::get('/designations', 'DesignationsController@show')->name('designations.show')
+                Route::delete('/designations/{designation}', 'DesignationsController@delete')->name('designations.delete');
+                Route::delete('/designations/AjaxGetData', 'DesignationsController@AjaxGetData')->name('designations.AjaxGetData');
 
-
+                // OFFICE SHIFT
+                Route::resource('/office', 'OfficeController');
             });
 
             Route::resource('people/clients', 'ClientController');
