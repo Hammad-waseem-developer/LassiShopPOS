@@ -139,13 +139,13 @@ $setting = DB::table('settings')
                             </a>
                         </li>
                         <li class="">
-                            <a href="#" class="nav-item child-nav ">
+                            <a href="{{route('office.index') }}" class="nav-item child-nav ">
                                 <span class="prefix rounded-circle"></span>
-                                <span class="item-name">Office</span>
+                                <span class="item-name">Office Shift</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="#" class="nav-item child-nav ">
+                            <a href="{{route('employee.index')}}" class="nav-item child-nav ">
                                 <span class="prefix rounded-circle"></span>
                                 <span class="item-name">Employee Shift</span>
                             </a>

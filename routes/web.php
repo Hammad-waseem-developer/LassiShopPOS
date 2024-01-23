@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationsController;
 
@@ -275,6 +276,18 @@ if ($installed === false) {
 
                 // OFFICE SHIFT
                 Route::resource('/office', 'OfficeController');
+                Route::get('/office', 'OfficeController@index')->name('office.index');
+                Route::get('/office/create', 'OfficeController@create')->name('office.create');
+                // Route::post('/office/store', 'OfficeController@store')->name('office.store');
+                Route::get('/office/getdata', 'OfficeController@getOffice')->name('office.getData');
+
+                // Employee Routes
+                Route::get('/employee', 'EmployeeController@index')->name('employee.index');
+                Route::get('/employee/create', 'EmployeeController@create')->name('employees.create');
+                Route::post('/employee/store', 'EmployeeController@store')->name('employees.store');
+                Route::get('/employees/getData', 'EmployeeController@getData')->name('employees.getData');
+                // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
+
             });
 
             Route::resource('people/clients', 'ClientController');
