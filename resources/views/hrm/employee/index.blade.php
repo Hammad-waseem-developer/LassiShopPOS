@@ -9,7 +9,7 @@
 
 <<div class="breadcrumb">
 
-    <h1>{{ __('translate.Designations') }}</h1>
+    <h1>{{ __('translate.Employees') }}</h1>
     </div>
     <div class="separator-breadcrumb border-top"></div>
     <div class="row" id="section_Client_list">
@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <div class="text-end mb-3">
                         @can('client_add')
-                            <a class="btn btn-outline-primary btn-md m-1" href="{{ route('designations.create') }}"><i
+                            <a class="btn btn-outline-primary btn-md m-1" href="{{ route('employees.create') }}"><i
                                     class="i-Add me-2 font-weight-bold"></i>
                                 {{ __('translate.Create') }}</a>
                         @endcan

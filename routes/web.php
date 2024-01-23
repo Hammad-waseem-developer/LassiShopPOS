@@ -286,6 +286,7 @@ if ($installed === false) {
                 Route::get('/employee/create', 'EmployeeController@create')->name('employees.create');
                 Route::post('/employee/store', 'EmployeeController@store')->name('employees.store');
                 Route::get('/employees/getData', 'EmployeeController@getData')->name('employees.getData');
+                Route::get('/employees/edit', 'EmployeeController@getData')->name('employees.getData');
                 // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
 
             });
