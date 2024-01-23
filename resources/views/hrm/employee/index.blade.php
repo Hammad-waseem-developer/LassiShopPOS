@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
-<<div class="breadcrumb">
+<div class="breadcrumb">
 
     <h1>{{ __('translate.Employees') }}</h1>
     </div>
@@ -28,7 +28,11 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th class="not_show">{{ __('Designation Name') }}</th>
+                                    <th >{{ __('First Name') }}</th>
+                                    <th >{{ __('Last Name') }}</th>
+                                    <th >{{ __('Phone') }}</th>
+                                    <th >{{ __('Office Shift') }}</th>
+                                    <th >{{ __('Designation Name') }}</th>
                                     <th>{{ __('Department Name') }}</th>
                                     <th>{{ __('Department Head') }}</th>
                                     <th>{{ __('translate.Action') }}</th>
@@ -45,6 +49,53 @@
         {{-- Delete Modal --}}
         {{-- @component('hrm.deletemodal.delete') 
     @endcomponent --}}
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div style="background-color: white; border:0px;" class="modal-content">
+            <div style="display: flex;
+                flex-direction: column;
+                align-items: center; padding-top: 20px;"
+                class="modal-body">
+                <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
+                <h2
+                    style="color: #595959;
+                    font-size: 30px;
+                    font-weight: 600;
+                    text-transform: none;
+                    margin: 0;
+                    padding: 0;
+                    line-height: 60px;
+                    display: block;">
+                    Are you sure ?</h2>
+                <div class="swal2-content"
+                    style="font-size: 18px;
+                    text-align: center;
+                    font-weight: 300;
+                    position: relative;
+                    float: none;
+                    margin: 0;
+                    padding: 0;
+                    line-height: normal;
+                    color: #545454;">
+                    You won't be able to revert this!
+                </div>
+            </div>
+            <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
+                <button data-dismiss="modal" aria-label="Close" type="button" onclick="Delete()"
+                    class="swal2-confirm btn btn-primary me-5 btn-ok"
+                    id="">Yes, delete
+                    it</button>
+                <button data-dismiss="modal" aria-label="Close" type="button"
+                    class="swal2-cancel btn btn-danger"
+                    style="display: inline-block;">No, cancel!</button>
+            </div>
+            <input type="hidden" id="deleteEmployeeId" value="">
+        </div>
+    </div>
+</div>
+<!-- Modal End -->
     </div>
 @endsection
 @section('page-js')
@@ -66,56 +117,101 @@
 
     <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
+            var editRoute = '{{ route('employees.edit', ['id' => ':id']) }}';
+    
             $('#client_list_table').DataTable({
                 ajax: '{{ route('employees.getData') }}',
                 processing: true,
                 columns: [
-                    // Define your columns based on the database fields
+                    { data: 'id' },
+                    { data: 'first_name' },
+                    { data: 'last_name' },
+                    { data: 'phone' },
+                    { data: 'office.name' },
+                    { data: 'designation.name' },
+                    { data: 'department.name' },
+                    { data: 'department.dept_head' },
                     {
-                        data: 'id'
-                    },
-                    {
-                        data: 'first_name'
-                    },
-                    {
-                        data: 'department.name'
-                    },
-                    {
-                        data: 'department.dept_head'
-                    },
-                    {
-                        // Define an action column with buttons
                         targets: -1,
                         render: function(data, type, full, meta) {
-                            console.log(full.id);
-                            
+                            var dynamicEditRoute = editRoute.replace(':id', full.id);
+    
                             return `
-                            <div class="dropdown">
-                                            <button class="btn btn-outline-info btn-rounded dropdown-toggle"
-                                                id="dropdownMenuButton" type="button" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">Action</button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                x-placement="top-start"
-                                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -88px, 0px);">
-                                                <a class="dropdown-item"
-                                                    href="{{ route('designations.edit', ['id' => full.id])}"><i
-                                                        class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit
-                                                    Designation</a>
-                                                <a data-toggle="modal" data-target="#deleteModal"
-                                                    class="dropdown-item delete cursor-pointer"
-                                                    onclick="deleteDesignation(${full.id})">
-                                                    <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete
-                                                    Designation
-                                                </a>
-                                            </div>
-                                        </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-info btn-rounded dropdown-toggle"
+                                        id="dropdownMenuButton" type="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">Action</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="${dynamicEditRoute}">
+                                            <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Designation
+                                        </a>
+                                        <a data-toggle="modal" data-target="#deleteModal"
+                                            class="dropdown-item delete cursor-pointer"
+                                            onclick="deleteDesignation(${full.id})">
+                                            <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Designation
+                                        </a>
+                                    </div>
+                                </div>
                             `;
                         }
                     }
                 ]
             });
         });
+    </script> --}}
+    
+    <script>
+      $(document).ready(function () {
+        var editRoute = '{{ route('employees.edit', ['id' => ':id']) }}';
+
+        $('#client_list_table').DataTable({
+            ajax: '{{ route('employees.getData') }}',
+            processing: true,
+            columns: [
+                { data: 'id' },
+                { data: 'first_name' },
+                { data: 'last_name' },
+                { data: 'phone' },
+                { data: 'office.name' },
+                { data: 'designation.name' },
+                { data: 'department.name' },
+                { data: 'department.dept_head' },
+                {
+                    targets: -1,
+                    render: function (data, type, full, meta) {
+                        var dynamicEditRoute = editRoute.replace(':id', full.id);
+
+                        return `
+                            <div class="dropdown">
+                                <button class="btn btn-outline-info btn-rounded dropdown-toggle"
+                                    id="dropdownMenuButton" type="button" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">Action</button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="${dynamicEditRoute}">
+                                        <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
+                                    </a>
+                                    <a class="dropdown-item delete cursor-pointer"
+                                        onclick="deleteEmployeeConfirmation(${full.id})">
+                                        <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            ]
+        });
+    });
+
+    function deleteEmployeeConfirmation(id) {
+        // Set the employee ID in the hidden input
+        $("#deleteEmployeeId").val(id);
+        // Open the delete confirmation modal
+        $('#deleteModal').modal('show');
+    }
+
     </script>
+    
 @endsection

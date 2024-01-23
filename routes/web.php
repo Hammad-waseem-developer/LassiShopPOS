@@ -129,7 +129,7 @@ if ($installed === false) {
                 Route::get('import_products', 'ProductsController@import_products_page');
                 Route::post('import_products', 'ProductsController@import_products');
                 Route::get('search_products', 'ProductsController@search_products')->name('search_products');
-                
+
                 Route::post('ProductByCategory', 'ProductsController@ProductByCategory')->name('ProductByCategory');
 
                 //------------------------------- categories--------------------------\\
@@ -260,17 +260,17 @@ if ($installed === false) {
                 Route::get('/departments/{department}/edit', 'DepartmentController@edit')->name('department.edit');
                 Route::put('/departments/{department}', 'DepartmentController@update')->name('department.update');
                 Route::delete('/departments/{department}', 'DepartmentController@delete')->name('department.delete');
-                Route::delete('/departments/AjaxGetData', 'DepartmentController@AjaxGetData')->name('department.AjaxGetData');               
-             
-             
+                Route::delete('/departments/AjaxGetData', 'DepartmentController@AjaxGetData')->name('department.AjaxGetData');
+
+
                 // designations
-                 Route::get('/designations', 'DesignationsController@index')->name('designations.index');
-                 Route::get('/designations/create', 'DesignationsController@create')->name('designations.create');       
-                 Route::post('/designations/store', 'DesignationsController@store')->name('designations.store');       
-                 Route::get('/designations/{designation}/edit', 'DesignationsController@edit')->name('designations.edit');
-                 Route::put('/designations/{designation}', 'DesignationsController@update')->name('designations.update');
-                     Route::get('/designations/getData', 'DesignationsController@getData')->name('designations.getData');
-                 // Route::get('/designations', 'DesignationsController@show')->name('designations.show')
+                Route::get('/designations', 'DesignationsController@index')->name('designations.index');
+                Route::get('/designations/create', 'DesignationsController@create')->name('designations.create');
+                Route::post('/designations/store', 'DesignationsController@store')->name('designations.store');
+                Route::get('/designations/{designation}/edit', 'DesignationsController@edit')->name('designations.edit');
+                Route::put('/designations/{designation}', 'DesignationsController@update')->name('designations.update');
+                Route::get('/designations/getData', 'DesignationsController@getData')->name('designations.getData');
+                // Route::get('/designations', 'DesignationsController@show')->name('designations.show')
                 Route::delete('/designations/{designation}', 'DesignationsController@delete')->name('designations.delete');
                 Route::delete('/designations/AjaxGetData', 'DesignationsController@AjaxGetData')->name('designations.AjaxGetData');
 
@@ -285,8 +285,11 @@ if ($installed === false) {
                 Route::get('/employee', 'EmployeeController@index')->name('employee.index');
                 Route::get('/employee/create', 'EmployeeController@create')->name('employees.create');
                 Route::post('/employee/store', 'EmployeeController@store')->name('employees.store');
-                Route::get('/employees/getData', 'EmployeeController@getData')->name('employees.getData');
-                Route::get('/employees/edit', 'EmployeeController@getData')->name('employees.getData');
+                Route::get('/employee/getData', 'EmployeeController@getData')->name('employees.getData');
+                Route::get('/employee/edit/{id}', 'EmployeeController@edit')->name('employees.edit');
+                Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
+                // Route::delete('/employee/delete/{id}', 'EmployeeController@deleteEmployee')->name('employee.delete');
+
                 // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
 
             });
