@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationsController;
 
@@ -289,8 +290,18 @@ if ($installed === false) {
                 Route::get('/employee/edit/{id}', 'EmployeeController@edit')->name('employees.edit');
                 Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
                 // Route::delete('/employee/delete/{id}', 'EmployeeController@deleteEmployee')->name('employee.delete');
-
                 // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
+                
+                // Attendance Routes
+                Route::get('/attendance', 'AttendanceController@index')->name('attendance.index');
+                Route::get('/attendance/create', 'AttendanceController@create')->name('attendance.create');
+                Route::post('/attendance/store', 'AttendanceController@store')->name('attendance.store');
+                Route::get('/attendance/getData', 'AttendanceController@getData')->name('attendance.getData');
+                Route::get('/attendance/edit/{id}', 'AttendanceController@edit')->name('attendance.edit');
+                Route::put('/attendance/update/{id}', 'AttendanceController@update')->name('attendance.update');
+
+                // leaveType Routes
+                Route::get('/leave-type', 'LeaveTypeController@index')->name('leaveType.index');
 
             });
 
