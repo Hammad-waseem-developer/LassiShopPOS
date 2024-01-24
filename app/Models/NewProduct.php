@@ -11,6 +11,18 @@ class NewProduct extends Model
 
     protected $table = "new_products";
 
+    protected $fillable = [
+        'category_id',
+        'brand_id',
+        'name',
+        'img_path',
+        'price',
+        'created_at',
+        'updated_at'
+    ];
+
+    public function Product_Deatils()
+    {
+        return $this->hasMany(NewProductDetail::class);
+    }
 }
-
-
