@@ -11,7 +11,7 @@ class LeaveTypeController extends Controller
     public function index()
     {
         $leaveTypes = LeaveType::all();
-        return view('hrm.leavetype.index', compact('leaveTypes'));
+        return view('hrm.leavetype.index1', compact('leaveTypes'));
     }
 
 
@@ -27,7 +27,7 @@ class LeaveTypeController extends Controller
             'type' => 'required|string|max:200',
         ]);
         LeaveType::create($validatedData);
-        return redirect()->back()->with('success', 'Leave type created successfully');
+        return redirect()->route('leaveType.index')->with('success', 'Leave type created successfully');
     }
 
     // LeaveTypeController.php
@@ -51,20 +51,22 @@ class LeaveTypeController extends Controller
 
         return redirect()->route('leaveType.index')->with('success', 'Leave type updated successfully');
     }
-    public function delete($id)
+    public function deleteLeaveType(Request $request)
     {
-        try {
-            $leaveType = LeaveType::findOrFail($id);
+        $leaveType = LeaveType::findOrFail($request->id);
+        if($leaveType){
             $leaveType->delete();
-            return response()->json(['message' => 'Leave type deleted successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error deleting LeaveType'], 500);
+            return response()->json(['message' => 'Leave type deleted successfully'], 200);
+        }else{
+            return response()->json(['message' => 'Leave type not found'], 404);
         }
+
     }
-    
+
     public function getData()
     {
         $leaveTypes = LeaveType::all();
         return response()->json(['data' => $leaveTypes]);
     }
+    
 }

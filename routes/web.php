@@ -306,7 +306,7 @@ if ($installed === false) {
                 Route::post('/leave-type/store', 'LeaveTypeController@store')->name('leaveType.store');
                 Route::get('/leave-type/edit/{id}', 'LeaveTypeController@edit')->name('leaveType.edit');
                 Route::put('/leave-type/update/{id}', 'LeaveTypeController@update')->name('leaveType.update');
-                Route::delete('/hrm/leave-type/delete/{id}', 'LeaveTypeController@delete')->name('leave-type.delete');
+                Route::post('/hrm/leave-type/delete', 'LeaveTypeController@deleteLeaveType')->name('leave-type.delete');
                 Route::get('/leave-type/getData', 'LeaveTypeController@getData')->name('leaveType.getData');
 
 
