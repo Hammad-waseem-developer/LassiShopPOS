@@ -81,7 +81,8 @@
                                     <select name="warehouse_id" class="form-control" id="warehouse_id">
                                         <option value="">Select Warehouse</option>
                                         @foreach ($warehouses as $warehouse)
-                                            <option selected value="{{ $warehouse->id }}">
+                                            <option value="{{ $warehouse->id }}"
+                                                {{ $warehouse->id == $settings->warehouse_id ? 'selected' : '' }}>
                                                 {{ $warehouse->name }}
                                             </option>
                                         @endforeach
@@ -92,8 +93,10 @@
                                     <label>{{ __('translate.Customer') }} <span class="field_required">*</span></label>
                                     <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
-                                        @foreach ($clients as $customer)
-                                            <option selected value="{{ $customer->id }}">{{ $customer->username }}
+                                        @foreach ($clients as $clients)
+                                            <option value="{{ $clients->id }}"
+                                                {{ $clients->id == $settings->client_id ? 'selected' : '' }}>
+                                                {{ $clients->username }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -402,6 +405,9 @@
 
         $(document).ready(function() {
 
+            var selectedCategory = 'all';
+            var selectedWarehouse = $("#warehouse_id").val();
+
             var isFetching = false; // Flag to track AJAX request state
 
             // Fetch and render products on page load
@@ -456,6 +462,14 @@
                         console.log(data);
                     }
                 });
+            });
+
+            // Handle change event for warehouse
+            $("#warehouse_id").on("change", function() {
+                const warehouseId = $(this).val();
+                const categoryId = $(".category-item.CategorySelected").data(
+                    "id"); // Get the selected category ID
+                ProductByCategory(categoryId, warehouseId, "Warehouse");
             });
 
             // Handle click events on autocomplete results
@@ -561,6 +575,9 @@
                     dataType: "json",
                     data: {
                         page: page, // Pass the current page to the server
+                        warehouse_id: $("#warehouse_id").val(), // Pass the selected warehouse
+                        category_id: $(".category-item.CategorySelected").data(
+                            "id"), // Pass the selected category
                     },
                     success: function(data) {
                         renderProducts(data);
@@ -872,11 +889,12 @@
                             // Add the 'selected' class to the clicked category item
                             $(this).addClass("CategorySelected");
 
-                            // Get the selected category id
-                            const categoryId = $(this).data("id");
+                            // Get the selected category and warehouse IDs
+                            const selectedCategory = $(this).data("id");
+                            const selectedWarehouse = $("#warehouse_id").val();
 
-                            // Call the ProductByCategory function with the selected category id
-                            ProductByCategory(categoryId);
+                            // Make the AJAX request
+                            ProductByCategory(selectedCategory, selectedWarehouse, "Category");
                         });
                     },
                     error: function(data) {
@@ -890,7 +908,13 @@
 
             $("body").on("click", "#Category", function() {
                 const id = $(this).data("id");
-                ProductByCategory(id);
+
+                // Get the selected category and warehouse IDs
+                const selectedCategory = $(this).data("id");
+                const selectedWarehouse = $("#warehouse_id").val();
+
+                // Make the AJAX request
+                ProductByCategory(selectedCategory, selectedWarehouse, "Category");
             });
 
             function renderProductsByCategory(products) {
@@ -902,7 +926,7 @@
                 }
             }
 
-            function ProductByCategory(id) {
+            function ProductByCategory(categoryId, warehouseId, type) {
                 $.ajax({
                     url: "{{ route('ProductByCategory') }}",
                     type: "POST",
@@ -912,7 +936,9 @@
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
                     data: {
-                        id
+                        category_id: categoryId,
+                        warehouse_id: warehouseId,
+                        type: type
                     },
                     success: function(data) {
                         if (Array.isArray(data.products)) {

@@ -57,10 +57,11 @@ class PosController extends Controller
     {
 
         $user_auth = auth()->user();
-        $products = NewProduct::all();
-        $units = Unit::where('deleted_at', '=', null)->get();
 
         if ($user_auth->can('pos')) {
+
+            $products = NewProduct::all();
+            $units = Unit::where('deleted_at', '=', null)->get();
 
             $settings = Setting::where('deleted_at', '=', null)->first();
 
@@ -133,7 +134,7 @@ class PosController extends Controller
             'warehouse_id' => 'required',
         ]);
 
-        $item = \DB::transaction(function () use ($request) {
+        // $item = \DB::transaction(function () use ($request) {
         $helpers = new helpers();
         $order = new Sale;
 
@@ -185,68 +186,29 @@ class PosController extends Controller
                 $productWarehouse = product_warehouse::where('product_id', $newProductDetail->base_product_id);
 
                 if ($productWarehouse) {
-
                     $product_warehouse = product_warehouse::where('warehouse_id', $order->warehouse_id)
                         ->where('product_id', $newProductDetail->base_product_id)
                         ->first();
+                    if ($unit && $product_warehouse) {
+                        if ($unit->name == 'Units') {
+                            $inv_qty = $product_warehouse->qte;
+                            $pos_qty = $newProductDetail->qty;
+                            $sub_qty = $inv_qty - $pos_qty;
 
-                        // if ($unit && $product_warehouse) {
-                        //     if ($unit->name == 'Dozen') {
-                        //         $inv_qty1 = $product_warehouse->qte * 12;
-                        //         $pos_qty1 = $newProductDetail->qty;
-                        //         $sub_qty1 = $inv_qty1 - $pos_qty1;
-                        //         $result_in_dozen = $sub_qty1 / 12;
-                        //         $rounded_result_in_dozen = round($result_in_dozen, 3);
-                        
-                        //         // Debugging information
-                        //         dd([
-                        //             'inv_qty1' => $inv_qty1,
-                        //             'pos_qty1' => $pos_qty1,
-                        //             'sub_qty1' => $sub_qty1,
-                        //             'result_in_dozen' => $result_in_dozen,
-                        //             'rounded_result_in_dozen' => $rounded_result_in_dozen,
-                        //         ]);
-                        
-                        //         $product_warehouse->qte = $rounded_result_in_dozen;
-                        //     } else {
-                        //         $inv_qty = $product_warehouse->qte;
-                        //         $pos_qty = $newProductDetail->qty / 1000;
-                        //         $sub_qty = $inv_qty - $pos_qty;
-                        
-                        //         // Debugging information
-                        //         dd([
-                        //             'inv_qty' => $inv_qty,
-                        //             'pos_qty' => $pos_qty,
-                        //             'sub_qty' => $sub_qty,
-                        //         ]);
-                        
-                        //         $product_warehouse->qte = $sub_qty;
-                        //     }
-                        
-                        //     $product_warehouse->save();
-                        // }
-                        
+                            // Round to the nearest whole number
+                            $rounded_qty = round($sub_qty);
 
-                        if ($unit && $product_warehouse) {
-                            if ($unit->name == 'Dozen') {
-                                $inv_qty1 = $product_warehouse->qte * 12;
-                                $pos_qty1 = $newProductDetail->qty;
-                                $sub_qty1 = $inv_qty1 - $pos_qty1;
-                        
-                                // Save the result directly without additional rounding
-                                $product_warehouse->qte = $sub_qty1 / 12;
-                            } else {
-                                $inv_qty = $product_warehouse->qte;
-                                $pos_qty = $newProductDetail->qty / 1000;
-                                $sub_qty = $inv_qty - $pos_qty;
-                        
-                                // Save the result directly without additional rounding
-                                $product_warehouse->qte = $sub_qty;
-                            }
-                        
-                            $product_warehouse->save();
+                            // Format with two decimal places
+                            $formatted_qty = number_format($rounded_qty, 2);
+                            // dd($formatted_qty);
+                            $product_warehouse->qte = $formatted_qty;
                         }
-                        
+                        $inv_qty = $product_warehouse->qte;
+                        $pos_qty = $newProductDetail->qty / 1000;
+                        $sub_qty = $inv_qty - $pos_qty;
+                        $product_warehouse->qte = $sub_qty;
+                        $product_warehouse->save();
+                    }
                 }
             }
         }
@@ -299,9 +261,9 @@ class PosController extends Controller
         }
 
         return $order->id;
-        }, 10);
+        // }, 10);
 
-        return response()->json(['success' => true, 'id' => $item]);
+        // return response()->json(['success' => true, 'id' => $item]);
     }
 
     // public function CreatePOS(Request $request)
@@ -589,10 +551,24 @@ class PosController extends Controller
 
     public function GetProductsAjax(Request $request)
     {
-        $perPage = 6; // Number of products per page
-        $page = $request->input('page', 1); // Get the requested page, default to 1
-        $products = NewProduct::paginate($perPage, ['*'], 'page', $page);
-        return response()->json($products);
+        if ($request->category_id == "all") {
+            $perPage = 6; // Number of products per page
+            $page = $request->input('page', 1); // Get the requested page, default to 1
+            $products = NewProduct::where('warehouse_id', $request->warehouse_id)->paginate($perPage, ['*'], 'page', $page);
+            return response()->json($products);
+        }
+        // dd($request->all());
+        if ($request->category_id) {
+            $perPage = 6; // Number of products per page
+            $page = $request->input('page', 1); // Get the requested page, default to 1
+            $products = NewProduct::where('warehouse_id', $request->warehouse_id)->where('category_id', $request->category_id)->paginate($perPage, ['*'], 'page', $page);
+            return response()->json($products);
+        } else {
+            $perPage = 6; // Number of products per page
+            $page = $request->input('page', 1); // Get the requested page, default to 1
+            $products = NewProduct::where('warehouse_id', $request->warehouse_id)->paginate($perPage, ['*'], 'page', $page);
+            return response()->json($products);
+        }
     }
     //------------ autocomplete_product_pos -----------------\\
 
