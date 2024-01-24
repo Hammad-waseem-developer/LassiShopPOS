@@ -35,6 +35,7 @@ class LeaveTypeController extends Controller
     public function edit($id)
     {
         $leaveType = LeaveType::find($id);
+        
 
         return view('hrm.leavetype.edit', compact('leaveType'));
     }
@@ -60,7 +61,6 @@ class LeaveTypeController extends Controller
         }else{
             return response()->json(['message' => 'Leave type not found'], 404);
         }
-
     }
 
     public function getData()

@@ -69,7 +69,7 @@ class EmployeeController extends Controller
         $offices = Office::get()->all();
         $employee = Employee::findOrFail($id);
 
-        // You can pass the $employee data to the view or perform any other actions here
+
         return view('hrm.employee.edit', compact('employee', 'company', 'departments', 'designations', 'offices'));
     }
     public function update(Request $request, Employee $employee)

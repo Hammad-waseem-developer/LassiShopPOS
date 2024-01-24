@@ -298,7 +298,7 @@ if ($installed === false) {
                 Route::post('/attendance/store', 'AttendanceController@store')->name('attendance.store');
                 Route::get('/attendance/getData', 'AttendanceController@getData')->name('attendance.getData');
                 Route::get('/attendance/edit/{id}', 'AttendanceController@edit')->name('attendance.edit');
-                Route::put('/attendance/update/{id}', 'AttendanceController@update')->name('attendance.update');
+                Route::post('/attendance/update/{id}', 'AttendanceController@update')->name('attendance.update');
 
                 // leaveType Routes
                 Route::get('/leave-type', 'LeaveTypeController@index')->name('leaveType.index');
@@ -309,6 +309,13 @@ if ($installed === false) {
                 Route::post('/hrm/leave-type/delete', 'LeaveTypeController@deleteLeaveType')->name('leave-type.delete');
                 Route::get('/leave-type/getData', 'LeaveTypeController@getData')->name('leaveType.getData');
 
+                // leave Request Routes
+                Route::get('/leave/request','LeaveRequestController@index')->name('leaveRequest.index');
+                Route::get('/leave/request/create','LeaveRequestController@create')->name('leaveRequest.create');
+                Route::post('/leave/request/store','LeaveRequestController@store')->name('leaveRequest.store');
+                Route::get('/leave/request/getData', 'LeaveRequestController@getData')->name('leaveRequest.getData');
+                Route::get('/leave/request/edit/{id}', 'LeaveRequestController@edit')->name('leaveRequest.edit');
+                Route::put('/leave/request/update/{id}', 'LeaveRequestController@update')->name('leaveRequest.update');
 
             });
 

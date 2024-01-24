@@ -12,8 +12,9 @@
     <div class="row" id="section_create_client">
         <div class="col-lg-12 mb-3">
             <div class="card">
-                <form method="POST" action="{{ route('attendance.store') }}" @submit.prevent="Create_Client()">
+                <form method="POST" action="{{ route('attendance.update',$attendance) }}" @submit.prevent="Create_Client()">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-4">
