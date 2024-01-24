@@ -302,6 +302,13 @@ if ($installed === false) {
 
                 // leaveType Routes
                 Route::get('/leave-type', 'LeaveTypeController@index')->name('leaveType.index');
+                Route::get('/leave-type/create', 'LeaveTypeController@create')->name('leaveType.create');
+                Route::post('/leave-type/store', 'LeaveTypeController@store')->name('leaveType.store');
+                Route::get('/leave-type/edit/{id}', 'LeaveTypeController@edit')->name('leaveType.edit');
+                Route::put('/leave-type/update/{id}', 'LeaveTypeController@update')->name('leaveType.update');
+                Route::delete('/hrm/leave-type/delete/{id}', 'LeaveTypeController@delete')->name('leave-type.delete');
+                Route::get('/leave-type/getData', 'LeaveTypeController@getData')->name('leaveType.getData');
+
 
             });
 
