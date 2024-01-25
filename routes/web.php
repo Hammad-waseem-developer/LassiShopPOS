@@ -276,11 +276,15 @@ if ($installed === false) {
                 Route::delete('/designations/AjaxGetData', 'DesignationsController@AjaxGetData')->name('designations.AjaxGetData');
 
                 // OFFICE SHIFT
-                Route::resource('/office', 'OfficeController');
+                // Route::resource('/office', 'OfficeController');
                 Route::get('/office', 'OfficeController@index')->name('office.index');
                 Route::get('/office/create', 'OfficeController@create')->name('office.create');
-                // Route::post('/office/store', 'OfficeController@store')->name('office.store');
-                Route::get('/office/getdata', 'OfficeController@getOffice')->name('office.getData');
+                Route::post('/office/store', 'OfficeController@store')->name('office.store');
+                Route::get('/office/printData', 'OfficeController@printData')->name('office.printData');
+                Route::post('/office/delete', 'OfficeController@delete')->name('office.delete');
+                Route::get('/office/edit/{id}', 'OfficeController@edit')->name('office.edit');
+                Route::put('/office/update/{id}', 'OfficeController@update')->name('office.update');
+
 
                 // Employee Routes
                 Route::get('/employee', 'EmployeeController@index')->name('employee.index');
