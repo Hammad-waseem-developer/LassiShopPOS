@@ -384,7 +384,6 @@
     <script>
         var data;
         var grandTotal = 0;
-        var data;
         var currentPage = 1;
 
         // Define routes and elements
@@ -451,7 +450,8 @@
                     url: "{{ route('search_products') }}",
                     type: "GET",
                     data: {
-                        term: searchTerm
+                        term: searchTerm,
+                        warehouse_id: $("#warehouse_id").val(),
                     },
                     success: function(data) {
                         renderSearchResults(data.products);
@@ -467,6 +467,7 @@
             // Handle change event for warehouse
             $("#warehouse_id").on("change", function() {
                 const warehouseId = $(this).val();
+                warehouse_id = warehouseId;
                 const categoryId = $(".category-item.CategorySelected").data(
                     "id"); // Get the selected category ID
                 ProductByCategory(categoryId, warehouseId, "Warehouse");
@@ -517,8 +518,32 @@
 
             initialize();
 
+            function checkCartItemsAndEnableWarehouseSelect() {
+                const warehouseSelect = $("#warehouse_id");
+
+                // Check if data is defined and has the 'cart' property
+                if (data && data.cart) {
+                    const isCartEmpty = $.isEmptyObject(data.cart);
+
+                    if (isCartEmpty) {
+                        // Cart is empty, enable the warehouse select box
+                        warehouseSelect.prop('disabled', false);
+                        warehouseSelect.css('cursor', 'pointer');
+                    } else {
+                        // Cart is not empty, disable the warehouse select box
+                        warehouseSelect.prop('disabled', true);
+                        warehouseSelect.css('cursor', 'not-allowed');
+                    }
+                } else {
+                    // If data is undefined or doesn't have the 'cart' property, assume cart is empty
+                    warehouseSelect.prop('disabled', false);
+                    warehouseSelect.css('cursor', 'pointer');
+                }
+            }
+
             function initialize() {
                 fetchAndRenderProducts();
+                checkCartItemsAndEnableWarehouseSelect();
 
                 // Handle click events
                 elements.productsBox.on("click", ".product-card", function() {
@@ -530,6 +555,8 @@
                     } = $(this).data();
                     addToCart(id, price, name, img_path);
                     playClickSound();
+                    $("#warehouse_id").attr("disabled", true);
+                    $("#warehouse_id").css("cursor", "not-allowed");
                 });
 
                 $("body").on("click", "#DeleteProduct", function() {
@@ -736,6 +763,7 @@
                     },
                     success: function(responseData) {
                         updateCartBox(responseData); // Call updateCartBox with the response data
+                        checkCartItemsAndEnableWarehouseSelect();
                     },
                     error: function(data) {
                         console.log(data);
@@ -761,6 +789,7 @@
                 }
 
                 updateGrandTotalWithShippingAndTax();
+                checkCartItemsAndEnableWarehouseSelect();
             }
 
             function updateGrandTotal(total, taxNet) {

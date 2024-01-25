@@ -1768,7 +1768,7 @@ class ProductsController extends Controller
         if ($request->term == '') {
             $products = [];
         } else {
-            $products = NewProduct::where('name', 'like', '%' . $request->term . '%')->get();
+            $products = NewProduct::where('name', 'like', '%' . $request->term . '%')->where('warehouse_id', $request->warehouse_id)->get();
         }
         return response()->json(
             [
