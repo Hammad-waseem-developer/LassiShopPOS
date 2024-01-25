@@ -68,8 +68,8 @@
                     class="swal2-confirm btn btn-primary me-5 btn-ok">
                     Yes, delete it
                 </button>
-                <button data-dismiss="modal" aria-label="Close" type="button" class="swal2-cancel btn btn-danger"
-                    style="display: inline-block;">
+                <button data-dismiss="modal" aria-label="Close" id="cancelBtn" type="button"
+                    class="swal2-cancel btn btn-danger" style="display: inline-block;">
                     No, cancel!
                 </button>
             </div>
@@ -146,92 +146,139 @@
 
 <script>
     $(document).ready(function() {
-        var editRoute = '{{ route('leaveRequest.edit', ['id' => ':id']) }}';
+        $('body').on('click', '#delete', function() {
+            var id = $(this).data('id');
+            console.log("Delete fun run " + id);
+            $('#deleteDepartmentId').val(id);
+            $('#deleteModal').modal('show');
+        });
 
-        $('#client_list_table').DataTable({
-            ajax: '{{ route('leaveRequest.getData') }}',
-            processing: true,
-            columns: [{
-                    data: 'id'
-                },
-                {
-                    data: null,
-                    render: function(data, type, full, meta) {
-                        // Concatenate first name and last name
-                        var fullName = full.employee.first_name + ' ' + full.employee.last_name;
+        $('body').on('click', '#cancelBtn', function() {
+            $('#deleteModal').modal('hide');
+        });
 
-                        // Use a badge to display the concatenated name
-                        return '<span class="">' + fullName + '</span>';
-                    }
+
+        $('body').on('click', '#deleteBtn', function() {
+            var id = $('#deleteDepartmentId').val();
+            var departmentId = $('#deleteDepartmentId').val();
+
+            $.ajax({
+                url: '{{ route('leaveRequest.delete') }}',
+                type: 'POST',
+                data: {
+                    id: departmentId,
                 },
-                {
-                    data: 'company.name'
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                {
-                    data: 'department.name'
+                success: function(response) {
+                    // Handle success, show success message or refresh the page
+                    toastr.success(response.message);
+                    getData();
+                    // location.reload(); // Reload the page
+                    $('#deleteModal').modal('hide');
+
                 },
-                {
-                    data: 'leave.type'
-                },
-                {
-                    data: 'start_date'
-                },
-                {
-                    data: 'end_date'
-                },
-                {
-            data: 'status',
-            render: function (data, type, full, meta) {
-                // Convert status to text and use a badge
-                var statusText = '';
-                var badgeClass = '';
-                switch (data) {
-                    case 1:
-                        statusText = 'Approved';
-                        badgeClass = 'badge-success';
-                        break;
-                    case 2:
-                        statusText = 'Pending';
-                        badgeClass = 'badge-warning';
-                        break;
-                    case 0:
-                        statusText = 'Rejected';
-                        badgeClass = 'badge-danger';
-                        break;
-                    default:
-                        statusText = 'Unknown';
-                        badgeClass = 'badge-secondary';
+                error: function(error) {
+                    // Handle error, show error message
+                    console.error('Error deleting department:', error);
                 }
-                return '<span class="badge ' + badgeClass + '">' + statusText + '</span>';
-            }
-        },
-        
-                {
-                    targets: -1,
-                    render: function(data, type, full, meta) {
-                        var dynamicEditRoute = editRoute.replace(':id', full.id);
+            });
+        })
 
-                        return `
+        getData();
+
+        function getData() {
+            $('#client_list_table').DataTable().destroy();
+            var editRoute = '{{ route('leaveRequest.edit', ['id' => ':id']) }}';
+
+            $('#client_list_table').DataTable({
+                ajax: '{{ route('leaveRequest.getData') }}',
+                processing: true,
+                columns: [{
+                        data: 'id'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, full, meta) {
+                            // Concatenate first name and last name
+                            var fullName = full.employee.first_name + ' ' + full.employee
+                                .last_name;
+
+                            // Use a badge to display the concatenated name
+                            return '<span class="">' + fullName + '</span>';
+                        }
+                    },
+                    {
+                        data: 'company.name'
+                    },
+                    {
+                        data: 'department.name'
+                    },
+                    {
+                        data: 'leave.type'
+                    },
+                    {
+                        data: 'start_date'
+                    },
+                    {
+                        data: 'end_date'
+                    },
+                    {
+                        data: 'status',
+                        render: function(data, type, full, meta) {
+                            // Convert status to text and use a badge
+                            var statusText = '';
+                            var badgeClass = '';
+                            switch (data) {
+                                case 1:
+                                    statusText = 'Approved';
+                                    badgeClass = 'badge-success';
+                                    break;
+                                case 2:
+                                    statusText = 'Pending';
+                                    badgeClass = 'badge-warning';
+                                    break;
+                                case 0:
+                                    statusText = 'Rejected';
+                                    badgeClass = 'badge-danger';
+                                    break;
+                                default:
+                                    statusText = 'Unknown';
+                                    badgeClass = 'badge-secondary';
+                            }
+                            return '<span class="badge ' + badgeClass + '">' + statusText +
+                                '</span>';
+                        }
+                    },
+
+                    {
+                        targets: -1,
+                        render: function(data, type, full, meta) {
+                            var dynamicEditRoute = editRoute.replace(':id', full.id);
+
+                            return `
                     <div class="dropdown">
                         <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                             id="dropdownMenuButton" type="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Action</button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="${dynamicEditRoute}">
-                                <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
+                                <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Leave Request
                             </a>
                             <a class="dropdown-item delete cursor-pointer"
-                                onclick="deleteEmployeeConfirmation(${full.id})">
-                                <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
+                            data-id="${full.id}" id="delete">
+                                <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Leave Request
                             </a>
                         </div>
                     </div>
                 `;
-            
+
+                        }
                     }
-                }
-            ]
-        });
+                ]
+            });
+        }
     });
 
     // function deleteEmployeeConfirmation(id) {

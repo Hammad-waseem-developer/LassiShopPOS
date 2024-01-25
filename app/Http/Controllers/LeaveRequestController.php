@@ -170,4 +170,18 @@ class LeaveRequestController extends Controller
         $leaveRequest = LeaveRequest::with(['employee', 'company', 'department', 'leave'])->get();
         return response()->json(['data' => $leaveRequest]);
     }
+
+
+    public function deleteRequest(Request $request)
+    {
+        // dd($request->all());
+        $leaveRequest = LeaveRequest::findOrFail($request->id);
+    
+        if ($leaveRequest) {
+            $leaveRequest->delete();
+            return response()->json(['message' => 'Holiday deleted successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Holiday not found'], 404);
+        }
+    }
 }

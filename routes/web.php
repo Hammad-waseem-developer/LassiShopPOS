@@ -316,7 +316,7 @@ if ($installed === false) {
                 Route::get('/leave/request/getData', 'LeaveRequestController@getData')->name('leaveRequest.getData');
                 Route::get('/leave/request/edit/{id}', 'LeaveRequestController@edit')->name('leaveRequest.edit');
                 Route::put('/leave/request/update/{id}', 'LeaveRequestController@update')->name('leaveRequest.update');
-
+                Route::post('/leave/request/delete', 'LeaveRequestController@deleteRequest')->name('leaveRequest.delete');
 
                 // holidays Routes
                 Route::get('/holidays','HolidayController@index')->name('holiday.index');
