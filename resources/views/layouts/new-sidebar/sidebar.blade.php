@@ -169,7 +169,7 @@ $setting = DB::table('settings')
                             </a>
                         </li>
                         <li class="">
-                            <a href="#" class="nav-item child-nav ">
+                            <a href="{{route('holiday.index')}}" class="nav-item child-nav ">
                                 <span class="prefix rounded-circle"></span>
                                 <span class="item-name">Holidays</span>
                             </a>

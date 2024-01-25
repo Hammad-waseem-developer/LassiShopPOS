@@ -317,6 +317,14 @@ if ($installed === false) {
                 Route::get('/leave/request/edit/{id}', 'LeaveRequestController@edit')->name('leaveRequest.edit');
                 Route::put('/leave/request/update/{id}', 'LeaveRequestController@update')->name('leaveRequest.update');
 
+
+                // holidays Routes
+                Route::get('/holidays','HolidayController@index')->name('holiday.index');
+                Route::get('/holidays/create','HolidayController@create')->name('holiday.create');
+                Route::post('/holidays/store','HolidayController@store')->name('holiday.store');
+                Route::get('/holidays/getData', 'HolidayController@getData')->name('holiday.getData');
+                Route::get('/holidays/edit/{id}', 'HolidayController@edit')->name('holiday.edit');
+
             });
 
             Route::resource('people/clients', 'ClientController');
