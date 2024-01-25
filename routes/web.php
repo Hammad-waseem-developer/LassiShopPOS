@@ -324,6 +324,7 @@ if ($installed === false) {
                 Route::post('/holidays/store','HolidayController@store')->name('holiday.store');
                 Route::get('/holidays/getData', 'HolidayController@getData')->name('holiday.getData');
                 Route::get('/holidays/edit/{id}', 'HolidayController@edit')->name('holiday.edit');
+                Route::put('/holidays/update/{id}', 'HolidayController@update')->name('holiday.update');
 
             });
 

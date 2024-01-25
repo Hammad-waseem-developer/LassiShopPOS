@@ -17,7 +17,7 @@ class HolidayController extends Controller
      */
     public function index()
     {
-      return view('hrm.holiday.index');
+        return view('hrm.holiday.index');
     }
 
     /**
@@ -28,7 +28,7 @@ class HolidayController extends Controller
     public function create()
     {
         $company = Company::get()->all();
-        return view('hrm.holiday.create' , compact('company'));
+        return view('hrm.holiday.create', compact('company'));
     }
 
     public function store(Request $request)
@@ -58,39 +58,51 @@ class HolidayController extends Controller
 
     public function getData()
     {
-        $leaveRequest = Holiday::with([ 'company'])->get();
+        $leaveRequest = Holiday::with(['company'])->get();
         return response()->json(['data' => $leaveRequest]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Holiday  $holiday
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        $holiday = Holiday::with(['company'])->find($id);
-    
+        $holiday = Holiday::get()->find($id);
+        $company = Company::get()->all();
         if (!$holiday) {
             // Handle the case where the holiday is not found, for example, redirect to index page
             return redirect()->route('holiday.index')->with('error', 'Holiday not found');
         }
-    
-        return view('hrm.holiday.edit', compact('holiday'));
-    }
-    
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Holiday  $holiday
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Holiday $holiday)
+        return view('hrm.holiday.edit', compact('holiday', 'company'));
+    }
+
+
+    public function update(Request $request, $id)
     {
-        //
+        $holiday = Holiday::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'company_id' => 'required|exists:company,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'title' => 'required|string|max:255',
+            'status' => 'required|in:0,1,2',
+            'details' => 'required|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors([$validator->errors()->first()])->withInput();
+        }
+
+        $holiday->update([
+            'company_id' => $request->input('company_id'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'name' => $request->input('title'),
+            'status' => $request->input('status'),
+            'details' => $request->input('details'),
+        ]);
+
+        return redirect()->route('holiday.index')->with('success', 'Holiday updated successfully');
     }
 
     /**
