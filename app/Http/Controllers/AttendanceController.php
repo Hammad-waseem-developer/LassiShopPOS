@@ -96,7 +96,16 @@ class AttendanceController extends Controller
 
     return redirect()->route('attendance.index')->with('success', 'Attendance record updated successfully');
 }
+public function delete(Request $request)
+{
+    $attendance = Attendance::findOrFail($request->id);
 
-     
+    if ($attendance) {
+        $attendance->delete();
+        return response()->json(['message' => 'Holiday deleted successfully'], 200);
+    } else {
+        return response()->json(['message' => 'Holiday not found'], 404);
+    }
+}
 
 }

@@ -46,9 +46,38 @@
             </div>
         </div>
     </div>
-    {{-- Delete Modal --}}
-    {{-- @component('hrm.deletemodal.delete') 
-    @endcomponent --}}
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div style="background-color: white; border:0px;" class="modal-content">
+                <div style="display: flex; flex-direction: column; align-items: center; padding-top: 20px;"
+                    class="modal-body">
+                    <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
+                    <h2
+                        style="color: #595959; font-size: 30px; font-weight: 600; text-transform: none; margin: 0; padding: 0; line-height: 60px; display: block;">
+                        Are you sure?
+                    </h2>
+                    <div class="swal2-content"
+                        style="font-size: 18px; text-align: center; font-weight: 300; position: relative; float: none; margin: 0; padding: 0; line-height: normal; color: #545454;">
+                        You won't be able to revert this!
+                    </div>
+                </div>
+                <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
+                    <button data-dismiss="modal" aria-label="Close" type="button" id="deleteBtn"
+                        class="swal2-confirm btn btn-primary me-5 btn-ok">
+                        Yes, delete it
+                    </button>
+                    <button data-dismiss="modal" aria-label="Close" id="cancelBtn" type="button"
+                        class="swal2-cancel btn btn-danger" style="display: inline-block;">
+                        No, cancel!
+                    </button>
+                </div>
+                <input type="hidden" id="deleteDepartmentId" value="">
+            </div>
+        </div>
+    </div>
+    <!-- Modal End-->
 </div>
 @endsection
 @section('page-js')
@@ -72,105 +101,111 @@
 <script>
     $(document).ready(function() {
         var editRoute = '{{ route('attendance.edit', ['id' => ':id']) }}';
+        $('body').on('click', '#delete', function() {
+            var id = $(this).data('id');
+            console.log("Delete fun run " + id);
+            $('#deleteDepartmentId').val(id);
+            $('#deleteModal').modal('show');
+        });
 
-        $('#client_list_table').DataTable({
-            ajax: '{{ route('attendance.getData') }}',
-            processing: true,
-            columns: [{
-                    data: 'id'
-                },
-                {
-                    data: null,
-                    render: function(data, type, full, meta) {
-                        // Assuming 'employee' is the relationship
-                        return full.employee.first_name + ' ' + full.employee.last_name;
-                    }
-                },
-                {
-                    data: 'company.name'
-                },
-                {
-                    data: 'office.name'
-                },
-                {
-                    data: 'clock_in'
-                },
-                {
-                    data: 'clock_out'
-                }, 
-                {
-                    data: 'date'
-                },
+        $('body').on('click', '#cancelBtn', function() {
+            $('#deleteModal').modal('hide');
+        });
 
-                {
-                    data: 'work_duration',
-                    render: function(data) {
-                        return data !== null ? data : '0';
-                    }
-                },
-                {
-                    targets: -1,
-                    render: function(data, type, full, meta) {
-                        var dynamicEditRoute = editRoute.replace(':id', full.id);
 
-                        return `
+        $('body').on('click', '#deleteBtn', function() {
+            var id = $('#deleteDepartmentId').val();
+            var departmentId = $('#deleteDepartmentId').val();
+
+            $.ajax({
+                url: '{{ route('attendance.delete') }}',
+                type: 'POST',
+                data: {
+                    id: departmentId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    // Handle success, show success message or refresh the page
+                    toastr.success(response.message);
+                    getData();
+                    // location.reload(); // Reload the page
+                    $('#deleteModal').modal('hide');
+
+                },
+                error: function(error) {
+                    // Handle error, show error message
+                    console.error('Error deleting department:', error);
+                }
+            });
+        })
+
+        getData();
+
+        function getData() {
+            $('#client_list_table').DataTable().destroy();
+            $('#client_list_table').DataTable({
+                ajax: '{{ route('attendance.getData') }}',
+                processing: true,
+                columns: [{
+                        data: 'id'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, full, meta) {
+                            // Assuming 'employee' is the relationship
+                            return full.employee.first_name + ' ' + full.employee.last_name;
+                        }
+                    },
+                    {
+                        data: 'company.name'
+                    },
+                    {
+                        data: 'office.name'
+                    },
+                    {
+                        data: 'clock_in'
+                    },
+                    {
+                        data: 'clock_out'
+                    },
+                    {
+                        data: 'date'
+                    },
+
+                    {
+                        data: 'work_duration',
+                        render: function(data) {
+                            return data !== null ? data : '0';
+                        }
+                    },
+                    {
+                        targets: -1,
+                        render: function(data, type, full, meta) {
+                            var dynamicEditRoute = editRoute.replace(':id', full.id);
+
+                            return `
                             <div class="dropdown">
                                 <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                                     id="dropdownMenuButton" type="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">Action</button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="${dynamicEditRoute}">
-                                        <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
+                                        <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Attendance
                                     </a>
                                     <a class="dropdown-item delete cursor-pointer"
-                                        onclick="deleteEmployeeConfirmation(${full.id})">
-                                        <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
+                                    data-id="${full.id}" id="delete">
+                                        <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Attendance
                                     </a>
                                 </div>
                             </div>
                         `;
+                        }
                     }
-                }
-            ]
-        });
-    });
-</script>
-{{-- <script>
-    $(document).ready(function () {
-        getData();
-
-        function getData() {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('office.getData') }}",
-                dataType: "json",
-                success: function (response) {
-                    console.log('Data received from server:', response);
-                    if (response && response.length > 0) {
-                        // Clear the existing table data
-                        $('#tbody').empty();
-
-                        response.forEach(element => {
-                            $("#tbody").append(`
-                                <tr>
-                                    <td>${element.id}</td>
-                                    <td>${element.name}</td>
-                                    <td>${element.clock_in}</td>
-                                    <td>${element.clock_out}</td>
-                                </tr>
-                            `);
-                        });
-
-                        console.log('Data appended to table:', response);
-                    } else {
-                        console.error('Empty or invalid response:', response);
-                    }
-                },
-                error: function (error) {
-                    console.error('Error fetching data:', error);
-                }
+                ]
             });
         }
     });
-</script> --}}
+</script>
 @endsection
