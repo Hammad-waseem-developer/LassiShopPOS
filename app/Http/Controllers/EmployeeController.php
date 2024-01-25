@@ -94,9 +94,9 @@ public function deleteEmployee(Request $request)
 
     if ($employee) {
         $employee->delete();
-        return response()->json(['message' => 'Holiday deleted successfully'], 200);
+        return response()->json(['message' => 'Employee deleted successfully'], 200);
     } else {
-        return response()->json(['message' => 'Holiday not found'], 404);
+        return response()->json(['message' => 'Employee not found'], 404);
     }
 }
 }

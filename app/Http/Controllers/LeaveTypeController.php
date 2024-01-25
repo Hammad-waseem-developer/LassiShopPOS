@@ -57,9 +57,9 @@ class LeaveTypeController extends Controller
         $leaveType = LeaveType::findOrFail($request->id);
         if($leaveType){
             $leaveType->delete();
-            return response()->json(['message' => 'Leave type deleted successfully'], 200);
+            return response()->json(['message' => 'Leave Type deleted successfully'], 200);
         }else{
-            return response()->json(['message' => 'Leave type not found'], 404);
+            return response()->json(['message' => 'Leave Type not found'], 404);
         }
     }
 

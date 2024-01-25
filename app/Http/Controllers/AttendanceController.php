@@ -102,9 +102,9 @@ public function delete(Request $request)
 
     if ($attendance) {
         $attendance->delete();
-        return response()->json(['message' => 'Holiday deleted successfully'], 200);
+        return response()->json(['message' => 'Attendance deleted successfully'], 200);
     } else {
-        return response()->json(['message' => 'Holiday not found'], 404);
+        return response()->json(['message' => 'Attendance not found'], 404);
     }
 }
 
