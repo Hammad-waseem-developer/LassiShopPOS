@@ -7,32 +7,13 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    // DepartmentController.php
-
-
-
-    public function getData(Request $request)
+   
+    public function getData()
     {
-        $departments = Department::all();
-        if ($departments->count() > 0) {
-            return response()->json(
-                [
-                    'departments' => $departments,
-                ]
-            );
-        }
-    }
-
-    public function AjaxGetData(Request $request)
-    {
-        $departments = Department::all();
-        if ($departments->count() > 0) {
-            return response()->json(
-                [
-                    'departments' => $departments,
-                ]
-            );
-        }
+        $department = Department::get()->all();
+     
+        return response()->json($department);
+        
     }
 
     public function index()
@@ -62,9 +43,9 @@ class DepartmentController extends Controller
     }
 
 
-    public function edit(Department $department)
-    {
-        //  dd($department);
+    public function edit($id)
+    { 
+        $department = Department::where('id', $id)->find($id);
         return view('hrm.departments.edit', compact('department'));
     }
 
@@ -83,32 +64,23 @@ class DepartmentController extends Controller
         return redirect()->route('department.index')->with('success', 'Department updated successfully!');
     }
 
-    // In your controller method
-
-
-    // DepartmentController.php
-
-    public function delete($id)
+    public function delete(Request $request)
     {
-        try {
-            $department = Department::findOrFail($id);
+        $department = Department::findOrFail($request->id);
+    
+        if ($department) {
             $department->delete();
-
-            return response()->json(['message' => 'Department deleted successfully']);
-        } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            \Log::error('Error deleting department: ' . $e->getMessage());
-
-            // Return an error response
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            return response()->json(['message' => 'Department deleted successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Department not found'], 404);
         }
     }
 
-    public function show($id)
-    {
-        $department = Department::findOrFail($id);
-        return view('hrm.departments.show', compact('department'));
+    // public function show($id)
+    // {
+    //     $department = Department::findOrFail($id);
+    //     return view('hrm.departments.show', compact('department'));
 
-    }
+    // }
 
 }

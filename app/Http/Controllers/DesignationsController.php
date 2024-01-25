@@ -60,27 +60,6 @@ class DesignationsController extends Controller
 
     return redirect()->route('designations.index')->with('success', 'Designation updated successfully!');
 }
-// public function show()
-// {
-//     $designations = Designation::with('department')->get();
-//     return view('hrm.desig.index', compact('designations'));
-// }
-
-// public function getData(Request $request)
-// {
-//     if ($request->ajax()) {
-//         $data = Designation::select(['id', 'name', 'dept_head']);
-
-//         return DataTables::of($data)
-//             ->addColumn('action', function ($row) {
-//                 // You can customize the action column as needed
-//                 return '<a href="' . route('designations.edit', $row->id) . '" class="btn btn-primary">Edit</a>';
-//             })
-//             ->make(true);
-//     }
-
-//     return abort(403, 'Unauthorized');
-// }
 
 public function getData()
 {

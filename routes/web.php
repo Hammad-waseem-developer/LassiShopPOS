@@ -254,14 +254,13 @@ if ($installed === false) {
             // HRM routes
             Route::prefix('hrm')->group(function () {
                 // departements
-                Route::resource('departments', 'DepartmentController');
                 Route::get('/departments', 'DepartmentController@index')->name('department.index');
                 Route::get('departments/create', 'DepartmentController@create')->name('department.create');
                 Route::post('departments/store', 'DepartmentController@store')->name('department.store');
-                Route::get('/departments/{department}/edit', 'DepartmentController@edit')->name('department.edit');
+                Route::get('/departments/edit/{id}', 'DepartmentController@edit')->name('department.edit');
                 Route::put('/departments/{department}', 'DepartmentController@update')->name('department.update');
-                Route::delete('/departments/{department}', 'DepartmentController@delete')->name('department.delete');
-                Route::delete('/departments/AjaxGetData', 'DepartmentController@AjaxGetData')->name('department.AjaxGetData');
+                Route::get('/departments/getData', 'DepartmentController@getData')->name('department.getData');
+                Route::post('/departments/delete', 'DepartmentController@delete')->name('department.delete');
 
 
                 // designations

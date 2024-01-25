@@ -37,52 +37,7 @@
                             </tr>
                         </thead>
                         <tbody id="tbody">
-                            @if (count($departments) > 0)
-                                @foreach ($departments as $department)
-                                    <tr>
-                                        <td>{{ $department->id }}</td>
-                                        <td>{{ $department->name }}</td>
-                                        <td>{{ $department->dept_head }}</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-outline-info btn-rounded dropdown-toggle"
-                                                    id="dropdownMenuButton" type="button" data-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false"
-                                                    fdprocessedid="d4xzwx">Action</button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                    x-placement="top-start"
-                                                    style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -88px, 0px);">
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('department.edit', $department) }}"><i
-                                                            class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit
-                                                        Departments</a>
-
-                                                    {{-- <a data-toggle="modal" data-target="#deleteModal"
-                                                    class="dropdown-item delete cursor-pointer" data-id="{{ $department->id }}"> <i
-                                                        class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
-                                                        Delete Departments</a> --}}
-
-                                                    <a data-toggle="modal" data-target="#deleteModal"
-                                                        class="dropdown-item delete cursor-pointer"
-                                                        onclick="deleteDepartment({{ $department->id }})"
-                                                        data-id="{{ $department->id }}">
-                                                        <i
-                                                            class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete
-                                                        Departments
-                                                    </a>
-
-
-
-                                                    {{-- <a data-toggle="modal" data-target="#deleteModal" class="dropdown-item delete cursor-pointer"
-                                                    data-id="{{ $department->id }}"> <i
-                                                        class="nav-icon i-Close-Window font-weight-bold mr-2"></i>
-                                                    Delete Departments</a> --}}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                        
                         </tbody>
                     </table>
                 </div>
@@ -92,55 +47,38 @@
     {{-- Delete Modal --}}
     {{-- @component('hrm.deletemodal.delete') 
     @endcomponent --}}
-    <!-- Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div style="background-color: white; border:0px;" class="modal-content">
-
-                <div style="display: flex;
-        flex-direction: column;
-        align-items: center; padding-top: 20px;"
-                    class="modal-body">
-                    <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
-                    <h2
-                        style="color: #595959;
-            font-size: 30px;
-            font-weight: 600;
-            text-transform: none;
-            margin: 0;
-            padding: 0;
-            line-height: 60px;
-            display: block;">
-                        Are you sure ?</h2>
-                    <div class="swal2-content"
-                        style="font-size: 18px;
-            text-align: center;
-            font-weight: 300;
-            position: relative;
-            float: none;
-            margin: 0;
-            padding: 0;
-            line-height: normal;
-            color: #545454;">
-                        You wont be able to revert this !</div>
-
-                </div>
-                <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
-                    @if ($departments->count() == 0)
-                    @else
-                        <button data-dismiss="modal" aria-label="Close" type="button" onclick="Delete()" class="swal2-confirm btn btn-primary me-5 btn-ok"
-                            id="{{ $department->id }}">Yes, delete
-                            it</button>
-                        <button data-dismiss="modal" aria-label="Close" type="button"
-                            class="swal2-cancel btn btn-danger" @endif
-                            style="display: inline-block;">No, cancel!</button>
-                </div>
-                <input type="hidden" id="deleteDepartmentId" value="">
-            </div>
-        </div>
-    </div>
-    <!-- Modal End-->
+   <!-- Modal -->
+   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+   aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+       <div style="background-color: white; border:0px;" class="modal-content">
+           <div style="display: flex; flex-direction: column; align-items: center; padding-top: 20px;"
+               class="modal-body">
+               <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
+               <h2
+                   style="color: #595959; font-size: 30px; font-weight: 600; text-transform: none; margin: 0; padding: 0; line-height: 60px; display: block;">
+                   Are you sure?
+               </h2>
+               <div class="swal2-content"
+                   style="font-size: 18px; text-align: center; font-weight: 300; position: relative; float: none; margin: 0; padding: 0; line-height: normal; color: #545454;">
+                   You won't be able to revert this!
+               </div>
+           </div>
+           <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
+               <button data-dismiss="modal" aria-label="Close" type="button" id="deleteBtn"
+                   class="swal2-confirm btn btn-primary me-5 btn-ok">
+                   Yes, delete it
+               </button>
+               <button data-dismiss="modal" aria-label="Close" id="cancelBtn" type="button"
+                   class="swal2-cancel btn btn-danger" style="display: inline-block;">
+                   No, cancel!
+               </button>
+           </div>
+           <input type="hidden" id="deleteDepartmentId" value="">
+       </div>
+   </div>
+</div>
+<!-- Modal End-->
 </div>
 @endsection
 @section('page-js')
@@ -153,50 +91,101 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
-
-
-<script type="text/javascript">
-    $(function() {
-        "use strict";
-        $(document).ready(function() {
-            flatpickr("#datetimepicker", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i"
-            });
-
-        });
-    });
-</script>
 <script>
-   
+    $(document).ready(function() {
+        getData();
 
-    function deleteDepartment(id) {
-        console.log(id);
-        $("#deleteDepartmentId").val(id);
-    }
-    // deete js code
-    function Delete() {
-    var id = $("#deleteDepartmentId").val();
-    console.log(id);
+        $('body').on('click', '#delete', function() {
+            var id = $(this).data('id');
+            $('#deleteDepartmentId').val(id);
+            $('#deleteModal').modal('show');
+        });
 
-    $.ajax({
-        url: '{{ route('department.delete', ['department' => ':id']) }}'.replace(':id', id),
-        type: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            // Hide the modal using Bootstrap's modal('hide') method
+        $('body').on('click', '#cancelBtn', function() {
             $('#deleteModal').modal('hide');
-            $('#deleteModal').remove();
-        },
-        error: function(error) {
-            // Handle errors
-            console.log(error);
-            // Display an error message to the user
+        })
+
+        $('body').on('click', '#deleteBtn', function() {
+            var id = $('#deleteDepartmentId').val();
+            var departmentId = $('#deleteDepartmentId').val();
+
+            $.ajax({
+                url: '{{ route('department.delete') }}', // Corrected the route name
+                type: 'POST',
+                data: {
+                    id: departmentId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    // Handle success, show success message or refresh the page
+                    toastr.success(response.message);
+                    $('#deleteModal').modal('hide');
+                    getData();
+                },
+                error: function(error) {
+                    // Handle error, show error message
+                    console.error('Error deleting department:', error);
+                }
+            });
+        });
+
+
+        function getData() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('department.getData') }}",
+                dataType: "json",
+                success: function(response) {
+                    $("#tbody").empty();
+                    if (response && response.length > 0) {
+                        response.forEach(element => {
+                            // Check if the required properties exist
+                            $('#tbody').append(`
+                                <tr>
+                                    <td>${element.id}</td>
+                                    <td>${element.name}</td>
+                                    <td>${element.dept_head}</td>
+
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-info btn-rounded dropdown-toggle"
+                                                id="dropdownMenuButton" type="button" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">Action</button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                x-placement="top-start"
+                                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -88px, 0px);">
+                                                <a class="dropdown-item"
+                                                    href="{{ url('/hrm/departments/edit') }}/${element.id}"
+                                                    data-id="${element.id}">
+                                                    <i class="nav-icon i-Edit font-weight-bold mr-2"></i>Edit Department
+                                                </a>
+
+                                                <a class="dropdown-item delete cursor-pointer"
+                                                data-id="${element.id}" id="delete">
+                                                    <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Department
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $('#tbody').append(`
+                        <tr>
+                            <td style="text-align: center;" colspan="12">No data available</td>
+                        </tr>
+                    `);
+
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
         }
     });
-}
-
-
 </script>
+@endsection
