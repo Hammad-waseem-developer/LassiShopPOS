@@ -14,7 +14,7 @@ class DesignationsController extends Controller
     public function index()
     {
       $designations = Designation::with('department')->first();
-        return view('hrm.desig.index', compact('designations'));
+        return view('hrm.desig.index1', compact('designations'));
     }
     public function create()
     {
@@ -39,8 +39,8 @@ class DesignationsController extends Controller
         return redirect()->route('designations.index')->with('success', 'Designation created successfully!');
     }
 
-    public function edit($designations){
-        $designations = Designation::with('department')->find($designations);
+    public function edit($id){
+        $designations = Designation::with('department')->find($id);
         $departments = Department::all();
         return view("hrm.desig.edit",compact("designations","departments"));
     }
@@ -90,19 +90,15 @@ public function getData()
     
 }
 
-public function delete($id)
-{
-    try {
-        $designation = Designation::findOrFail($id);
-        $designation->delete();
-
-        return response()->json(['message' => 'Designation deleted successfully']);
-    } catch (\Exception $e) {
-        // Log the error for debugging purposes
-        Log::error('Error deleting designation: ' . $e->getMessage());
-
-        // Return an error response
-        return response()->json(['error' => 'Internal Server Error'], 500);
+public function delete(Request $request)
+    {
+        $office = Designation::findOrFail($request->id);
+    
+        if ($office) {
+            $office->delete();
+            return response()->json(['message' => 'Designation deleted successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Designation not found'], 404);
+        }
     }
-}
 }

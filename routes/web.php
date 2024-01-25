@@ -268,12 +268,13 @@ if ($installed === false) {
                 Route::get('/designations', 'DesignationsController@index')->name('designations.index');
                 Route::get('/designations/create', 'DesignationsController@create')->name('designations.create');
                 Route::post('/designations/store', 'DesignationsController@store')->name('designations.store');
-                Route::get('/designations/{designation}/edit', 'DesignationsController@edit')->name('designations.edit');
+                Route::get('/designations/edit/{id}', 'DesignationsController@edit')->name('designations.edit');
                 Route::put('/designations/{designation}', 'DesignationsController@update')->name('designations.update');
                 Route::get('/designations/getData', 'DesignationsController@getData')->name('designations.getData');
+                Route::post('/designations/delete', 'DesignationsController@delete')->name('designations.delete');
                 // Route::get('/designations', 'DesignationsController@show')->name('designations.show')
-                Route::delete('/designations/{designation}', 'DesignationsController@delete')->name('designations.delete');
-                Route::delete('/designations/AjaxGetData', 'DesignationsController@AjaxGetData')->name('designations.AjaxGetData');
+                // Route::delete('/designations/{designation}', 'DesignationsController@delete')->name('designations.delete');
+                // Route::delete('/designations/AjaxGetData', 'DesignationsController@AjaxGetData')->name('designations.AjaxGetData');
 
                 // OFFICE SHIFT
                 // Route::resource('/office', 'OfficeController');
