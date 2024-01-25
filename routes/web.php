@@ -325,7 +325,7 @@ if ($installed === false) {
                 Route::get('/holidays/getData', 'HolidayController@getData')->name('holiday.getData');
                 Route::get('/holidays/edit/{id}', 'HolidayController@edit')->name('holiday.edit');
                 Route::put('/holidays/update/{id}', 'HolidayController@update')->name('holiday.update');
-
+                Route::post('/holidays/delete', 'HolidayController@deleteholiday')->name('holiday.delete');
             });
 
             Route::resource('people/clients', 'ClientController');

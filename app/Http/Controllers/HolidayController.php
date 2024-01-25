@@ -105,14 +105,15 @@ class HolidayController extends Controller
         return redirect()->route('holiday.index')->with('success', 'Holiday updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Holiday  $holiday
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Holiday $holiday)
+    public function deleteholiday(Request $request)
     {
-        //
+        $holiday = Holiday::findOrFail($request->id);
+    
+        if ($holiday) {
+            $holiday->delete();
+            return response()->json(['message' => 'Holiday deleted successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Holiday not found'], 404);
+        }
     }
 }

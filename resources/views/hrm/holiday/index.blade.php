@@ -65,8 +65,8 @@
                     class="swal2-confirm btn btn-primary me-5 btn-ok">
                     Yes, delete it
                 </button>
-                <button data-dismiss="modal" aria-label="Close" type="button" class="swal2-cancel btn btn-danger"
-                    style="display: inline-block;">
+                <button data-dismiss="modal" aria-label="Close" id="cancelBtn" type="button"
+                    class="swal2-cancel btn btn-danger" style="display: inline-block;">
                     No, cancel!
                 </button>
             </div>
@@ -95,84 +95,130 @@
     $(document).ready(function() {
         var editRoute = '{{ route('holiday.edit', ['id' => ':id']) }}';
 
-        $('#client_list_table').DataTable({
-            ajax: '{{ route('holiday.getData') }}',
-            processing: true,
-            columns: [{
-                    data: 'id'
-                },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'company.name'
-                },
-                {
-                    data: 'start_date'
-                },
-                {
-                    data: 'end_date'
-                },
-                {
-            data: 'status',
-            render: function (data, type, full, meta) {
-                // Convert status to text and use a badge
-                var statusText = '';
-                var badgeClass = '';
-                switch (data) {
-                    case 1:
-                        statusText = 'Approved';
-                        badgeClass = 'badge-success';
-                        break;
-                    case 2:
-                        statusText = 'Pending';
-                        badgeClass = 'badge-warning';
-                        break;
-                    case 0:
-                        statusText = 'Rejected';
-                        badgeClass = 'badge-danger';
-                        break;
-                    default:
-                        statusText = 'Unknown';
-                        badgeClass = 'badge-secondary';
-                }
-                return '<span class="badge ' + badgeClass + '">' + statusText + '</span>';
-            }
-        },
-        
-                {
-                    targets: -1,
-                    render: function(data, type, full, meta) {
-                        var dynamicEditRoute = editRoute.replace(':id', full.id);
+        $('body').on('click', '#delete', function() {
+            var id = $(this).data('id');
+            console.log("Delete fun run " + id);
+            $('#deleteDepartmentId').val(id);
+            $('#deleteModal').modal('show');
+        });
 
-                        return `
+        $('body').on('click', '#cancelBtn', function() {
+            $('#deleteModal').modal('hide');
+        });
+
+
+        $('body').on('click', '#deleteBtn', function() {
+            var id = $('#deleteDepartmentId').val();
+            var departmentId = $('#deleteDepartmentId').val();
+
+            $.ajax({
+                url: '{{ route('holiday.delete') }}',
+                type: 'POST',
+                data: {
+                    id: departmentId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    // Handle success, show success message or refresh the page
+                    toastr.success(response.message);
+                    getData();
+                    // location.reload(); // Reload the page
+                    $('#deleteModal').modal('hide');
+
+                },
+                error: function(error) {
+                    // Handle error, show error message
+                    console.error('Error deleting department:', error);
+                }
+            });
+        })
+
+        getData();
+
+        function getData() {
+            $('#client_list_table').DataTable().destroy();
+            $('#client_list_table').DataTable({
+                ajax: '{{ route('holiday.getData') }}',
+                processing: true,
+                columns: [{
+                        data: 'id'
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'company.name'
+                    },
+                    {
+                        data: 'start_date'
+                    },
+                    {
+                        data: 'end_date'
+                    },
+                    {
+                        data: 'status',
+                        render: function(data, type, full, meta) {
+                            // Convert status to text and use a badge
+                            var statusText = '';
+                            var badgeClass = '';
+                            switch (data) {
+                                case 1:
+                                    statusText = 'Approved';
+                                    badgeClass = 'badge-success';
+                                    break;
+                                case 2:
+                                    statusText = 'Pending';
+                                    badgeClass = 'badge-warning';
+                                    break;
+                                case 0:
+                                    statusText = 'Rejected';
+                                    badgeClass = 'badge-danger';
+                                    break;
+                                default:
+                                    statusText = 'Unknown';
+                                    badgeClass = 'badge-secondary';
+                            }
+                            return '<span class="badge ' + badgeClass + '">' + statusText +
+                                '</span>';
+                        }
+                    },
+
+                    {
+                        targets: -1,
+                        render: function(data, type, full, meta) {
+                            var dynamicEditRoute = editRoute.replace(':id', full.id);
+
+                            return `
                     <div class="dropdown">
                         <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                             id="dropdownMenuButton" type="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Action</button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="${dynamicEditRoute}">
-                                <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
+                                <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Holiday
                             </a>
                             <a class="dropdown-item delete cursor-pointer"
-                                onclick="deleteEmployeeConfirmation(${full.id})">
-                                <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
+                              data-id="${full.id}" id="delete">
+                                <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Holiday
                             </a>
                         </div>
                     </div>
                 `;
-            
+
+                        }
                     }
-                }
-            ]
-        });
+                ]
+            });
+        }
     });
 
-    // function deleteEmployeeConfirmation(id) {
-    //     // Set the employee ID in the hidden input
-    //     $("#deleteEmployeeId").val(id);
-    //     // Open the delete confirmation modal
-    //     $('#deleteModal').modal('show');
-    // }
+    function deleteEmployeeConfirmation(id) {
+        // Set the employee ID in the hidden input
+        $("#deleteEmployeeId").val(id);
+        // Open the delete confirmation modal
+        $('#deleteModal').modal('show');
+    }
 </script>
 @endsection
