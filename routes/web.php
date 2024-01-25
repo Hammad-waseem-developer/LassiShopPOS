@@ -289,7 +289,8 @@ if ($installed === false) {
                 Route::get('/employee/getData', 'EmployeeController@getData')->name('employees.getData');
                 Route::get('/employee/edit/{id}', 'EmployeeController@edit')->name('employees.edit');
                 Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
-                // Route::delete('/employee/delete/{id}', 'EmployeeController@deleteEmployee')->name('employee.delete');
+                Route::post('/employee/delete', 'EmployeeController@deleteEmployee')->name('employees.delete');
+    
                 // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
                 
                 // Attendance Routes

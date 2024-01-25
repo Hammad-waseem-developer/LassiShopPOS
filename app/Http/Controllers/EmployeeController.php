@@ -85,18 +85,18 @@ class EmployeeController extends Controller
     ]);
 
     $employee->update($validatedData);
-    return redirect()->back()->with('success', 'Employee updated successfully');
+    return redirect(route('employee.index'))->with('success', 'Employee updated successfully');
 }
 
-public function deleteEmployee($id)
+public function deleteEmployee(Request $request)
 {
-    try {
-        $employee = Employee::findOrFail($id);
-        $employee->delete();
+    $employee = Employee::findOrFail($request->id);
 
-        return response()->json(['success' => true, 'message' => 'Employee deleted successfully']);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => 'Error deleting employee']);
+    if ($employee) {
+        $employee->delete();
+        return response()->json(['message' => 'Holiday deleted successfully'], 200);
+    } else {
+        return response()->json(['message' => 'Holiday not found'], 404);
     }
 }
 }
