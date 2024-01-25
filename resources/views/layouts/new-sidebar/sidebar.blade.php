@@ -127,6 +127,12 @@ $setting = DB::table('settings')
                     style="">
                     <ul class="list-group">
                         <li class="">
+                            <a href="{{ route('company.index') }}" class="nav-item child-nav">
+                                <span class="prefix rounded-circle"></span>
+                                <span class="item-name">Company</span>
+                            </a>                            
+                        </li>
+                        <li class="">
                             <a href="{{ route('department.index') }}" class="nav-item child-nav">
                                 <span class="prefix rounded-circle"></span>
                                 <span class="item-name">Departments</span>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
@@ -253,6 +254,16 @@ if ($installed === false) {
             //------------------------------- clients --------------------------\\
             // HRM routes
             Route::prefix('hrm')->group(function () {
+                // Company
+                Route::get('/company', 'CompanyController@index')->name('company.index');
+                Route::get('/company/create', 'CompanyController@create')->name('company.create');
+                Route::post('/company/store', 'CompanyController@store')->name('company.store');
+                Route::get('/company/edit/{id}', 'CompanyController@edit')->name('company.edit');
+                Route::put('/company/update/{id}', 'CompanyController@update')->name('company.update');
+                Route::get('/company/getData', 'CompanyController@getData')->name('company.getData');
+                Route::post('/company/delete', 'CompanyController@delete')->name('company.delete');
+
+
                 // departements
                 Route::get('/departments', 'DepartmentController@index')->name('department.index');
                 Route::get('departments/create', 'DepartmentController@create')->name('department.create');
