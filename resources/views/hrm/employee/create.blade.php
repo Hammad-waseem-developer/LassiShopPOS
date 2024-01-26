@@ -84,10 +84,7 @@
 
                         <div class="form-group col-md-4 {{ $errors->has('department') ? 'has-error' : '' }}">
                             <label for="office">{{ __('Office Shift') }} <span class="field_required">*</span></label>
-
-                            <!-- Use a select element for the dropdown -->
                             <select class="form-control" name="department" id="office">
-                                <!-- Add an option for the default or empty value -->
                                 <option value="" selected disabled>{{ __('Select Department') }}</option>
                                 @foreach ($departments as $department)
                                     <option value="{{ $department->id }}"
