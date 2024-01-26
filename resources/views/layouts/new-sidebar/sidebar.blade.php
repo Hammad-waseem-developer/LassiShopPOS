@@ -185,6 +185,35 @@ $setting = DB::table('settings')
             </li>
             {{-- HRM end     --}}
 
+            {{-- POS PRODUCT --}}
+            <li>
+                <div @click="selectCollapse('pos-product')" :class="selected == 'pos-product' ? 'collapse-active' : 'collapse-deactive'" class="collapse-button">
+                    <div class="d-flex align-items-center">
+                        <!-- HRM SVG -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
+                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
+                          </svg>
+                        <span class="item-name">Pos Product</span>
+                    </div>
+                    <svg class="collapse-icon" width="5" height="8" viewBox="0 0 5 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 7L4 4L1 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                
+                <div x-ref="pos-product" x-bind:style="activeCollapse($refs, 'pos-product', selected)" class="collapse-content"
+                    style="">
+                    <ul class="list-group">
+                        <li class="">
+                            <a href="{{ route('pos-product.index') }}" class="nav-item child-nav">
+                                <span class="prefix rounded-circle"></span>
+                                <span class="item-name">All Pos Products</span>
+                            </a>                            
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            {{-- POS PRODUCT end     --}}
+
             {{-- Products --}}
             @if (auth()->user()->can('products_add') ||
                     auth()->user()->can('products_view') ||

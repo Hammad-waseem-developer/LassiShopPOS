@@ -357,6 +357,17 @@ if ($installed === false) {
             Route::get('import_clients', 'ClientController@import_clients_page')->name('import_clients');
             Route::post('import_clients', 'ClientController@import_clients');
 
+            //------------------------------- Pos Product --------------------------\\
+            Route::prefix('pos-product')->group(function () {
+                Route::get('/', 'PosProductController@index')->name('pos-product.index');
+                Route::get('/create', 'PosProductController@create')->name('pos-product.create');
+                Route::post('/store', 'PosProductController@store')->name('pos-product.store');
+                Route::get('/edit/{id}', 'PosProductController@edit')->name('pos-product.edit');
+                Route::put('/{pos_product}', 'PosProductController@update')->name('pos-product.update');
+                Route::post('/delete', 'PosProductController@delete')->name('pos-product.delete');
+            });
+
+
             //------------------------------- users & permissions --------------------------\\
             Route::prefix('user-management')->group(function () {
                 Route::resource('users', 'UserController');
