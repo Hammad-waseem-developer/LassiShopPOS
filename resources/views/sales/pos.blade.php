@@ -720,11 +720,18 @@
                         id,
                         price,
                         name,
-                        img_path
+                        img_path,
+                        warehouse_id: $("#warehouse_id").val()
                     },
-                    success: updateCartBox,
+                    success: function(response) {
+                        if (response.message) {
+                            toastr.error('Out of stock');
+                        } else {
+                            updateCartBox(response);
+                        }
+                    },
                     error: function(data) {
-                        console.log(data);
+                        console.log("Error:",  data);
                     }
                 });
             }
