@@ -50,4 +50,17 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+    public function social()
+    {
+        return $this->hasMany(SocialMedia::class, 'emp_id');
+    }
+
+    public function bank()
+    {
+        return $this->hasOne(BankAccount::class, 'emp_id');
+    }
+    public function experience()
+    {
+        return $this->hasMany(Experience::class, 'emp_id');
+    }
 }
