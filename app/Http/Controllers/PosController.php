@@ -195,13 +195,7 @@ class PosController extends Controller
                             $pos_qty = $newProductDetail->qty;
                             $sub_qty = $inv_qty - $pos_qty;
 
-                            // Round to the nearest whole number
-                            $rounded_qty = round($sub_qty);
-
-                            // Format with two decimal places
-                            $formatted_qty = number_format($rounded_qty, 2);
-                            // dd($formatted_qty);
-                            $product_warehouse->qte = $formatted_qty;
+                            $product_warehouse->qte = round($sub_qty);
                         }
                         $inv_qty = $product_warehouse->qte;
                         $pos_qty = $newProductDetail->qty / 1000;
