@@ -303,7 +303,6 @@ if ($installed === false) {
                 Route::post('/employee/store', 'EmployeeController@store')->name('employees.store');
                 Route::get('/employee/getData', 'EmployeeController@getData')->name('employees.getData');
                 Route::get('/employee/edit/{id}', 'EmployeeController@edit')->name('employees.edit');
-                Route::get('/employee/show/{id}', 'EmployeeController@show')->name('employees.show');
                 Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
                 Route::post('/employee/delete', 'EmployeeController@deleteEmployee')->name('employees.delete');
     
@@ -361,11 +360,13 @@ if ($installed === false) {
             //------------------------------- Pos Product --------------------------\\
             Route::prefix('pos-product')->group(function () {
                 Route::get('/', 'PosProductController@index')->name('pos-product.index');
+                Route::get('/getPosProducts', 'PosProductController@getPosProducts')->name('pos-product.getPosProducts');
                 Route::get('/create', 'PosProductController@create')->name('pos-product.create');
                 Route::post('/store', 'PosProductController@store')->name('pos-product.store');
                 Route::get('/edit/{id}', 'PosProductController@edit')->name('pos-product.edit');
-                Route::put('/{pos_product}', 'PosProductController@update')->name('pos-product.update');
-                Route::post('/delete', 'PosProductController@delete')->name('pos-product.delete');
+                Route::put('/products/{id}', 'PosProductController@update')->name('pos-product.update');
+                Route::delete('/delete', 'PosProductController@delete')->name('pos-product.delete');
+                Route::post('/product-ingredients', 'PosProductController@product_ingredients')->name('pos-product.product_ingredients');
             });
 
 
