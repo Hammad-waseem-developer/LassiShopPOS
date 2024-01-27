@@ -3,12 +3,12 @@
 @section('main-content')
 @section('page-css')
 @endsection
-
+{{-- {{dd($employee) }} --}}
 <div class="breadcrumb">
     <h1>{{ __('Edit Employee') }}</h1>
     {{-- <div><a href="{{ route('employee.index') }}">{{ __('Employees') }}</a></div> --}}
 </div>
-
+{{-- {{dd($social) }} --}}
 <div class="separator-breadcrumb border-top"></div>
 
 <div class="row" id="section_edit_employee">
@@ -34,7 +34,7 @@
 
                         <div class="form-group col-md-4">
                             <label for="phone">{{ __('Phone') }} <span class="field_required">*</span></label>
-                            <input type="number" class="form-control" name="phone"
+                            <input type="tel" id="phone" pattern="[0-9+()-]{4,20}" title="Enter a valid phone number (4-20 digits)" class="form-control" name="phone"
                                 placeholder="{{ __('Phone Number') }}" value="{{ $employee->phone }}">
                         </div>
 
@@ -292,6 +292,219 @@
                                     <span class="help-block text-danger">{{ $errors->first('salaray') }}</span>
                                 @endif
                             </div>
+
+                              {{-- Social Media --}}
+                        <div class="social_media">
+                            <h3>{{ __('Social Media') }}</h3>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="skype">{{ __('Skype') }} <span
+                                            class="field_required">*</span></label>
+                                    <input type="text" class="form-control" name="skype"
+                                        placeholder="{{ __('Skype') }}" value="{{$social->skype}}">
+                                    @if ($errors->has('skype'))
+                                        <span class="help-block text-danger">{{ $errors->first('skype') }}</span>
+                                    @endif
+                                </div>
+
+
+                                <div class="form-group col-md-4">
+                                    <label for="facebook">{{ __('Facebook') }} <span
+                                            class="field_required">*</span></label>
+                                    <input type="text" class="form-control" name="facebook"
+                                        placeholder="{{ __('Facebook') }}" value="{{$social->facebook}}">
+                                    @if ($errors->has('facebook'))
+                                        <span class="help-block text-danger">{{ $errors->first('facebook') }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="whatsApp">{{ __('WhatsApp') }} <span
+                                            class="field_required">*</span></label>
+                                    <input type="text" class="form-control" name="whatsApp"
+                                        placeholder="{{ __('WhatsApp') }}" value="{{$social->whatsapp}}">
+                                    @if ($errors->has('whatsApp'))
+                                        <span class="help-block text-danger">{{ $errors->first('whatsApp') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="linkedIn">{{ __('LinkedIn') }} <span
+                                            class="field_required">*</span></label>
+                                    <input type="text" class="form-control" name="linkedIn"
+                                        placeholder="{{ __('LinkedIn') }}" value="{{$social->linkedin}}">
+                                    @if ($errors->has('linkedIn'))
+                                        <span class="help-block text-danger">{{ $errors->first('linkedIn') }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="twitter">{{ __('Twitter') }} <span
+                                            class="field_required">*</span></label>
+                                    <input type="text" class="form-control" name="twitter"
+                                        placeholder="{{ __('Twitter') }}" value="{{$social->twitter}}">
+                                    @if ($errors->has('twitter'))
+                                        <span class="help-block text-danger">{{ $errors->first('twitter') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        {{-- social Media End --}}
+
+                        {{-- Bank Accounts --}}
+                        <h3>{{ __('Bank Accounts') }}</h3>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="bank_name">{{ __('Bank Name') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="text" class="form-control" name="bank_name"
+                                    placeholder="{{ __('Bank Name') }}" value="{{$bank->bank_name}}">
+                                @if ($errors->has('bank_name'))
+                                    <span class="help-block text-danger">{{ $errors->first('bank_name') }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="bank_branch">{{ __('Bank Branch *') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="text" class="form-control" name="bank_branch"
+                                    placeholder="{{ __('Bank Branch *') }}" value="{{$bank->bank_branch}}">
+                                @if ($errors->has('bank_branch'))
+                                    <span class="help-block text-danger">{{ $errors->first('bank_branch') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="bank_number">{{ __('Bank Number') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="text" class="form-control" name="bank_no"
+                                    placeholder="{{ __('Bank Number') }}" value="{{$bank->bank_no}}">
+                                @if ($errors->has('bank_no'))
+                                    <span class="help-block text-danger">{{ $errors->first('bank_no') }}</span>
+                                @endif
+                            </div>
+                            <label for="bank_detail">{{ __('Bank Please provide any details') }} <span
+                                    class="field_required">*</span></label>
+                            <div class="form-group col-md-6">
+                                <textarea name="bank_detail" placeholder="{{ __('Enter Description') }}" rows="3" cols="40 " value="">{{$bank->details}}</textarea>
+                                @if ($errors->has('bank_detail'))
+                                    <span class="help-block text-danger">{{ $errors->first('bank_detail') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        {{-- Bank End Accounts --}}
+                        <h3> {{ __('Experience') }}</h3>
+                        {{-- Experience --}}
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="title">{{ __('Title') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="title" class="form-control" name="title"
+                                    placeholder="{{ __('Title') }}" value="{{$experience->title}}">
+                                @if ($errors->has('title'))
+                                    <span class="help-block text-danger">{{ $errors->first('title') }}</span>
+                                @endif
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                                <label for="company_name">{{ __('Company Name') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="text" class="form-control" name="company_name"
+                                    placeholder="{{ __('Company Name') }}" value="{{$experience->company_name}}">
+                                @if ($errors->has('company_name'))
+                                    <span class="help-block text-danger">{{ $errors->first('company_name') }}</span>
+                                @endif
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="location">{{ __('Location') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="text" class="form-control" name="location"
+                                    placeholder="{{ __('Location') }}" value=" {{$experience->location}}">
+                                @if ($errors->has('location'))
+                                    <span class="help-block text-danger">{{ $errors->first('location') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="start_date">{{ __('Start Date') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="date" class="form-control" name="start_date"
+                                    placeholder="{{ __('Start Date') }}" value="{{$experience->start_date}}">
+                                @if ($errors->has('start_date'))
+                                    <span class="help-block text-danger">{{ $errors->first('start_date') }}</span>
+                                @endif
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="finish_date">{{ __('Finish date') }} <span
+                                        class="field_required">*</span></label>
+                                <input type="date" class="form-control" name="finish_date"
+                                    placeholder="{{ __('Finish date') }}"  value="{{ $experience->finish_date }}">
+                                @if ($errors->has('finish_date'))
+                                    <span class="help-block text-danger">{{ $errors->first('finish_date') }}</span>
+                                @endif
+                            </div>
+
+                            <div
+                                class="form-group col-md-4 {{ $errors->has('employment_type') ? 'has-error' : '' }}">
+                                <label for="employment_type">{{ __('Employment Type') }} <span
+                                        class="field_required">*</span></label>
+
+                                <!-- Use a select element for the dropdown -->
+                                <select class="form-control" name="employment_type" id="employment_type">
+                                    <!-- Add options for employment type -->
+                                    <option value="full_time"
+                                        {{ $employee->employment_type == 'full_time' ? 'selected' : '' }}>
+                                        {{ __('Full Time') }}
+                                    </option>
+                                    <option value="part_time"
+                                        {{ $employee->employment_type == 'part_time' ? 'selected' : '' }}>
+                                        {{ __('Part Time') }}
+                                    </option>
+                                    <option value="self_employed"
+                                        {{ $employee->employment_type == 'self_employed' ? 'selected' : '' }}>
+                                        {{ __('Self Employed') }}
+                                    </option>
+                                    <option value="contract"
+                                        {{ $employee->employment_type == 'contract' ? 'selected' : '' }}>
+                                        {{ __('Contract') }}
+                                    </option>
+                                    <option value="internship"
+                                        {{ $employee->employment_type == 'internship' ? 'selected' : '' }}>
+                                        {{ __('Internship') }}
+                                    </option>
+                                    <option value="seasonal"
+                                        {{ $employee->employment_type == 'seasonal' ? 'selected' : '' }}>
+                                        {{ __('Seasonal') }}
+                                    </option>
+                                </select>
+
+                                @if ($errors->has('employment_type'))
+                                    <span
+                                        class="help-block text-danger">{{ $errors->first('employment_type') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="description">{{ __('Description') }} <span
+                                    class="field_required">*</span></label>
+                            <div class="form-group col-md-12">
+                                <textarea name="description" id="" cols="144" rows="4">{{$experience->description}}
+                             </textarea>
+                                @if ($errors->has('description'))
+                                    <span class="help-block text-danger">{{ $errors->first('description') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Experience End --}}
+
+
                         </div>
 
                         <div class="row mt-3">

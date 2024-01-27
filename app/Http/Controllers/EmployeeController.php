@@ -181,8 +181,13 @@ class EmployeeController extends Controller
         $offices = Office::get()->all();
         $employee = Employee::findOrFail($id);
 
+        $social = SocialMedia::where('emp_id', $id)->first();
+        
+        $bank = BankAccount::where('emp_id', $id)->first();
+        $experience = Experience::where('emp_id', $id)->first();
 
-        return view('hrm.employee.edit', compact('employee', 'company', 'departments', 'designations', 'offices'));
+
+        return view('hrm.employee.edit', compact('employee','social','bank','experience','company', 'departments', 'designations', 'offices'));
     }
     // public function update(Request $request, Employee $employee)
     // {
@@ -202,6 +207,7 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
 {
+    // dd($request->all());
    
     $validatedData = $request->validate([
         'first_name' => 'required|string|max:255',
@@ -244,14 +250,7 @@ class EmployeeController extends Controller
     ]);
 
     $employee = Employee::findOrFail($id);
-    $social = new SocialMedia();
-    $bank = new BankAccount();
-    $experience = new Experience();
-
     $employee->fill($validatedData);
-    $social->fill($validatedData);
-    $bank->fill($validatedData);
-    $experience->fill($validatedData);
 
     // Update the fields
     $employee->first_name = $request->first_name;
@@ -276,9 +275,41 @@ class EmployeeController extends Controller
     $employee->remaining_leave = $request->remaining_leave;
     $employee->hourly_late = $request->hourly_late;
     $employee->salary = $request->salaray;
-
     $employee->save();
 
+    $social = SocialMedia::where('emp_id', $employee->id)->firstOrNew([]);
+    $social->fill($validatedData);
+    $social->skype = $request->skype;
+    $social->whatsapp = $request->whatsApp;
+    $social->facebook = $request->facebook;
+    $social->facebook = $request->facebook;
+    $social->linkedin = $request->linkedIn;
+    $social->twitter = $request->twitter;
+    $social->emp_id = $employee->id;
+    $social->save();
+    
+    
+    $bank = BankAccount::where('emp_id', $employee->id)->firstOrNew([]);
+    $bank->fill($validatedData);
+    $bank->bank_name = $request->bank_name;
+    $bank->bank_branch = $request->bank_detail;
+    $bank->bank_no = $request->bank_no;
+    $bank->details = $request->bank_branch;
+    $bank->emp_id = $employee->id;
+    $bank->save();
+    
+    
+    $experience = Experience::where('emp_id', $employee->id)->firstOrNew([]);
+    $experience->fill($validatedData);
+    $experience->title = $request->title;
+    $experience->company_name = $request->company_name;
+    $experience->location = $request->location;
+    $experience->start_date = $request->start_date;
+    $experience->finish_date = $request->finish_date;
+    $experience->employment_type = $request->employment_type;
+    $experience->description = $request->description;
+    $experience->emp_id = $employee->id;
+    $experience->save();
     return redirect(route('employee.index'))->with('success', 'Employee updated successfully!');
 }
 
