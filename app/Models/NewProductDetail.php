@@ -17,4 +17,9 @@ class NewProductDetail extends Model
     {
         return $this->belongsTo(NewProduct::class);
     }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
 }

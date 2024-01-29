@@ -22,14 +22,15 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Warehouse;
 use App\Models\NewProduct;
-use App\Models\NewProductDetail;
 use App\Models\PosSetting;
 use App\Models\SaleDetail;
 use App\Models\PaymentSale;
+use App\Models\PosSaleItems;
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
 use App\Models\UserWarehouse;
 use App\Models\ProductVariant;
+use App\Models\NewProductDetail;
 use App\Models\product_warehouse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -291,6 +292,17 @@ class PosController extends Controller
                 $sale->update([
                     'paid_amount' => $total_paid,
                     'payment_statut' => $payment_statut,
+                ]);
+            }
+
+            $cartForSale = Session::get('cart');
+            foreach ($cartForSale as $cart) {
+                PosSaleItems::create([
+                    'sale_id' => $order->id,
+                    'new_product_id' => $cart['id'],
+                    'qty' => $cart['quantity'],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
                 ]);
             }
 
@@ -706,6 +718,9 @@ class PosController extends Controller
 
         if ($user_auth->can('pos')) {
 
+            $posProduct = PosSaleItems::where('sale_id', $id)->with('newProduct.Product_Deatils.unit')->with('sale.details')->get();
+            // dd($posProduct);
+
             $details = array();
 
             $sale = Sale::with('details.product.unitSale')
@@ -781,6 +796,7 @@ class PosController extends Controller
                     'pos_settings' => $pos_settings,
                     'sale' => $item,
                     'details' => $details,
+                    'posProduct' => $posProduct
                 ]
             );
         }

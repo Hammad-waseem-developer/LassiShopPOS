@@ -49,7 +49,7 @@
 
         <table class="detail_invoice">
           <tbody>
-            <tr v-for="detail_invoice in details">
+            {{-- <tr v-for="detail_invoice in details">
               <td colspan="3">
                 @{{detail_invoice.name}}
                 <br v-show="detail_invoice.is_imei && detail_invoice.imei_number !==null">
@@ -62,7 +62,19 @@
               <td class="product_detail_invoice">
                 @{{detail_invoice.total}}
               </td>
-            </tr>
+            </tr> --}}
+
+            @foreach ($posProduct as $product)
+            <tr>
+              <td colspan="3">
+                {{$product->newProduct->name}}
+                <br>
+                <span>{{$product->qty}} x {{$product->newProduct->price}}</span>
+              </td>
+              <td class="product_detail_invoice">
+                {{$product->newProduct->price * $product->qty}}
+              </td>
+            @endforeach
 
             <tr class="mt-10" v-show="pos_settings.show_discount">
               <td colspan="3" class="total">{{ __('translate.Tax') }}</td>

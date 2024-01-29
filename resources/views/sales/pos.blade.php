@@ -1024,9 +1024,12 @@
                 success: function(data) {
                     if (data.success) {
                         $("#form_Update_Detail").modal("hide");
+                        $("#form_Update_Detail").trigger("reset");
                         // $("#sale_table").DataTable().ajax.reload();
                         console.log(data.id);
-                        window.location.href = "{{ url('invoice_pos') }}/"+data.id;
+                        toastr.success(data.message);
+                        window.open("{{ url('invoice_pos') }}/"+data.id, "_blank");
+                        window.location.reload();
                     } else {
                         alert(data.message);
                     }
