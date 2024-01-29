@@ -4,7 +4,7 @@
     @section('page-css')
     @endsection
     <div class="breadcrumb">
-        <h1>{{ __('Office Create') }}</h1>
+        <h1>{{ __('Attendance Create') }}</h1>
     </div>
 
     <div class="separator-breadcrumb border-top"></div>
