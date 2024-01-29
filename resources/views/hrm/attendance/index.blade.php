@@ -11,6 +11,7 @@
 
     <h1>{{ __('Attendance') }}</h1>
 </div>
+
 <div class="separator-breadcrumb border-top"></div>
 <div class="row" id="section_Client_list">
     <div class="col-md-12">
@@ -182,12 +183,8 @@
                     {
                         data: 'date'
                     },
-
                     {
-                        data: 'work_duration',
-                        render: function(data) {
-                            return data !== null ? data : '0';
-                        }
+                        data: 'work_duration'
                     },
                     {
                         targets: -1,
