@@ -16,8 +16,8 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-           
-              
+
+
                 <div class="text-end mb-3" style="display: flex;
                 justify-content: flex-end;">
                     @can('client_add')
@@ -27,15 +27,16 @@
                     @endcan
                     <div class="dropdown show" style="    display: flex;
                     align-items: center;">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          EXPORT
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            EXPORT
                         </a>
-                      
+
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          <a class="dropdown-item" href="#"  onclick="ExportToExcel('xlsx')" >excel</a>
-                          {{-- <a class="dropdown-item" href="#">pdf</a> --}}
+                            <a class="dropdown-item" href="#" onclick="ExportToExcel('xlsx')">excel</a>
+                            {{-- <a class="dropdown-item" href="#">pdf</a> --}}
                         </div>
-                      </div>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table id="client_list_table" class="display table">
@@ -97,14 +98,14 @@
     <!-- Modal End-->
 </div>
 {{-- Sessions messages will be here --}}
-@if(Session::has('success'))
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
-<script>
-    $(document).ready(function() {
-        toastr.success("{{ Session::get('success') }}");
-    });
-</script>
+@if (Session::has('success'))
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            toastr.success("{{ Session::get('success') }}");
+        });
+    </script>
 @endif
 @endsection
 @section('page-js')
@@ -122,10 +123,10 @@
 <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
 
 
- {{-- var showRoute = '{{ route('employees.show', ['id' => ':id']) }}'; --}}
 <script>
     $(document).ready(function() {
         var editRoute = '{{ route('employees.edit', ['id' => ':id']) }}';
+        var showRoute = '{{ route('employees.show', ['id' => ':id']) }}';
         $('body').on('click', '#delete', function() {
             var id = $(this).data('id');
             console.log("Delete fun run " + id);
@@ -201,7 +202,7 @@
                         targets: -1,
                         render: function(data, type, full, meta) {
                             var dynamicEditRoute = editRoute.replace(':id', full.id);
-                            // var dynamicShowRoute = showRoute.replace(':id', full.id);
+                            var dynamicShowRoute = showRoute.replace(':id', full.id);
 
                             return `
                             <div class="dropdown">
@@ -216,6 +217,10 @@
                                     data-id="${full.id}" id="delete">
                                         <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
                                     </a>
+                                    <a class="dropdown-item"  href="${dynamicShowRoute}"
+                                    data-id="${full.id}" id="show">
+                                        <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
+                                    </a>
                                 
                                 </div>
                             </div>
@@ -227,45 +232,39 @@
         }
     });
 
-    // <a class="dropdown-item"  href="${dynamicShowRoute}"
-                                    // data-id="${full.id}" id="show">
-                                    //     <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
-                                    // </a>
 
     function ExportToExcel(type, fn, dl) {
-    // Clone the table element
-    var elt = document.getElementById('client_list_table').cloneNode(true);
+        // Clone the table element
+        var elt = document.getElementById('client_list_table').cloneNode(true);
 
-    // Remove the last column (Action column) from the cloned table
-    var headers = elt.getElementsByTagName('th');
-    var rows = elt.getElementsByTagName('tr');
-    for (var i = 0; i < rows.length; i++) {
-        rows[i].deleteCell(-1);
+        // Remove the last column (Action column) from the cloned table
+        var headers = elt.getElementsByTagName('th');
+        var rows = elt.getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].deleteCell(-1);
+        }
+
+        // Convert the modified table to a workbook
+        var wb = XLSX.utils.table_to_book(elt, {
+            sheet: "sheet1"
+        });
+
+        // Generate the filename
+        var currentDate = new Date();
+        var day = currentDate.getDate().toString().padStart(2, '0');
+        var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        var year = currentDate.getFullYear();
+        var formattedDate = day + '-' + month + '-' + year;
+        var fileName = 'Employee List(' + formattedDate + ').xlsx';
+
+        // Download or return the Excel file
+        return dl ?
+            XLSX.write(wb, {
+                bookType: type,
+                bookSST: true,
+                type: 'base64'
+            }) :
+            XLSX.writeFile(wb, fn || fileName);
     }
-
-    // Convert the modified table to a workbook
-    var wb = XLSX.utils.table_to_book(elt, {
-        sheet: "sheet1"
-    });
-
-    // Generate the filename
-    var currentDate = new Date();
-    var day = currentDate.getDate().toString().padStart(2, '0');
-    var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    var year = currentDate.getFullYear();
-    var formattedDate = day + '-' + month + '-' + year;
-    var fileName = 'Employee List(' + formattedDate + ').xlsx';
-
-    // Download or return the Excel file
-    return dl ?
-        XLSX.write(wb, {
-            bookType: type,
-            bookSST: true,
-            type: 'base64'
-        }) :
-        XLSX.writeFile(wb, fn || fileName);
-}
-
 </script>
-
 @endsection

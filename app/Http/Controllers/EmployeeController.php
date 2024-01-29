@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BankAccount;
 use App\Models\Office;
+use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Department;
+use App\Models\Experience;
+use App\Models\BankAccount;
 use App\Models\Designation;
+use App\Models\SocialMedia;
 use Illuminate\Http\Request;
 use App\Models\EmployeeShift;
-use App\Models\Experience;
-use App\Models\SocialMedia;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
@@ -323,9 +324,20 @@ class EmployeeController extends Controller
         }
     }
     public function show($id){
+        $office_id = Employee::where('id', $id)->pluck('office_id');
+        $designation_id = Employee::where('id', $id)->pluck('designation_id');
+        $department_id = Employee::where('id', $id)->pluck('department_id');
+
+        $company = Company::all();
+        $departments = Department::where('id', $department_id)->first();
+        $designations = Designation::where('id', $designation_id)->first();
+        $office = Office::where('id', $office_id)->first();
+
         $employee = Employee::findOrFail($id);
-        dd($employee);  
-        // return view('hrm.employee.show',compact('employee'));
+        $social = SocialMedia::where('emp_id', $id)->first();       
+        $bank = BankAccount::where('emp_id', $id)->first();
+        $experience = Experience::where('emp_id', $id)->first();
+        return view('hrm.employee.show1', compact('employee','social','bank','experience','company', 'departments', 'designations', 'office'));
     }
 }
 

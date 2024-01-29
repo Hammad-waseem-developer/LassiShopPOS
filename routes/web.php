@@ -303,6 +303,7 @@ if ($installed === false) {
                 Route::post('/employee/store', 'EmployeeController@store')->name('employees.store');
                 Route::get('/employee/getData', 'EmployeeController@getData')->name('employees.getData');
                 Route::get('/employee/edit/{id}', 'EmployeeController@edit')->name('employees.edit');
+                Route::get('/employee/show/{id}', 'EmployeeController@show')->name('employees.show');
                 Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
                 Route::post('/employee/delete', 'EmployeeController@deleteEmployee')->name('employees.delete');
     
