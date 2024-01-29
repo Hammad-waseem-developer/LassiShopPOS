@@ -129,7 +129,6 @@ class EmployeeController extends Controller
         $social->skype = $request->skype;
         $social->whatsapp = $request->whatsApp;
         $social->facebook = $request->facebook;
-        $social->facebook = $request->facebook;
         $social->linkedin = $request->linkedIn;
         $social->twitter = $request->twitter;
         $social->emp_id = $employee->id;
@@ -139,9 +138,9 @@ class EmployeeController extends Controller
         $bank = new BankAccount();
         $bank->fill($validatedData);
         $bank->bank_name = $request->bank_name;
-        $bank->bank_branch = $request->bank_detail;
+        $bank->bank_branch = $request->bank_branch;
         $bank->bank_no = $request->bank_no;
-        $bank->details = $request->bank_branch;
+        $bank->details = $request->bank_detail;
         $bank->emp_id = $employee->id;
         $bank->save();
         
@@ -282,7 +281,6 @@ class EmployeeController extends Controller
     $social->skype = $request->skype;
     $social->whatsapp = $request->whatsApp;
     $social->facebook = $request->facebook;
-    $social->facebook = $request->facebook;
     $social->linkedin = $request->linkedIn;
     $social->twitter = $request->twitter;
     $social->emp_id = $employee->id;
@@ -292,9 +290,9 @@ class EmployeeController extends Controller
     $bank = BankAccount::where('emp_id', $employee->id)->firstOrNew([]);
     $bank->fill($validatedData);
     $bank->bank_name = $request->bank_name;
-    $bank->bank_branch = $request->bank_detail;
+    $bank->bank_branch = $request->bank_branch;
     $bank->bank_no = $request->bank_no;
-    $bank->details = $request->bank_branch;
+    $bank->details = $request->bank_detail;
     $bank->emp_id = $employee->id;
     $bank->save();
     

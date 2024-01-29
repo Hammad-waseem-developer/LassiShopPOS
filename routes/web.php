@@ -314,7 +314,7 @@ if ($installed === false) {
                 Route::post('/attendance/store', 'AttendanceController@store')->name('attendance.store');
                 Route::get('/attendance/getData', 'AttendanceController@getData')->name('attendance.getData');
                 Route::get('/attendance/edit/{id}', 'AttendanceController@edit')->name('attendance.edit');
-                Route::post('/attendance/update/{id}', 'AttendanceController@update')->name('attendance.update');
+                Route::put('/attendance/update/{id}', 'AttendanceController@update')->name('attendance.update');
                 Route::post('/attendance/delete', 'AttendanceController@delete')->name('attendance.delete');
                 // leaveType Routes
                 Route::get('/leave-type', 'LeaveTypeController@index')->name('leaveType.index');

@@ -117,13 +117,13 @@
                                     <label for="status">{{ __('Status') }} <span class="field_required">*</span></label>
                                     <select class="form-control" name="status" id="status">
                                         <option value="" selected disabled>{{ __('Select Status') }}</option>
-                                        <option value="0" {{ $leaveRequest->status == '0' ? 'selected' : '' }}>
+                                        <option value="2" {{ $leaveRequest->status == '2' ? 'selected' : '' }}>
                                             {{ __('Pending') }}
                                         </option>
                                         <option value="1" {{ $leaveRequest->status == '1' ? 'selected' : '' }}>
                                             {{ __('Approved') }}
                                         </option>
-                                        <option value="2" {{ $leaveRequest->status == '2' ? 'selected' : '' }}>
+                                        <option value="0" {{ $leaveRequest->status == '0' ? 'selected' : '' }}>
                                             {{ __('Rejected') }}
                                         </option>
                                     </select>

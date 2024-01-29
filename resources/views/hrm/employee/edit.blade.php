@@ -365,10 +365,10 @@
                                 @endif
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="bank_branch">{{ __('Bank Branch *') }} <span
+                                <label for="bank_branch">{{ __('Bank Branch ') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="bank_branch"
-                                    placeholder="{{ __('Bank Branch *') }}" value="{{$bank->bank_branch}}">
+                                    placeholder="{{ __('Bank Branch ') }}" value="{{$bank->bank_branch}}">
                                 @if ($errors->has('bank_branch'))
                                     <span class="help-block text-danger">{{ $errors->first('bank_branch') }}</span>
                                 @endif

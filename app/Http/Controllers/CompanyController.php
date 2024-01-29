@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
-
+use Session;
 class CompanyController extends Controller
 {
     public function index()
@@ -51,7 +51,6 @@ class CompanyController extends Controller
 
     $company = Company::findOrFail($id);
     $company->update($validatedData);
-
     return redirect()->route('company.index')->with('success', 'Company updated successfully!');
 }
 public function getData()

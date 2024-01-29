@@ -6,7 +6,7 @@
     <div class="breadcrumb">
         <h1>{{ __('Attendance Edit') }}</h1>
     </div>
-
+    
     <div class="separator-breadcrumb border-top"></div>
 
     <div class="row" id="section_create_client">
@@ -25,7 +25,7 @@
                                     <option value="" selected disabled>{{ __('Select Company') }}</option>
                                     @foreach ($company as $company)
                                         <option value="{{$company->id}}"
-                                        {{ $company->id == $company->id ? 'selected' : '' }}>
+                                        {{ $company->id == $attendance->company_id ? 'selected' : '' }}>
                                             {{ $company->name }}
                                         </option>
                                     @endforeach
@@ -43,7 +43,7 @@
                                     <option value="" selected disabled>{{ __('Select Employee') }}</option>
                                     @foreach ($employees as $employee)
                                         <option value="{{ $employee->id }}"
-                                            {{ $employee->id == $employee->id ? 'selected' : '' }}>
+                                            {{ $employee->id == $attendance->emp_id ? 'selected' : '' }}>
                                             {{ $employee->first_name }}
                                         </option>
                                     @endforeach
@@ -60,7 +60,7 @@
                                     <!-- Add an option for the default or empty value -->
                                     <option value="" selected disabled>{{ __('Select Shift Name') }}</option>
                                     @foreach ($offices as $office)
-                                    <option value="{{ $office->id }}" {{ $employee->office_id == $office->id ? 'selected' : '' }}>
+                                    <option value="{{ $office->id }}" {{ $office->id == $attendance->office_id ? 'selected' : '' }}>
                                         {{ $office->name }}
                                     </option>
                                 @endforeach

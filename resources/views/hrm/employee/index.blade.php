@@ -96,6 +96,16 @@
     </div>
     <!-- Modal End-->
 </div>
+{{-- Sessions messages will be here --}}
+@if(Session::has('success'))
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+<script>
+    $(document).ready(function() {
+        toastr.success("{{ Session::get('success') }}");
+    });
+</script>
+@endif
 @endsection
 @section('page-js')
 <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
@@ -112,10 +122,10 @@
 <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
 
 
+ {{-- var showRoute = '{{ route('employees.show', ['id' => ':id']) }}'; --}}
 <script>
     $(document).ready(function() {
         var editRoute = '{{ route('employees.edit', ['id' => ':id']) }}';
-        var showRoute = '{{ route('employees.show', ['id' => ':id']) }}';
         $('body').on('click', '#delete', function() {
             var id = $(this).data('id');
             console.log("Delete fun run " + id);
@@ -191,7 +201,7 @@
                         targets: -1,
                         render: function(data, type, full, meta) {
                             var dynamicEditRoute = editRoute.replace(':id', full.id);
-                            var dynamicShowRoute = showRoute.replace(':id', full.id);
+                            // var dynamicShowRoute = showRoute.replace(':id', full.id);
 
                             return `
                             <div class="dropdown">
@@ -206,10 +216,7 @@
                                     data-id="${full.id}" id="delete">
                                         <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
                                     </a>
-                                    <a class="dropdown-item"  href="${dynamicShowRoute}"
-                                    data-id="${full.id}" id="show">
-                                        <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
-                                    </a>
+                                
                                 </div>
                             </div>
                         `;
@@ -220,14 +227,11 @@
         }
     });
 
+    // <a class="dropdown-item"  href="${dynamicShowRoute}"
+                                    // data-id="${full.id}" id="show">
+                                    //     <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
+                                    // </a>
 
-
-    // function deleteEmployeeConfirmation(id) {
-    //     // Set the employee ID in the hidden input
-    //     $("#deleteEmployeeId").val(id);
-    //     // Open the delete confirmation modal
-    //     $('#deleteModal').modal('show');
-    // }
     function ExportToExcel(type, fn, dl) {
     // Clone the table element
     var elt = document.getElementById('client_list_table').cloneNode(true);

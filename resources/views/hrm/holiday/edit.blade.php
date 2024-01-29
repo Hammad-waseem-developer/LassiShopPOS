@@ -39,7 +39,7 @@
                                 $startDate = new DateTime($holiday->start_date);
                             @endphp
                             <input type="date" class="form-control" name="start_date" id="start_date"
-                                value="{{ $startDate->format('Y-m-d') }}">>
+                                value="{{ $startDate->format('Y-m-d') }}">
                             @error('start_date')
                                 <span class="help-block text-danger">{{ $message }}</span>
                             @enderror
@@ -107,4 +107,15 @@
         </div>
     </div>
 </div>
+
+{{-- Sessions messages will be here --}}
+@if(Session::has('success'))
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+<script>
+    $(document).ready(function() {
+        toastr.success("{{ Session::get('success') }}");
+    });
+</script>
+@endif
 @endsection

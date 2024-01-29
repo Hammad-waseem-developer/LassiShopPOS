@@ -1,12 +1,10 @@
 @extends('layouts.master')
 @section('main-content')
 @section('page-css')
-
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/nprogress.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/flatpickr.min.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
 @endsection
 
 
@@ -39,7 +37,7 @@
                             </tr>
                         </thead>
                         <tbody id="tbody">
-                        
+
                         </tbody>
                     </table>
                 </div>
@@ -49,39 +47,49 @@
     {{-- Delete Modal --}}
     {{-- @component('hrm.deletemodal.delete') 
     @endcomponent --}}
-   <!-- Modal -->
-   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-   aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered" role="document">
-       <div style="background-color: white; border:0px;" class="modal-content">
-           <div style="display: flex; flex-direction: column; align-items: center; padding-top: 20px;"
-               class="modal-body">
-               <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
-               <h2
-                   style="color: #595959; font-size: 30px; font-weight: 600; text-transform: none; margin: 0; padding: 0; line-height: 60px; display: block;">
-                   Are you sure?
-               </h2>
-               <div class="swal2-content"
-                   style="font-size: 18px; text-align: center; font-weight: 300; position: relative; float: none; margin: 0; padding: 0; line-height: normal; color: #545454;">
-                   You won't be able to revert this!
-               </div>
-           </div>
-           <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
-               <button data-dismiss="modal" aria-label="Close" type="button" id="deleteBtn"
-                   class="swal2-confirm btn btn-primary me-5 btn-ok">
-                   Yes, delete it
-               </button>
-               <button data-dismiss="modal" aria-label="Close" id="cancelBtn" type="button"
-                   class="swal2-cancel btn btn-danger" style="display: inline-block;">
-                   No, cancel!
-               </button>
-           </div>
-           <input type="hidden" id="deleteDepartmentId" value="">
-       </div>
-   </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div style="background-color: white; border:0px;" class="modal-content">
+                <div style="display: flex; flex-direction: column; align-items: center; padding-top: 20px;"
+                    class="modal-body">
+                    <div class="swal2-icon swal2-warning pulse-warning" style="display: block;">!</div>
+                    <h2
+                        style="color: #595959; font-size: 30px; font-weight: 600; text-transform: none; margin: 0; padding: 0; line-height: 60px; display: block;">
+                        Are you sure?
+                    </h2>
+                    <div class="swal2-content"
+                        style="font-size: 18px; text-align: center; font-weight: 300; position: relative; float: none; margin: 0; padding: 0; line-height: normal; color: #545454;">
+                        You won't be able to revert this!
+                    </div>
+                </div>
+                <div style="justify-content: center; border-top: 0px; padding: 40px 0px 20px 0px;" class="modal-footer">
+                    <button data-dismiss="modal" aria-label="Close" type="button" id="deleteBtn"
+                        class="swal2-confirm btn btn-primary me-5 btn-ok">
+                        Yes, delete it
+                    </button>
+                    <button data-dismiss="modal" aria-label="Close" id="cancelBtn" type="button"
+                        class="swal2-cancel btn btn-danger" style="display: inline-block;">
+                        No, cancel!
+                    </button>
+                </div>
+                <input type="hidden" id="deleteDepartmentId" value="">
+            </div>
+        </div>
+    </div>
+    <!-- Modal End-->
 </div>
-<!-- Modal End-->
-</div>
+ <!-- Display toastr message -->
+ @if(Session::has('success'))
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+ <script>
+     $(document).ready(function() {
+         toastr.success("{{ Session::get('success') }}");
+     });
+ </script>
+@endif
 @endsection
 @section('page-js')
 <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
@@ -92,7 +100,6 @@
 <!-- Add these lines to include DataTables -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-
 <script>
     $(document).ready(function() {
         getData();
@@ -143,7 +150,7 @@
                     $("#tbody").empty();
                     if (response && response.length > 0) {
                         response.forEach(element => {
-                         
+
                             $('#tbody').append(`
                                 <tr>
                                     <td>${element.id}</td>

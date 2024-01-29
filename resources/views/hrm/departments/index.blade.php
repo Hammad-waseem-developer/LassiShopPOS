@@ -80,6 +80,16 @@
 </div>
 <!-- Modal End-->
 </div>
+  <!-- Display toastr message -->
+  @if(Session::has('success'))
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          toastr.success("{{ Session::get('success') }}");
+      });
+  </script>
+@endif
 @endsection
 @section('page-js')
 <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>

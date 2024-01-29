@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Office;
 use App\Models\Employee;
 use App\Models\Attendance;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -64,9 +65,9 @@ class AttendanceController extends Controller
 
      public function edit($id)
      {
-          $company = DB::table('company')->get()->all();
-        $employees = Employee::get()->all();
-        $offices = Office::get()->all();
+          $company = Company::all();
+        $employees = Employee::all();
+        $offices = Office::all();
 
          $attendance = Attendance::with(['employee', 'company', 'office'])->findOrFail($id);
      
