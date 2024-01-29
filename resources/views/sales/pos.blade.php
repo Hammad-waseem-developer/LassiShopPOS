@@ -224,11 +224,11 @@
                                                     <span class="error"></span>
                                                 </div>
 
-                                                <!-- PAyment Choice -->
+                                                <!-- Payment Choice -->
                                                 <div class="form-group col-md-6">
                                                     <label for="ordertax">Payment Choice
                                                         <span class="field_required">*</span></label>
-                                                    <select name="payment_choice" id="payment_method"
+                                                    <select name="payment_method_id" id="payment_method_id"
                                                         class="form-control">
                                                         <option value="">Select Payment</option>
                                                         @foreach ($payment_methods as $payment_method)
@@ -243,7 +243,7 @@
                                                 <!-- Account -->
                                                 <div class="form-group col-md-6">
                                                     <label>Account <span class="field_required">*</span></label>
-                                                    <select name="account" id="account" class="form-control">
+                                                    <select name="account_id" id="account_id" class="form-control">
                                                         @foreach ($accounts as $account)
                                                             <option value="">Select Account</option>
                                                             <option value="{{ $account->id }}">
@@ -731,7 +731,7 @@
                         }
                     },
                     error: function(data) {
-                        console.log("Error:",  data);
+                        console.log("Error:", data);
                     }
                 });
             }
@@ -1017,17 +1017,20 @@
                     GrandTotal: $("#GrandTotal").text(),
                     notes: $("#note").val(),
                     paying_amount: $("#paying_amount").val(),
-                    payment_method: $("#payment_method").val(),
-                    account: $("#account").val(),
+                    payment_method_id: $("#payment_method_id").val(),
+                    account_id: $("#account_id").val(),
                     sale_note: $("#sale_note").val(),
                 },
                 success: function(data) {
                     if (data.success) {
                         $("#form_Update_Detail").modal("hide");
-                        $("#sale_table").DataTable().ajax.reload();
+                        // $("#sale_table").DataTable().ajax.reload();
+                        console.log(data.id);
+                        window.location.href = "{{ url('invoice_pos') }}/"+data.id;
                     } else {
                         alert(data.message);
                     }
+                    console.log(data);
                 },
                 error: function(data) {
                     console.log(data);

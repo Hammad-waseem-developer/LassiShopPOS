@@ -134,130 +134,171 @@ class PosController extends Controller
             'warehouse_id' => 'required',
         ]);
 
-        // $item = \DB::transaction(function () use ($request) {
-        $helpers = new helpers();
-        $order = new Sale;
+        $item = \DB::transaction(function () use ($request) {
+            $helpers = new helpers();
+            $order = new Sale;
 
-        $order->is_pos = 1;
-        $order->date = $request->date;
-        $order->Ref = 'SO-' . date("Ymd") . '-' . date("his");
-        $order->client_id = $request->client_id;
-        $order->warehouse_id = $request->warehouse_id;
-        $order->tax_rate = $request->tax_rate;
-        $order->TaxNet = $request->TaxNet;
-        $order->discount = $request->discount;
-        $order->discount_type = $request->discount_type;
-        $order->discount_percent_total = $request->discount_percent_total;
-        $order->shipping = $request->shipping;
-        $order->GrandTotal = $request->GrandTotal;
-        $order->notes = $request->notes;
-        $order->statut = 'completed';
-        $order->payment_statut = 'unpaid';
-        $order->user_id = Auth::user()->id;
+            $order->is_pos = 1;
+            $order->date = $request->date;
+            $order->Ref = 'SO-' . date("Ymd") . '-' . date("his");
+            $order->client_id = $request->client_id;
+            $order->warehouse_id = $request->warehouse_id;
+            $order->tax_rate = $request->tax_rate;
+            $order->TaxNet = $request->TaxNet;
+            $order->discount = $request->discount;
+            $order->discount_type = $request->discount_type;
+            $order->discount_percent_total = $request->discount_percent_total;
+            $order->shipping = $request->shipping;
+            $order->GrandTotal = $request->GrandTotal;
+            $order->notes = $request->notes;
+            $order->statut = 'completed';
+            $order->payment_statut = 'unpaid';
+            $order->user_id = Auth::user()->id;
 
-        $order->save();
+            $order->save();
 
-        // $data = $request['details'];
-        $data = Session::get('cart');
-        foreach ($data as $key => $value) {
-            $orderDetails[] = [
-                'date'               => $order->date,
-                'sale_id'            => $order->id,
-                // 'sale_unit_id'       => $value['sale_unit_id'] ? $value['sale_unit_id'] : NULL,
-                'quantity'           => $value['quantity'],
-                'product_id'         => $value['id'],
-                // 'product_variant_id' => $value['product_variant_id'] ? $value['product_variant_id'] : NULL,
-                'total'              => $value['quantity'] * $value['price'],
-                'price'              => $value['price'],
-                // 'TaxNet'             => $value['tax_percent'],
-                'TaxNet'             => $order->TaxNet,
-                // 'tax_method'         => $value['tax_method'],
-                // 'discount'           => $value['discount'],
-                // 'discount_method'    => $value['discount_Method'],
-                // 'imei_number'        => $value['imei_number'],
-            ];
+            // $data = $request['details'];
+            $data = Session::get('cart');
+            foreach ($data as $key => $value) {
+                //Order Details
 
-            $newProductDetails = NewProductDetail::where('new_product_id', $value['id'])->get();
+                $newProductDetails = NewProductDetail::where('new_product_id', $value['id'])->get();
 
-            foreach ($newProductDetails as $newProductDetail) {
 
-                $unit = Unit::where('id', $newProductDetail->unit_id)->first();
+                // foreach ($newProductDetails as $newProductDetail) {
 
-                $productWarehouse = product_warehouse::where('product_id', $newProductDetail->base_product_id);
+                //     $unit = Unit::where('id', $newProductDetail->unit_id)->first();
 
-                if ($productWarehouse) {
-                    $product_warehouse = product_warehouse::where('warehouse_id', $order->warehouse_id)
-                        ->where('product_id', $newProductDetail->base_product_id)
+                //     $productWarehouse = product_warehouse::where('product_id', $newProductDetail->base_product_id)
+                //         ->where('warehouse_id', $request->warehouse_id)
+                //         ->first();
+
+                //     if ($unit && $productWarehouse) {
+                //         $quantityInBaseUnit = $newProductDetail->qty;
+
+                //         // Convert quantity to base product unit
+                //         if ($unit->name !== 'Units') {
+                //             $quantityInBaseUnit = $quantityInBaseUnit / $unit->operator_value;
+                //         }
+
+                //         // Update product warehouse quantity
+                //         $productWarehouse->qte -= $quantityInBaseUnit;
+                //         $productWarehouse->save();
+                //     }
+
+                // }
+
+                foreach ($newProductDetails as $newProductDetail) {
+                    $unit = Unit::where('id', $newProductDetail->unit_id)->first();
+                    $productWarehouse = product_warehouse::where('product_id', $newProductDetail->base_product_id)
+                        ->where('warehouse_id', $request->warehouse_id)
                         ->first();
-                    if ($unit && $product_warehouse) {
-                        if ($unit->name == 'Units') {
-                            $inv_qty = $product_warehouse->qte;
-                            $pos_qty = $newProductDetail->qty;
-                            $sub_qty = $inv_qty - $pos_qty;
 
-                            $product_warehouse->qte = round($sub_qty);
+                    if ($unit && $productWarehouse) {
+                        $quantityInBaseUnit = $newProductDetail->qty;
+
+                        // Check if the conversion is needed
+                        if ($unit->name !== 'Units') {
+                            // Check if the conversion is supported
+                            if ($unit->operator === '/' && $unit->operator_value !== 0) {
+                                $quantityInBaseUnit = $quantityInBaseUnit / $unit->operator_value;
+                            } elseif ($unit->operator === '*' && $unit->operator_value !== 0) {
+                                $quantityInBaseUnit = $quantityInBaseUnit * $unit->operator_value;
+                            } else {
+                                throw new \Exception('Invalid conversion for unit: ' . $unit->name);
+                            }
                         }
-                        $inv_qty = $product_warehouse->qte;
-                        $pos_qty = $newProductDetail->qty / 1000;
-                        $sub_qty = $inv_qty - $pos_qty;
-                        $product_warehouse->qte = $sub_qty;
-                        $product_warehouse->save();
+
+                        // Update product warehouse quantity based on the purchase and sale units
+                        $productWarehouse->qte -= $quantityInBaseUnit;
+                        $productWarehouse->save();
                     }
                 }
+
+
+
+                foreach ($newProductDetails as $newProductDetail) {
+                    $product = Product::where('id', $newProductDetail->base_product_id)->first();
+                    // dd($product);
+                    $Price = ($value['price'] * $value['quantity']);
+
+                    if ($product->tax_method == 1) {
+                        // Tax included in the price
+                        $total = $Price;
+                    } else {
+                        // Tax is not included in the price
+                        $total = $Price + ($Price * $product->TaxNet / 100);
+                    }
+
+                    $orderDetails[] = [
+                        'date'               => $order->date,
+                        'sale_id'            => $order->id,
+                        'sale_unit_id'       => $product->unit_sale_id ? $product->unit_sale_id : NULL,
+                        'quantity'           => $value['quantity'],
+                        'product_id'         => $product->id,
+                        // 'product_variant_id' => $value['product_variant_id'] ? $value['product_variant_id'] : NULL,
+                        'total'              => $total,
+                        'price'              => $product->price,
+                        'TaxNet'             => $product->TaxNet,
+                        'tax_method'         => $product->tax_method,
+                        'discount'           => 0,
+                        // 'discount_method'    => $value['discount_Method'],
+                        'imei_number'        => '',
+                    ];
+                }
             }
-        }
 
-        SaleDetail::insert($orderDetails);
+            SaleDetail::insert($orderDetails);
 
-        dd($orderDetails);
 
-        if ($request['montant'] > 0) {
+            if ($request->paying_amount > 0) {
 
-            $sale = Sale::findOrFail($order->id);
+                $sale = Sale::findOrFail($order->id);
 
-            $total_paid = $sale->paid_amount + $request['montant'];
-            $due = $sale->GrandTotal - $total_paid;
+                $total_paid = $sale->paid_amount + $request->paying_amount;
+                $due = $sale->GrandTotal - $total_paid;
 
-            if ($due === 0.0 || $due < 0.0) {
-                $payment_statut = 'paid';
-            } else if ($due != $sale->GrandTotal) {
-                $payment_statut = 'partial';
-            } else if ($due == $sale->GrandTotal) {
-                $payment_statut = 'unpaid';
-            }
+                if ($due === 0.0 || $due < 0.0) {
+                    $payment_statut = 'paid';
+                } else if ($due != $sale->GrandTotal) {
+                    $payment_statut = 'partial';
+                } else if ($due == $sale->GrandTotal) {
+                    $payment_statut = 'unpaid';
+                }
 
-            PaymentSale::create([
-                'sale_id'    => $order->id,
-                'account_id' => $request['account_id'] ? $request['account_id'] : NULL,
-                'Ref'        => $this->generate_random_code_payment(),
-                'date'       => $request['date'],
-                'payment_method_id'  => $request['payment_method_id'],
-                'montant'    => $request['montant'],
-                'change'     => 0,
-                'notes'      => $request['payment_notes'],
-                'user_id'    => Auth::user()->id,
-            ]);
+                PaymentSale::create([
+                    'sale_id'    => $order->id,
+                    'account_id' => $request->account_id ? $request->account_id : NULL,
+                    'Ref'        => $this->generate_random_code_payment(),
+                    'date'       => $request->date,
+                    'payment_method_id'  => $request->payment_method_id,
+                    'montant'    => $request->paying_amount,
+                    'change'     => 0,
+                    'notes'      => $request->payment_notes,
+                    'user_id'    => Auth::user()->id,
+                ]);
 
-            $account = Account::where('id', $request['account_id'])->exists();
+                $account = Account::where('id', $request->account_id)->exists();
 
-            if ($account) {
-                // Account exists, perform the update
-                $account = Account::find($request['account_id']);
-                $account->update([
-                    'initial_balance' => $account->initial_balance + $request['montant'],
+                if ($account) {
+                    // Account exists, perform the update
+                    $account = Account::find($request->account_id);
+                    $account->update([
+                        'initial_balance' => $account->initial_balance + $request->paying_amount,
+                    ]);
+                }
+
+                $sale->update([
+                    'paid_amount' => $total_paid,
+                    'payment_statut' => $payment_statut,
                 ]);
             }
 
-            $sale->update([
-                'paid_amount' => $total_paid,
-                'payment_statut' => $payment_statut,
-            ]);
-        }
+            return $order->id;
+        }, 10);
 
-        return $order->id;
-        // }, 10);
-
-        // return response()->json(['success' => true, 'id' => $item]);
+        Session::forget('cart');
+        return response()->json(['success' => true, 'id' => $item]);
     }
 
     // public function CreatePOS(Request $request)

@@ -104,7 +104,7 @@ class AddToCartController extends Controller
 
     public function add_to_cart(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $cart = Session::get('cart');
         $productDetails = NewProductDetail::where('new_product_id', $request->id)->get();
 
