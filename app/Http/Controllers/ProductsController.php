@@ -1727,6 +1727,10 @@ class ProductsController extends Controller
     {
         // dd($request->all());
         if ($request->type == 'Warehouse') {
+            $products = NewProduct::where('warehouse_id', $request->warehouse_id)->get();
+            return response()->json([
+                'products' => $products
+            ]);
             if ($request->category_id == 'all') {
                 $products = NewProduct::where('warehouse_id', $request->warehouse_id)->get();
                 return response()->json([
