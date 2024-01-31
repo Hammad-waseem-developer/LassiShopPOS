@@ -1042,7 +1042,7 @@
                         window.open("{{ url('invoice_pos') }}/" + data.id, "_blank");
                         window.location.reload();
                     } else {
-                        alert(data.message);
+                        toastr.error(data.message);
                     }
                     console.log(data);
                 },

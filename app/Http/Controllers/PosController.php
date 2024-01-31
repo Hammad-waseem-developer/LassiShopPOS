@@ -134,6 +134,9 @@ class PosController extends Controller
             'client_id' => 'required',
             'warehouse_id' => 'required',
         ]);
+        if(Session::get('cart') == null){
+            return response()->json(['status' => 'error', 'message' => 'Please add some items!']);
+        }
 
         $item = \DB::transaction(function () use ($request) {
             $helpers = new helpers();
