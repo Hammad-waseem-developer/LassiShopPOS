@@ -64,6 +64,7 @@ class HoldOrdersController extends Controller
 
     public function edit(Request $request)
     {
+        Session::forget('cart');
         $holdOrder = HoldOrder::find($request->id);
         $holdProducts = HoldProduct::where('hold_order_id', $request->id)->get();
         return response()->json([
