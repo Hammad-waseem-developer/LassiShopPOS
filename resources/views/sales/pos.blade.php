@@ -766,9 +766,13 @@
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
                     data: {
-                        id
+                        id: id,
+                        warehouse_id: $("#warehouse_id").val()
                     },
                     success: function(responseData) {
+                        if (responseData.message === 'Out of stock') {
+                            toastr.error('Out of stock');
+                        }
                         updateCartBox(responseData); // Call updateCartBox with the response data
                         checkCartItemsAndEnableWarehouseSelect();
                     },

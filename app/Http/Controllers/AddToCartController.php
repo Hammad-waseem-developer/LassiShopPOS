@@ -2,176 +2,112 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Unit;
 use App\Models\NewProduct;
+use Illuminate\Http\Request;
 use App\Models\NewProductDetail;
 use App\Models\product_warehouse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class AddToCartController extends Controller
 {
-    // session()->forget('cart');
-
-    // public function add_to_cart(Request $request)
-    // {
-    //     $cart = Session::get('cart') ?? [];
-    //     $newProductId = $request->id;
-
-    //     // Initialize an empty array for $totalQuantities
-    //     $totalQuantities = [];
-
-    //     // Check if $cart is not null before iterating through it
-    //     if ($cart) {
-    //         // Calculate total quantity for each product in the cart
-    //         foreach ($cart as $cartItem) {
-    //             $cartProductDetails = NewProductDetail::where('new_product_id', $cartItem['id'])->get();
-    //             foreach ($cartProductDetails as $productDetail) {
-    //                 $cartProductWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
-    //                     ->where('warehouse_id', $request->warehouse_id)
-    //                     ->first();
-
-    //                 $inv_qty = $cartProductWarehouse->qte;
-    //                 $pos_qty = $productDetail->qty / 1000;
-    //                 $sub_qty = $inv_qty - $pos_qty;
-
-    //                 $totalQuantities[$cartItem['id']] = ($totalQuantities[$cartItem['id']] ?? 0) + $sub_qty * $cartItem['quantity'];
-    //             }
-    //         }
-    //     }
-
-    //     // Continue with the rest of your code...
-    //     // Track whether any product quantity exceeds available stock
-    //     $anyProductOutOfStock = false;
-
-    //     $productDetails = NewProductDetail::where('new_product_id', $newProductId)->get();
-
-    //     foreach ($productDetails as $productDetail) {
-    //         $productWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
-    //             ->where('warehouse_id', $request->warehouse_id)
-    //             ->first();
-
-    //         $inv_qty = $productWarehouse->qte;
-    //         $pos_qty = $productDetail->qty / 1000;
-    //         $sub_qty = $inv_qty - $pos_qty;
-
-    //         // Check total quantity in the cart for this product
-    //         $totalQuantityInCart = $totalQuantities[$newProductId] ?? 0;
-
-    //         // Check if adding the current product will exceed the available quantity
-    //         if (($totalQuantityInCart + 1) * $pos_qty > $productWarehouse->qte) {
-    //             $anyProductOutOfStock = true;
-    //             break;
-    //         }
-    //     }
-
-    //     // Check if any product is out of stock
-    //     if ($anyProductOutOfStock) {
-    //         return response()->json(
-    //             [
-    //                 'message' => 'Out of stock',
-    //             ],
-    //             200
-    //         );
-    //     } else {
-    //         $productId = $newProductId;
-    //         $productPrice = $request->price;
-    //         $productName = $request->name;
-    //         $productImgPath = $request->img_path;
-
-    //         // Check if the product is already in the cart
-    //         if (array_key_exists($productId, $cart)) {
-    //             $cart[$productId]['quantity'] += 1;
-    //         } else {
-    //             // Add the product to the cart
-    //             $cart[$productId] = [
-    //                 'id' => $productId,
-    //                 'name' => $productName,
-    //                 'price' => $productPrice,
-    //                 'img_path' => $productImgPath,
-    //                 'quantity' => 1,
-    //             ];
-    //         }
-
-    //         Session::put('cart', $cart);
-
-    //         return response()->json(
-    //             [
-    //                 'cart' => $cart,
-    //             ]
-    //         );
-    //     }
-    // }
-
     public function add_to_cart(Request $request)
     {
-        // dd($request->all());
-        $cart = Session::get('cart');
-        $productDetails = NewProductDetail::where('new_product_id', $request->id)->get();
+        // Session::forget('cart');
+        // Retrieve the cart
+        $cart = Session::get('cart') ?? [];
+        // Keep track of out-of-stock items
+        $outOfStockItems = [];
+        $canAddToCart = true; // Assume the products can be added until proven otherwise
 
-        // Track whether any product quantity exceeds available stock
-        $anyProductOutOfStock = false;
+        // Continue with the rest of the code for processing the requested product
+        $productId = $request->id;
+        $productPrice = $request->price;
+        $productName = $request->name;
+        $productImgPath = $request->img_path;
 
-        foreach ($productDetails as $productDetail) {
-            $productWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
-                ->where('warehouse_id', $request->warehouse_id)
-                ->first();
-
-            $inv_qty = $productWarehouse->qte;
-            $pos_qty = $productDetail->qty / 1000;
-            $sub_qty = $inv_qty - $pos_qty;
-
-            // Adjust $sub_qty based on the quantity already in the cart
-            if ($cart != null && array_key_exists($request->id, $cart)) {
-                $sub_qty *= $cart[$request->id]['quantity'];
-            }
-
-            // Check if adjusted quantity is greater than available stock
-            if ($sub_qty >= $productWarehouse->qte) {
-                $anyProductOutOfStock = true;
-                break; // Exit the loop if any product is out of stock
-            }
-        }
-
-        // Check if any product is out of stock
-        if ($anyProductOutOfStock) {
-            return response()->json(
-                [
-                    'message' => 'Out of stock',
-                ],
-                200
-            );
+        // Clone the cart to simulate the addition of the new product
+        $simulatedCart = $cart;
+        if (array_key_exists($productId, $simulatedCart)) {
+            $simulatedCart[$productId]['quantity'] += 1;
         } else {
-
-            $cart = Session::get('cart');
-            if ($cart == null) {
-                $cart = [];
-            }
-            $productId = $request->id;
-            $productPrice = $request->price;
-            $productName = $request->name;
-            $productImgPath = $request->img_path;
-
-
-            if (array_key_exists($productId, $cart)) {
-                $cart[$productId]['quantity'] += 1;
-            } else {
-
-                $cart[$productId] = [
-                    'id' => $productId,
-                    'name' => $productName,
-                    'price' => $productPrice,
-                    'img_path' => $productImgPath,
-                    'quantity' => 1,
-                ];
-            }
-            Session::put('cart', $cart);
-            return response()->json(
-                [
-                    'cart' => $cart
-                ]
-            );
+            $simulatedCart[$productId] = [
+                'id' => $productId,
+                'name' => $productName,
+                'price' => $productPrice,
+                'img_path' => $productImgPath,
+                'quantity' => 1,
+            ];
         }
+
+        // Calculate the total quantity needed for all products in the simulated cart
+        $totalQuantityNeeded = [];
+        foreach ($simulatedCart as $item) {
+            $productDetails = NewProductDetail::where('new_product_id', $item['id'])->get();
+            foreach ($productDetails as $productDetail) {
+                $unit = Unit::where('id', $productDetail->unit_id)->first();
+                $ingredientWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
+                    ->where('warehouse_id', $request->warehouse_id)
+                    ->first();
+
+                if ($unit && $ingredientWarehouse) {
+                    // Calculate quantity in the base unit
+                    $quantityInBaseUnit = $productDetail->qty * $item['quantity'];
+
+                    // Check if unit conversion is needed
+                    if ($unit->name !== 'Units') {
+                        // Apply unit conversion
+                        if ($unit->operator === '/' && $unit->operator_value !== 0) {
+                            $quantityInBaseUnit /= $unit->operator_value;
+                        } elseif ($unit->operator === '*' && $unit->operator_value !== 0) {
+                            $quantityInBaseUnit *= $unit->operator_value;
+                        } else {
+                            throw new \Exception('Invalid conversion for unit: ' . $unit->name);
+                        }
+                    }
+
+                    // Add the quantity needed for the current item to the total
+                    if (!isset($totalQuantityNeeded[$ingredientWarehouse->product_id])) {
+                        $totalQuantityNeeded[$ingredientWarehouse->product_id] = 0;
+                    }
+
+                    $totalQuantityNeeded[$ingredientWarehouse->product_id] += $quantityInBaseUnit;
+
+                    if ($totalQuantityNeeded[$ingredientWarehouse->product_id] > $ingredientWarehouse->qte) {
+                        // Track out-of-stock item
+                        $canAddToCart = false;
+                        $outOfStockItems[] = "Out of Stock";
+                        break; // Stop checking other ingredients if one is out of stock
+                    }
+                }
+            }
+        }
+
+        // Check if any out-of-stock items were found
+        if (!$canAddToCart) {
+            return response()->json(['message' => 'Out of stock for: ' . implode(', ', $outOfStockItems)]);
+        }
+
+        // Update the actual cart if the stock check passes
+        if (array_key_exists($productId, $cart)) {
+            $cart[$productId]['quantity'] += 1;
+        } else {
+            $cart[$productId] = [
+                'id' => $productId,
+                'name' => $productName,
+                'price' => $productPrice,
+                'img_path' => $productImgPath,
+                'quantity' => 1,
+            ];
+        }
+
+        // Update the cart in the session
+        Session::put('cart', $cart);
+
+        // Return the updated cart in the response
+        return response()->json(['cart' => $cart]);
     }
+
 
     public function deleteProductFromCart(Request $request)
     {
@@ -188,16 +124,173 @@ class AddToCartController extends Controller
 
     public function addQty(Request $request)
     {
-        $cart = Session::get('cart');
-        $productId = $request->id;
-        $cart[$productId]['quantity'] += 1;
-        Session::put('cart', $cart);
+        // Retrieve the cart
+        $cart = Session::get('cart') ?? [];
+        // Keep track of out-of-stock items
+        $outOfStockItems = [];
+        $canAddToCart = false; // Assume the products can be added until proven otherwise
+
+        // Clone the cart to simulate the addition of the new product
+        $simulatedCart = $cart;
+
+        // Calculate the total quantity needed for all products in the simulated cart
+        $totalQuantityNeeded = [];
+        foreach ($simulatedCart as $item) {
+            $productDetails = NewProductDetail::where('new_product_id', $item['id'])->get();
+            foreach ($productDetails as $productDetail) {
+                $unit = Unit::where('id', $productDetail->unit_id)->first();
+                $ingredientWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
+                    ->where('warehouse_id', $request->warehouse_id)
+                    ->first();
+
+                if ($unit && $ingredientWarehouse) {
+                    // Calculate quantity in the base unit
+                    $quantityInBaseUnit = $productDetail->qty * $item['quantity'];
+
+                    // Check if unit conversion is needed
+                    if ($unit->name !== 'Units') {
+                        // Apply unit conversion
+                        if ($unit->operator === '/' && $unit->operator_value !== 0) {
+                            $quantityInBaseUnit /= $unit->operator_value;
+                        } elseif ($unit->operator === '*' && $unit->operator_value !== 0) {
+                            $quantityInBaseUnit *= $unit->operator_value;
+                        } else {
+                            throw new \Exception('Invalid conversion for unit: ' . $unit->name);
+                        }
+                    }
+
+                    // Add the quantity needed for the current item to the total
+                    if (!isset($totalQuantityNeeded[$ingredientWarehouse->product_id])) {
+                        $totalQuantityNeeded[$ingredientWarehouse->product_id] = 0;
+                    }
+
+                    $totalQuantityNeeded[$ingredientWarehouse->product_id] += $quantityInBaseUnit;
+
+                    if ($totalQuantityNeeded[$ingredientWarehouse->product_id] > $ingredientWarehouse->qte) {
+                        // Track out-of-stock item
+                        $canAddToCart = false;
+                        $outOfStockItems[] = "Out of Stock";
+                        break; // Stop checking other ingredients if one is out of stock
+                    } else {
+                        $canAddToCart = true;
+                    }
+                }
+            }
+        }
+
+        // Check if any out-of-stock items were found
+        if (!$canAddToCart) {
+            return response()->json(['message' => 'Out of stock', 'cart' => $cart]);
+        }
+
+        $productDetails = NewProductDetail::where('new_product_id', $request->id)->get();
+        foreach ($productDetails as $productDetail) {
+            $unit = Unit::where('id', $productDetail->unit_id)->first();
+            $ingredientWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
+                ->where('warehouse_id', $request->warehouse_id)
+                ->first();
+
+            if ($unit && $ingredientWarehouse) {
+                // Calculate quantity in the base unit
+                $quantityInBaseUnit = $productDetail->qty;
+
+                // Check if unit conversion is needed
+                if ($unit->name !== 'Units') {
+                    // Apply unit conversion
+                    if ($unit->operator === '/' && $unit->operator_value !== 0) {
+                        $quantityInBaseUnit /= $unit->operator_value;
+                    } elseif ($unit->operator === '*' && $unit->operator_value !== 0) {
+                        $quantityInBaseUnit *= $unit->operator_value;
+                    } else {
+                        throw new \Exception('Invalid conversion for unit: ' . $unit->name);
+                    }
+                }
+
+                // Add the quantity needed for the current item to the total
+                if (!isset($totalQuantityNeeded[$ingredientWarehouse->product_id])) {
+                    $totalQuantityNeeded[$ingredientWarehouse->product_id] = 0;
+                }
+
+                $totalQuantityNeeded[$ingredientWarehouse->product_id] += $quantityInBaseUnit;
+
+                if ($totalQuantityNeeded[$ingredientWarehouse->product_id] > $ingredientWarehouse->qte) {
+                    // Track out-of-stock item
+                    $canAddToCart = false;
+                    $outOfStockItems[] = "Out of Stock";
+                    return response()->json(['message' => 'Out of stock', 'cart' => $cart]);
+                    break; // Stop checking other ingredients if one is out of stock
+                } else {
+                    $canAddToCart = true;
+                }
+            }
+        }
+
+        if ($canAddToCart === true) {
+            $productId = $request->id;
+            $cart[$productId]['quantity'] += 1;
+            Session::put('cart', $cart);
+        }
         return response()->json(
             [
                 'cart' => $cart
             ]
         );
     }
+
+
+    // public function addQty(Request $request)
+    // {
+    //     $cart = Session::get('cart');
+    //     // Calculate the total quantity needed for all items in the cart
+    //     $totalQuantityNeeded = 0;
+    //     // Keep track of out-of-stock items
+    //     $outOfStockItems = [];
+
+    //     foreach ($cart as $item) {
+    //         $productDetails = NewProductDetail::where('new_product_id', $request->id)->get();
+    //         foreach ($productDetails as $productDetail) {
+    //             $unit = Unit::where('id', $productDetail->unit_id)->first();
+    //             $ingredientWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
+    //                 ->where('warehouse_id', $request->warehouse_id)
+    //                 ->first();
+
+    //             if ($unit && $ingredientWarehouse) {
+    //                 // Calculate quantity in the base unit
+    //                 $quantityInBaseUnit = $productDetail->qty * $item['quantity'];
+
+    //                 // Check if unit conversion is needed
+    //                 if ($unit->name !== 'Units') {
+    //                     // Apply unit conversion
+    //                     if ($unit->operator === '/' && $unit->operator_value !== 0) {
+    //                         $quantityInBaseUnit /= $unit->operator_value;
+    //                     } elseif ($unit->operator === '*' && $unit->operator_value !== 0) {
+    //                         $quantityInBaseUnit *= $unit->operator_value;
+    //                     } else {
+    //                         throw new \Exception('Invalid conversion for unit: ' . $unit->name);
+    //                     }
+    //                 }
+
+    //                 // Add the quantity needed for the current item to the total
+    //                 $totalQuantityNeeded += $quantityInBaseUnit;
+
+    //                 if ($totalQuantityNeeded > $ingredientWarehouse->qte) {
+    //                     // Track out-of-stock item
+    //                     return response()->json(['cart' => $cart, 'message' => 'Out of stock']);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // Continue with the rest of the code for increasing the quantity
+    //     $productId = $request->id;
+    //     $cart[$productId]['quantity'] += 1;
+    //     Session::put('cart', $cart);
+    //     return response()->json(
+    //         [
+    //             'cart' => $cart
+    //         ]
+    //     );
+    // }
 
     public function removeQty(Request $request)
     {

@@ -196,7 +196,7 @@ class PosController extends Controller
                         ->first();
 
                     if ($unit && $productWarehouse) {
-                        $quantityInBaseUnit = $newProductDetail->qty;
+                        $quantityInBaseUnit = $newProductDetail->qty * $value['quantity'];
 
                         // Check if the conversion is needed
                         if ($unit->name !== 'Units') {
@@ -212,6 +212,7 @@ class PosController extends Controller
 
                         // Update product warehouse quantity based on the purchase and sale units
                         $productWarehouse->qte -= $quantityInBaseUnit;
+                        // dd($quantityInBaseUnit);
                         $productWarehouse->save();
                     }
                 }
