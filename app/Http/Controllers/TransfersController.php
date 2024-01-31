@@ -296,7 +296,7 @@ class TransfersController extends Controller
             }, 10);
 
             return response()->json(['success' => true]);
-
+            Session::forget('cart');
         }
         return abort('403', __('You are not authorized'));
     }

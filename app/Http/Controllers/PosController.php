@@ -20,6 +20,7 @@ use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\HoldOrder;
 use App\Models\Warehouse;
 use App\Models\NewProduct;
 use App\Models\PosSetting;
@@ -61,6 +62,7 @@ class PosController extends Controller
 
         if ($user_auth->can('pos')) {
 
+            $holdList = HoldOrder::with('holdProducts')->get();
             $products = NewProduct::all();
             $units = Unit::where('deleted_at', '=', null)->get();
 
@@ -114,6 +116,7 @@ class PosController extends Controller
                 'default_warehouse'  => $default_warehouse,
                 'default_Client'     => $default_Client,
                 'totalRows'          => $totalRows,
+                'holdList'           => $holdList,
             ]);
         } else {
             return abort('403', __('You are not authorized'));
@@ -134,7 +137,7 @@ class PosController extends Controller
             'client_id' => 'required',
             'warehouse_id' => 'required',
         ]);
-        if(Session::get('cart') == null){
+        if (Session::get('cart') == null) {
             return response()->json(['status' => 'error', 'message' => 'Please add some items!']);
         }
 

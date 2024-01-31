@@ -192,6 +192,15 @@ if ($installed === false) {
             Route::get('pos/autocomplete_product_pos/{id}', 'PosController@autocomplete_product_pos');
             Route::get('invoice_pos/{id}', 'PosController@Print_Invoice_POS');
             Route::get('GetCategories', 'PosController@GetCategories')->name('GetCategories');
+            
+            //---------------------- Hold Order ----------------------\\
+            //------------------------------------------------------------------\\
+            Route::post('hold-order', 'HoldOrdersController@create')->name('hold_order');
+            Route::post('edit-hold-order', 'HoldOrdersController@edit')->name('edit_hold_order');
+            Route::get('getHoldList', 'HoldOrdersController@getHoldList')->name('getHoldList');
+            Route::post('delete-hold-order', 'HoldOrdersController@delete')->name('delete_hold_order');
+
+
 
             //------------------------------- transfers --------------------------\\
             Route::resource('transfer/transfers', 'TransfersController');

@@ -66,8 +66,16 @@
                                 </ul>
                             </div>
                         </div>
-                        <button class="btn btn-light p-3 rounded-circle ms-3">
+                        {{-- <button class="btn btn-light p-3 rounded-circle ms-3">
                             @include('components.icons.full-screen', ['class' => 'width_20'])
+                        </button> --}}
+                        <button class="btn btn-success btn-sm ms-3" id="show-hold-order">
+                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                            </svg> --}}
+                            Hold Orders
                         </button>
                     </div>
 
@@ -181,9 +189,17 @@
                                         <div class="half-circle half-circle-right"></div>
                                     </div>
 
-                                    <button class="cart-btn btn btn-primary" id="PayNow">
-                                        {{ __('translate.Pay_Now') }}
-                                    </button>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button class="cart-btn btn btn-primary" id="PayNow">
+                                                {{ __('translate.Pay_Now') }}
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="cart-btn btn btn-success"
+                                                id="HoldOrderBtn">Hold</button>
+                                        </div>
+                                    </div>
 
                                 </div>
 
@@ -277,6 +293,63 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Hold Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Hold Order</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" class="text-warning" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                                          </svg>
+                                        <h3 class="text-center my-3">Hold Invoice ? Same Reference will replace the old list if exist!!</h2>
+                                        <input type="text" id="reference-number" class="form-control"
+                                            placeholder="Enter Reference Number">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="holdOrder">Save
+                                            changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Show Hold Orders Modal -->
+                        <div class="modal fade" id="Show_Hold" tabindex="-1" aria-labelledby="Show_HoldModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="Show_HoldModalLabel">Hold list</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Reference</th>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="hold_list">
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -403,6 +476,207 @@
         };
 
         $(document).ready(function() {
+
+            function GetHoldList() {
+                $.ajax({
+                    url: "{{ route('getHoldList') }}",
+                    type: "GET",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    success: function(responseData) {
+                        $("#hold_list").empty();
+                        responseData.forEach(element => {
+                            $("#hold_list").append(`
+                            <tr>
+                                <th scope="row">${element.id}</th>
+                                <td>${ element.reference_no }</td>
+                                <td>${ element.created_at }</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                        data-bs-dismiss="modal"
+                                        id="DeleteHoldOrder" data-id="${element.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" fill="currentColor"
+                                            class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                        data-bs-dismiss="modal" id="editHold"
+                                        data-id="${element.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" fill="currentColor"
+                                            class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            `);
+                        })
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+
+
+
+            $("body").on('click', '#DeleteHoldOrder', function() {
+                var id = $(this).data('id');
+                deleteHoldOrder(id);
+            });
+
+            function deleteHoldOrder(id) {
+                $.ajax({
+                    url: "{{ route('delete_hold_order') }}",
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id
+                    },
+                    success: function(data) {
+                        if (data.message === 'success') {
+                            toastr.success(data.data);
+                            GetHoldList();
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+            }
+
+
+            $("body").on('click', '#show-hold-order', function() {
+                $("#Show_Hold").modal("show");
+            });
+
+            $("body").on("click", "#HoldOrderBtn", function() {
+                if (data.cart == null) {
+                    toastr.error("Please select at least one product");
+                } else {
+                    $("#exampleModal").modal("show");
+                }
+            });
+
+            $("body").on("click", "#holdOrder", function() {
+                var reference_number = $('#reference-number').val();
+                var warehouse_id = $('#warehouse_id').val();
+                var shipping = $('#shipping').val();
+                var orderTax = $('#orderTax').val();
+                var discount = $('#discount').val();
+                var discountType = elements.discountSelect.val();
+                var hold_products = data;
+
+                $.ajax({
+                    url: "{{ route('hold_order') }}",
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        reference_number,
+                        warehouse_id,
+                        shipping,
+                        orderTax,
+                        discount,
+                        discountType,
+                        hold_products
+                    },
+                    success: function(data) {
+                        if (data.message === 'success') {
+                            toastr.success("Order Hold Successfully");
+                            $("#exampleModal").modal("hide");
+                            GetHoldList();
+                            $("#shipping").val("");
+                            $("#orderTax").val("");
+                            $("#discount").val("");
+                            $("#GrandTotal").val("");
+                            $("#discountType").val("");
+                            data.cart = null;
+                            elements.cartItems.html("");
+                        }
+                        if (data.message === 'error') {
+                            var errors = data.data;
+
+                            // Display each error message using Toastr
+                            for (var key in errors) {
+                                if (errors.hasOwnProperty(key)) {
+                                    var errorMessage = errors[key][
+                                        0
+                                    ]; // Assuming there is only one error message per field
+                                    toastr.error(errorMessage);
+                                }
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        toastr.error(data.error);
+                        $("#exampleModal").modal("hide");
+                    }
+                })
+            });
+
+            $("body").on("click", "#editHold", function() {
+                var HoldId = $(this).data("id");
+
+                $.ajax({
+                    url: "{{ route('edit_hold_order') }}",
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id: HoldId
+                    },
+                    success: function(data) {
+                        $("#shipping").val(data.data.holdOrder.shipping);
+                        $("#orderTax").val(data.data.holdOrder.orderTax);
+                        $("#discount").val(data.data.holdOrder.discount);
+                        $(elements.discountSelect).val(data.data.holdOrder.discountType);
+                        $("#warehouse_id").val(data.data.holdOrder.warehouse_id);
+                        $("#reference-number").val(data.data.holdOrder.reference_number);
+                        const warehouseId = data.data.holdOrder.warehouse_id;
+                        warehouse_id = warehouseId;
+                        const categoryId = $(".category-item.CategorySelected").data(
+                            "id"); // Get the selected category ID
+                        ProductByCategory(categoryId, warehouseId, "Warehouse");
+                        data.data.holdProducts.forEach(element => {
+                            if (element.quantity === 1) {
+                                addToCart(element.product_id, element.price, element
+                                    .name, element.img_path);
+                            }
+
+                            if (element.quantity > 1) {
+                                for (let i = 0; i < element.quantity; i++) {
+                                    addToCart(element.product_id, element.price, element
+                                        .name, element.img_path);
+                                }
+                            }
+                        })
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+
+            });
 
             $("#products-box").on("click", function() {
                 if (elements.cartItems.length > 0) {
@@ -551,6 +825,7 @@
             function initialize() {
                 fetchAndRenderProducts();
                 checkCartItemsAndEnableWarehouseSelect();
+                GetHoldList();
 
                 // Handle click events
                 elements.productsBox.on("click", ".product-card", function() {
@@ -1036,8 +1311,6 @@
                     if (data.success) {
                         $("#form_Update_Detail").modal("hide");
                         $("#form_Update_Detail").trigger("reset");
-                        // $("#sale_table").DataTable().ajax.reload();
-                        console.log(data.id);
                         toastr.success(data.message);
                         window.open("{{ url('invoice_pos') }}/" + data.id, "_blank");
                         window.location.reload();
