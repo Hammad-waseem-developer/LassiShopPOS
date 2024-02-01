@@ -204,7 +204,10 @@ if ($installed === false) {
 
             //---------------------- Order List ----------------------\\
             //------------------------------------------------------------------\\
-            Route::get('OrderList', 'PosController@OrderList')->name('OrderList');
+            Route::post('OrderList', 'OrderListController@OrderList')->name('OrderList');
+            Route::get('OrderListShow', 'OrderListController@OrderListShow')->name('OrderListShow');
+            Route::post('complete-order', 'OrderListController@completeOrder')->name('complete_order');
+            Route::post('undo-order', 'OrderListController@undoOrder')->name('undo_order');
 
 
             //------------------------------- transfers --------------------------\\

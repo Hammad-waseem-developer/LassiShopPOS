@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\NewProduct;
 use Illuminate\Http\Request;
+use App\Events\OrderListEvent;
 use App\Models\NewProductDetail;
 use App\Models\product_warehouse;
 use Illuminate\Support\Facades\Session;
@@ -15,7 +16,8 @@ class AddToCartController extends Controller
     {
         // Retrieve the cart
         $cart = Session::get('cart') ?? [];
-        $OrderList = Session::get('OrderList') ?? [];
+        // dd($cart);
+        // $OrderList = Session::get('OrderList') ?? [];
         // Keep track of out-of-stock items
         $outOfStockItems = [];
         $canAddToCart = true; // Assume the products can be added until proven otherwise
@@ -28,10 +30,10 @@ class AddToCartController extends Controller
 
         // Clone the cart to simulate the addition of the new product
         $simulatedCart = $cart;
-        $simulatedOrderList = $OrderList;
+        // $simulatedOrderList = $OrderList;
         if (array_key_exists($productId, $simulatedCart)) {
             $simulatedCart[$productId]['quantity'] += 1;
-            $simulatedOrderList[$productId]['quantity'] += 1;
+            // $simulatedOrderList[$productId]['quantity'] += 1;
 
         } else {
             $simulatedCart[$productId] = [
@@ -101,7 +103,7 @@ class AddToCartController extends Controller
         // Update the actual cart if the stock check passes
         if (array_key_exists($productId, $cart)) {
             $cart[$productId]['quantity'] += 1;
-            $OrderList[$productId]['quantity'] += 1;
+            // $OrderList[$productId]['quantity'] += 1;
         } else {
             $cart[$productId] = [
                 'id' => $productId,
@@ -110,18 +112,19 @@ class AddToCartController extends Controller
                 'img_path' => $productImgPath,
                 'quantity' => 1,
             ];
-            $OrderList[$productId] = [
-                'id' => $productId,
-                'name' => $productName,
-                'price' => $productPrice,
-                'img_path' => $productImgPath,
-                'quantity' => 1,
-            ];
+            // $OrderList[$productId] = [
+            //     'id' => $productId,
+            //     'name' => $productName,
+            //     'price' => $productPrice,
+            //     'img_path' => $productImgPath,
+            //     'quantity' => 1,
+            // ];
         }
 
         // Update the cart in the session
         Session::put('cart', $cart);
-        Session::put('OrderList', $OrderList);
+        // Session::put('OrderList', $OrderList);
+        // event(new OrderListEvent($OrderList));
 
         // Return the updated cart in the response
         return response()->json(['cart' => $cart]);
@@ -131,9 +134,13 @@ class AddToCartController extends Controller
     public function deleteProductFromCart(Request $request)
     {
         $cart = Session::get('cart');
+        // $OrderList = Session::get('OrderList');
         $productId = $request->id;
         unset($cart[$productId]);
+        // unset($OrderList[$productId]);
         Session::put('cart', $cart);
+        // Session::put('OrderList', $OrderList);
+        // event(new OrderListEvent($OrderList));
         return response()->json(
             [
                 'cart' => $cart
@@ -145,14 +152,14 @@ class AddToCartController extends Controller
     {
         // Retrieve the cart
         $cart = Session::get('cart') ?? [];
-        $OrderList = Session::get('OrderList') ?? [];
+        // $OrderList = Session::get('OrderList') ?? [];
         // Keep track of out-of-stock items
         $outOfStockItems = [];
         $canAddToCart = false; // Assume the products can be added until proven otherwise
 
         // Clone the cart to simulate the addition of the new product
         $simulatedCart = $cart;
-        $simulatedOrderList = $OrderList;
+        // $simulatedOrderList = $OrderList;
 
         // Calculate the total quantity needed for all products in the simulated cart
         $totalQuantityNeeded = [];
@@ -249,9 +256,10 @@ class AddToCartController extends Controller
         if ($canAddToCart === true) {
             $productId = $request->id;
             $cart[$productId]['quantity'] += 1;
-            $OrderList[$productId]['quantity'] += 1;
+            // $OrderList[$productId]['quantity'] += 1;
             Session::put('cart', $cart);
-            Session::put('OrderList', $OrderList);
+            // Session::put('OrderList', $OrderList);
+            // event(new OrderListEvent($OrderList));
         }
         return response()->json(
             [
@@ -318,12 +326,13 @@ class AddToCartController extends Controller
     public function removeQty(Request $request)
     {
         $cart = Session::get('cart');
-        $OrderList = Session::get('OrderList');
+        // $OrderList = Session::get('OrderList');
         $productId = $request->id;
         $cart[$productId]['quantity'] -= 1;
-        $OrderList[$productId]['quantity'] -= 1;
+        // $OrderList[$productId]['quantity'] -= 1;
         Session::put('cart', $cart);
-        Session::put('OrderList', $OrderList);
+        // Session::put('OrderList', $OrderList);
+        // event(new OrderListEvent($OrderList));
         return response()->json(
             [
                 'cart' => $cart

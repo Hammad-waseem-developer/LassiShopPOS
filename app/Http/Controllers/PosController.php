@@ -38,6 +38,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
+use App\Events\OrderListEvent;
+
 
 class PosController extends Controller
 {
@@ -316,7 +318,77 @@ class PosController extends Controller
             return $order->id;
         }, 10);
 
+        // $cartData = Session::get('cart');
+        // $orderList = Session::get('OrderList') ?? [];
+
+        // foreach ($cartData as $orderId => $order) {
+        //     $sessionKey = 'OrderList_' . $orderId;
+
+        //     // Check if the product already exists in OrderList
+        //     if (isset($orderList[$orderId])) {
+        //         // Update the quantity if the product exists
+        //         $orderList[$orderId]['quantity'] += $order['quantity'];
+        //     } else {
+        //         // Add a new entry if the product doesn't exist
+        //         $orderList[$orderId] = $order;
+        //     }
+
+        //     // Update the session with the modified OrderList
+        //     Session::put($sessionKey, $orderList[$orderId]);
+
+        //     // Broadcast the event for the modified or new order
+        //     event(new OrderListEvent($orderList[$orderId]));
+        // }
+
+        // // Set the 'OrderList' session with the aggregated data
+        // Session::put('OrderList', $orderList);
+
+        // // Broadcast the event with the entire orderList data
+        // event(new OrderListEvent($orderList));
+
+        // Session::forget('cart');
+
+        $cartData = Session::get('cart');
+        $orderList = Session::get('OrderList') ?? [];
+
+        foreach ($cartData as $orderId => $order) {
+            $sessionKey = 'OrderList_' . $orderId;
+
+            // Check if the product already exists in OrderList
+            if (isset($orderList[$orderId])) {
+                // Update the quantity if the product exists
+                $orderList[$orderId]['quantity'] += $order['quantity'];
+
+                // Store the updated original quantity in the session
+                Session::put('originalQuantity_' . $orderId, $orderList[$orderId]['quantity']);
+                // Update the orderList with the original quantity
+                $orderList[$orderId]['originalQuantity'] = $orderList[$orderId]['quantity'];
+            } else {
+                // Add a new entry if the product doesn't exist
+                $orderList[$orderId] = $order;
+                // Store the original quantity in the session
+                Session::put('originalQuantity_' . $orderId, $order['quantity']);
+                // Update the orderList with the original quantity
+                $orderList[$orderId]['originalQuantity'] = $order['quantity'];
+            }
+
+            // Update the session with the modified OrderList
+            Session::put($sessionKey, $orderList[$orderId]);
+
+            // Broadcast the event for the modified or new order
+            event(new OrderListEvent($orderList[$orderId]));
+        }
+
+        // Set the 'OrderList' session with the aggregated data
+        Session::put('OrderList', $orderList);
+
+        // Broadcast the event with the entire orderList data
+        event(new OrderListEvent($orderList));
+
         Session::forget('cart');
+        // dd(Session::get('originalQuantity_28'));
+
+
         return response()->json(['success' => true, 'id' => $item]);
     }
 
@@ -837,13 +909,5 @@ class PosController extends Controller
     {
         Session::forget('cart');
         return response()->json(['success' => "Cart is flushed"]);
-    }
-
-    //-------------- Flush Session ---------------\\
-    public function OrderList()
-    {
-        // Session::forget('OrderList');
-        $OrderList = Session::get('OrderList');
-        return response()->json(['OrderList' => $OrderList]);
     }
 }
