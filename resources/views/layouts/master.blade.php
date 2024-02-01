@@ -12,6 +12,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Posly - POS with Inventory Management</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
         @yield('before-css')
         {{-- theme css --}}
 
