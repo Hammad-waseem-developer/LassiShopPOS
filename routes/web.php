@@ -192,6 +192,7 @@ if ($installed === false) {
             Route::get('pos/autocomplete_product_pos/{id}', 'PosController@autocomplete_product_pos');
             Route::get('invoice_pos/{id}', 'PosController@Print_Invoice_POS');
             Route::get('GetCategories', 'PosController@GetCategories')->name('GetCategories');
+            Route::post('flushCart', 'PosController@flushCart')->name('flushCart');
             
             //---------------------- Hold Order ----------------------\\
             //------------------------------------------------------------------\\

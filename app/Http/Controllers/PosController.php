@@ -831,4 +831,11 @@ class PosController extends Controller
         $categories = Category::where('deleted_at', '=', null)->get();
         return response()->json($categories);
     }
+
+    //-------------- Flush Session ---------------\\
+    public function flushCart(Request $request)
+    {
+        Session::forget('cart');
+        return response()->json(['success' => "Cart is flushed"]);
+    }
 }
