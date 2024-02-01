@@ -838,4 +838,12 @@ class PosController extends Controller
         Session::forget('cart');
         return response()->json(['success' => "Cart is flushed"]);
     }
+
+    //-------------- Flush Session ---------------\\
+    public function OrderList()
+    {
+        // Session::forget('OrderList');
+        $OrderList = Session::get('OrderList');
+        return response()->json(['OrderList' => $OrderList]);
+    }
 }

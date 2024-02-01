@@ -202,6 +202,10 @@ if ($installed === false) {
             Route::post('delete-hold-order', 'HoldOrdersController@delete')->name('delete_hold_order');
 
 
+            //---------------------- Order List ----------------------\\
+            //------------------------------------------------------------------\\
+            Route::get('OrderList', 'PosController@OrderList')->name('OrderList');
+
 
             //------------------------------- transfers --------------------------\\
             Route::resource('transfer/transfers', 'TransfersController');
