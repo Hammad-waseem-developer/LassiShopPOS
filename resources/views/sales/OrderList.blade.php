@@ -69,9 +69,18 @@
     </div>
     <div class="container">
         <div class="row">
-            <div id="orderListContainer" class="card-container">
-                <div class="col-md-4">
-                    <!-- OrderList content will be dynamically updated here -->
+            <div id="orderListContainer" style="display: flex; justify-content: center; flex-direction: column;"
+                class="card-container">
+                <!-- OrderList content will be dynamically updated here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <div id="paginationContainer" class="d-flex justify-content-center mt-3">
+                    <!-- Pagination controls will be dynamically updated here -->
                 </div>
             </div>
         </div>
@@ -111,16 +120,28 @@
 
     <script src="{{ asset('assets/js/compact-layout.js') }}"></script>
 
+
     <script>
         $(document).ready(function() {
-            function updateOrderListCards(orderList) {
+            var orderLists = [];
+
+            // Convert object to array
+            const orderList = Object.values(orderLists);
+
+            function updateOrderListCards(orderList, currentPage, itemsPerPage) {
                 var container = $('#orderListContainer');
                 container.empty();
 
                 if (!orderList || orderList.length === 0) {
                     container.append('<p>No orders found.</p>');
+                    return;
                 }
-                $.each(orderList, function(index, item) {
+
+                var startIndex = (currentPage - 1) * itemsPerPage;
+                var endIndex = startIndex + itemsPerPage;
+                var paginatedOrderList = orderList.slice(startIndex, endIndex);
+
+                $.each(paginatedOrderList, function(index, item) {
                     var card = $('<div class="card p-2 text-center" style="width: 18rem; height: 20rem;">');
                     card.append('<img src="/images/products/' + item.img_path +
                         '" class="card-img-top image img-fluid m-0 p-0" alt="Product Image">');
@@ -144,7 +165,25 @@
                     container.append(card);
                 });
 
+                // Add pagination controls
+                var totalPages = Math.ceil(orderList.length / itemsPerPage);
+                var paginationContainer = $(
+                    '<div id="paginationContainer" class="d-flex justify-content-center mt-3">');
+
+                for (var i = 1; i <= totalPages; i++) {
+                    var pageLink = $('<a href="#" class="btn btn-outline-primary mx-1">' + i + '</a>');
+                    if (i === currentPage) {
+                        pageLink.addClass('active');
+                    }
+                    paginationContainer.append(pageLink);
+                }
+
+                container.append(paginationContainer);
             }
+
+            // Example usage:
+            var currentPage = 1;
+            var itemsPerPage = 1;
 
             function fetchOrderList() {
                 $.ajax({
@@ -158,7 +197,9 @@
                     },
                     dataType: 'json',
                     success: function(response) {
-                        updateOrderListCards(response.OrderList);
+                        var orderListArray = Object.values(response.OrderList);
+                        orderLists = orderListArray;
+                        updateOrderListCards(orderLists, currentPage, itemsPerPage);
                     },
                     error: function(error) {
                         console.error('Error fetching OrderList:', error);
@@ -166,8 +207,10 @@
                 });
             }
 
+            // Initial call to fetchOrderList
             fetchOrderList();
 
+            // Set interval to fetch order list every 5 seconds
             setInterval(function() {
                 fetchOrderList();
             }, 5000);
@@ -186,13 +229,12 @@
                     },
                     dataType: 'json',
                     success: function(response) {
-                        console.log(response);
                         fetchOrderList();
                     },
                     error: function(error) {
                         console.error('Error fetching OrderList:', error);
                     }
-                })
+                });
             });
 
             $("body").on('click', '#undoOrder', function() {
@@ -218,11 +260,22 @@
                     error: function(error) {
                         console.error('Error fetching OrderList:', error);
                     }
-                })
+                });
             }
 
-        })
+            // Pagination controls
+            $(document).on('click', '#paginationContainer a', function(e) {
+                e.preventDefault();
+
+                var clickedPage = parseInt($(this).text());
+                if (clickedPage !== currentPage) {
+                    currentPage = clickedPage;
+                    updateOrderListCards(orderLists, currentPage, itemsPerPage);
+                }
+            });
+        });
     </script>
+
 
 </body>
 
