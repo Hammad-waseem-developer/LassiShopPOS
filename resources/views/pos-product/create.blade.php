@@ -5,8 +5,8 @@
 @endsection
 <style>
     .cursor {
-        cursor: 'not-allowed'!important;
-        pointer-events: 'none'!important;
+        cursor: 'not-allowed' !important;
+        pointer-events: 'none' !important;
 
     }
 </style>
@@ -148,13 +148,12 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    console.log(response);
                     if (response.status == 'success') {
+                        console.log("success" + response);
                         toastr.success(response.message);
                         window.location.href = "{{ route('pos-product.index') }}";
                     } else if (response.status == 'error') {
-                        // Handle errors and display them on the same page
-                        // console.log("Error " + response.errors);
+                        console.log(response);
                         handleErrors(response.errors);
                         toastr.error(response.message);
                     }
@@ -162,6 +161,7 @@
                 error: function(error) {
                     toastr.error(error.message);
                 }
+
             });
         }
 
@@ -223,12 +223,17 @@
             // Clear previous error messages
             $('.error-message').empty();
 
-            // Display errors below each input field
-            $.each(errors, function(field, error) {
-                $(`select[name="${field}"]`).siblings('.error-message').html(
-                    '<div class="alert alert-danger">' + error + '</div>');
-            });
+            if (errors && errors.length > 0) {
+                // Display errors using Toastr
+                $.each(errors, function(index, error) {
+                    // Display error message in Toastr
+                    toastr.error(error);
+                });
+            }
         }
+
+
+
 
 
 
