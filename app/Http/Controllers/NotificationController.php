@@ -37,7 +37,7 @@ class NotificationController extends Controller
     {
         $notificationId = $request->id;
         $notificationDetails = NotificationDetail::with('notification')->where('notification_id', $notificationId)->where('user_id', Auth::user()->id)->first();
-        dd($notificationDetails);
+        // dd($notificationDetails);
         $notificationDetails->status = 1;
         $notificationDetails->read_at = now();
         $notificationDetails->save();
