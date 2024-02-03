@@ -129,6 +129,21 @@
             </ul>
         </div>
     </div>
+    <input type="hidden" name="notification_id" id="notification_id">
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="notification-details">
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <script>
@@ -203,88 +218,135 @@
     //     setInterval(fetchNotifications, 5000);
     // });
 
-    document.addEventListener('DOMContentLoaded', function () {
-    function fetchNotifications() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '{{ route('fetch-notifications') }}', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+    document.addEventListener('DOMContentLoaded', function() {
+        function fetchNotifications() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '{{ route('fetch-notifications') }}', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                var response = JSON.parse(xhr.responseText);
-                updateNotifications(response.unreadNotificationsCount, response.notifications);
-            } else {
-                console.error('Error fetching notifications:', xhr.statusText);
-            }
-        };
-
-        xhr.onerror = function () {
-            console.error('Network error while fetching notifications');
-        };
-
-        xhr.send();
-    }
-
-    function updateNotifications(unreadNotificationsCount, notifications) {
-        var notificationContainer = document.getElementById('notification-container');
-
-        if (unreadNotificationsCount > 0) {
-            notificationContainer.classList.add('notBtn1');
-            // toastr.warning(unreadNotificationsCount + ' new notifications.');
-        }
-
-        if (unreadNotificationsCount === 0) {
-            notificationContainer.classList.remove('notBtn1');
-        }
-
-        if (notificationContainer) {
-            var notificationList = document.querySelector('.display');
-            if (notificationList) {
-                while (notificationList.firstChild) {
-                    notificationList.removeChild(notificationList.firstChild);
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    var response = JSON.parse(xhr.responseText);
+                    updateNotifications(response.unreadNotificationsCount, response.notifications);
+                } else {
+                    console.error('Error fetching notifications:', xhr.statusText);
                 }
+            };
 
-                notifications.forEach(function (notification) {
-                    var notificationDiv = document.createElement('div');
-                    notificationDiv.classList.add('sec');
+            xhr.onerror = function() {
+                console.error('Network error while fetching notifications');
+            };
 
-                    if (notification.notification_detail.some(function (detail) {
-                        return detail.user_id === {{ Auth::user()->id }} && detail.status === 0;
-                    })) {
-                        notificationDiv.classList.add('new');
+            xhr.send();
+        }
+
+        function updateNotifications(unreadNotificationsCount, notifications) {
+            var notificationContainer = document.getElementById('notification-container');
+
+            if (unreadNotificationsCount > 0) {
+                notificationContainer.classList.add('notBtn1');
+                // toastr.warning(unreadNotificationsCount + ' new notifications.');
+            }
+
+            if (unreadNotificationsCount === 0) {
+                notificationContainer.classList.remove('notBtn1');
+            }
+
+            if (notificationContainer) {
+                var notificationList = document.querySelector('.display');
+                if (notificationList) {
+                    while (notificationList.firstChild) {
+                        notificationList.removeChild(notificationList.firstChild);
                     }
 
-                    var link = document.createElement('a');
-                    var txtDiv = document.createElement('div');
-                    txtDiv.classList.add('txt');
-                    txtDiv.textContent = notification.messages;
+                    notifications.forEach(function(notification) {
+                        var notificationDiv = document.createElement('div');
+                        notificationDiv.classList.add('sec');
+                        // if (notification.notification_detail.some(function(detail) {
+                        //         return detail.user_id === {{ Auth::user()->id }} && detail
+                        //             .status === 0;
+                        //     })) {
+                        //     notificationDiv.classList.add('new');
+                        // }
 
-                    var subTxtDiv = document.createElement('div');
-                    subTxtDiv.classList.add('txt', 'sub');
-                    subTxtDiv.textContent = moment(notification.created_at).fromNow();
+                        if(notification.status == 0){
+                            notificationDiv.classList.add('new');
+                        }
 
-                    if (notification.notification_detail.some(function (detail) {
-                        return detail.user_id === {{ Auth::user()->id }} && detail.status === 0;
-                    })) {
-                        txtDiv.classList.add('boldtxt');
-                        subTxtDiv.textContent += ' (unread)';
-                    }
+                        var link = document.createElement('a');
+                        var txtDiv = document.createElement('div');
+                        // Add the data-bs-toggle and data-bs-target attributes
+                        txtDiv.setAttribute('data-bs-toggle', 'modal');
+                        txtDiv.setAttribute('data-bs-target', '#exampleModal');
+                        txtDiv.setAttribute('data-id', notification.id);
+                        txtDiv.classList.add('notificationBox'); // Use class instead of ID
 
-                    link.appendChild(txtDiv);
-                    link.appendChild(subTxtDiv);
-                    notificationDiv.appendChild(link);
-                    notificationList.appendChild(notificationDiv);
-                });
+                        txtDiv.classList.add('txt');
+                        txtDiv.textContent = notification.messages;
+
+                        var subTxtDiv = document.createElement('div');
+                        subTxtDiv.classList.add('txt', 'sub');
+                        subTxtDiv.textContent = moment(notification.created_at).fromNow();
+
+                        // if (notification.notification_detail.some(function(detail) {
+                        //         return detail.user_id === {{ Auth::user()->id }} && detail
+                        //             .status === 0;
+                        //     })) {
+                        //     txtDiv.classList.add('boldtxt');
+                        //     subTxtDiv.textContent += ' (unread)';
+                        // }
+
+                        if(notification.status == 0){
+                            txtDiv.classList.add('boldtxt');
+                            subTxtDiv.textContent += ' (unread)';
+                        }
+
+                        link.appendChild(txtDiv);
+                        link.appendChild(subTxtDiv);
+                        notificationDiv.appendChild(link);
+                        notificationList.appendChild(notificationDiv);
+
+                        // Add event listener to the modal within the loop
+                        txtDiv.addEventListener('click', function() {
+                            var id = this.getAttribute('data-id');
+                            document.getElementById('notification_id').value = id;
+
+                            var xhr = new XMLHttpRequest();
+                            var url = '{{ route('fetch-notifications-message') }}?id=' +
+                            id; // Include id in the URL
+                            xhr.open('GET', url, true);
+                            xhr.setRequestHeader('Content-Type', 'application/json');
+                            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+                            xhr.onload = function() {
+                                if (xhr.status >= 200 && xhr.status < 300) {
+                                    var response = JSON.parse(xhr.responseText);
+                                    console.log(response);
+                                    document.getElementById('notification-details').innerHTML = ' ';
+                                    document.getElementById('notification-details').innerHTML = response.notificationDetails.notification.messages;
+                                } else {
+                                    console.error('Error fetching notifications:', xhr
+                                        .statusText);
+                                }
+                            };
+
+                            xhr.onerror = function() {
+                                console.error('Network error while fetching notifications');
+                            };
+
+                            xhr.send();
+                        });
+                    });
+                }
             }
         }
-    }
 
-    updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
+        updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
 
-    setInterval(fetchNotifications, 5000);
-});
+        setInterval(fetchNotifications, 1000);
 
+    });
 </script>
 <style>
     .box::-webkit-scrollbar-track {
@@ -442,6 +504,7 @@
         /* font-size: 1rem; */
         font-size: 13px;
         color: grey;
+        border-bottom: 2px solid rgba(130, 130, 130, 0.514);
     }
 
     .new {
