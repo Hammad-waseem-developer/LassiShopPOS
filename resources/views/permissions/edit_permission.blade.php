@@ -1001,6 +1001,22 @@
                       </td>
                     </tr>
 
+                    <tr>
+                      <th>Hrm</th>
+                      <td>
+                        <div class="pt-3">
+
+                          <div class="form-check form-check-inline w-100">
+                            <label class="checkbox checkbox-primary" for="hrm_view">
+                              <input type="checkbox" v-model="permissions" id="hrm_view"
+                                value="hrm_view"><span>{{ __('translate.View') }}</span><span class="checkmark"></span>
+                            </label>
+                          </div>
+
+                        </div>
+                      </td>
+                    </tr>
+
                   </tbody>
                 </table>
                 </div>

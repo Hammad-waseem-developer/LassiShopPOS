@@ -24,54 +24,6 @@ class OrderListController extends Controller
         ]);
     }
 
-    // public function completeOrder(Request $request)
-    // {
-    //     $OrderList = Session::get('OrderList');
-    //     $productId = $request->order_id;
-    //     if (isset($OrderList[$productId])) {
-    //         // Reduce the quantity
-    //         $OrderList[$productId]['quantity'] -= 1;
-    //         if ($OrderList[$productId]['quantity'] == 0) {
-    //             unset($OrderList[$productId]);
-    //         }
-    //         // Update the session
-    //         Session::put('OrderList', $OrderList);
-
-    //         // Broadcast the event
-    //         event(new OrderListEvent($OrderList));
-
-    //         return response()->json(['OrderList' => $OrderList]);
-    //     }
-
-    //     return response()->json(['error' => 'Order not found']);
-    // }
-
-
-    // public function undoOrder(Request $request)
-    // {
-    //     $OrderList = Session::get('OrderList');
-    //     $productId = $request->order_id;
-
-    //     if (isset($OrderList[$productId])) {
-    //         // Increase the quantity
-    //         $OrderList[$productId]['quantity'] += 1;
-
-    //         if ($OrderList[$productId]['quantity'] == 1) {
-    //             return response()->json(['OrderList' => $OrderList]);
-    //         }
-
-    //         // Update the session
-    //         Session::put('OrderList', $OrderList);
-
-    //         // Broadcast the event
-    //         event(new OrderListEvent($OrderList));
-
-    //         return response()->json(['OrderList' => $OrderList]);
-    //     }
-    // }
-
-
-
     public function completeOrder(Request $request)
     {
         $productId = $request->order_id;

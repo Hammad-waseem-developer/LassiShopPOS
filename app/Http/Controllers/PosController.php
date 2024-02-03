@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationCreate;
 use DB;
 use PDF;
 use Config;
@@ -39,7 +40,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
 use App\Events\OrderListEvent;
-
+use App\Models\Notification;
+use App\Models\NotificationDetail;
 
 class PosController extends Controller
 {
@@ -220,8 +222,26 @@ class PosController extends Controller
 
                         // Update product warehouse quantity based on the purchase and sale units
                         $productWarehouse->qte -= $quantityInBaseUnit;
-                        // dd($quantityInBaseUnit);
                         $productWarehouse->save();
+
+                        $productStockCheck = Product::where('id', $newProductDetail->base_product_id)->first();
+                        if($productStockCheck->stock_alert >= $productWarehouse->qte ){
+                            $notification = Notification::create([
+                                'messages' => 'Product ( '.$productStockCheck->name.' ) is low in stock, please restock.',
+                            ]);
+                            $users = User::all();
+                            foreach ($users as $user) {
+                                NotificationDetail::create([
+                                    'notification_id' => $notification->id,
+                                    'user_id' => $user->id,
+                                    'status' => 0,
+                                    'read_at' => null,
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ]);
+                            }
+                            event(new NotificationCreate($notification));
+                        }
                     }
                 }
 
@@ -318,36 +338,6 @@ class PosController extends Controller
             return $order->id;
         }, 10);
 
-        // $cartData = Session::get('cart');
-        // $orderList = Session::get('OrderList') ?? [];
-
-        // foreach ($cartData as $orderId => $order) {
-        //     $sessionKey = 'OrderList_' . $orderId;
-
-        //     // Check if the product already exists in OrderList
-        //     if (isset($orderList[$orderId])) {
-        //         // Update the quantity if the product exists
-        //         $orderList[$orderId]['quantity'] += $order['quantity'];
-        //     } else {
-        //         // Add a new entry if the product doesn't exist
-        //         $orderList[$orderId] = $order;
-        //     }
-
-        //     // Update the session with the modified OrderList
-        //     Session::put($sessionKey, $orderList[$orderId]);
-
-        //     // Broadcast the event for the modified or new order
-        //     event(new OrderListEvent($orderList[$orderId]));
-        // }
-
-        // // Set the 'OrderList' session with the aggregated data
-        // Session::put('OrderList', $orderList);
-
-        // // Broadcast the event with the entire orderList data
-        // event(new OrderListEvent($orderList));
-
-        // Session::forget('cart');
-
         $cartData = Session::get('cart');
         $orderList = Session::get('OrderList') ?? [];
 
@@ -386,7 +376,6 @@ class PosController extends Controller
         event(new OrderListEvent($orderList));
 
         Session::forget('cart');
-        // dd(Session::get('originalQuantity_28'));
 
 
         return response()->json(['success' => true, 'id' => $item]);

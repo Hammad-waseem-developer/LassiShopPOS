@@ -20,7 +20,7 @@ class Is_Admin
 
 			return $next($request);
 		}
-
         return redirect("/dashboard/admin");
+
     }
 }

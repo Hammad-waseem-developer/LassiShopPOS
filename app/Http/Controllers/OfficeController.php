@@ -65,7 +65,7 @@ class OfficeController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'clock_in' => 'required|date_format:H:i',
-        'clock_out' => 'required|date_format:H:i|after:clock_in',
+        'clock_out' => 'required',
         'company' => 'required|exists:company,id',
     ]);
 

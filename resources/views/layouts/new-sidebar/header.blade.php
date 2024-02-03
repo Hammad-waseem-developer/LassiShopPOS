@@ -59,13 +59,38 @@
                 {{ __('translate.POS') }}
             </a>
         @endcan
+        @can('pos')
+            <a href="{{ route('OrderListShow') }}" class="btn btn-outline-success ms-3 fw-bolder">
+                Order List
+            </a>
+        @endcan
+
         <button class="btn p-2 ms-4" data-fullscreen>
             @include('components.icons.expand', ['class' => 'width_20'])
         </button>
 
-        <a href="" style=" margin: 4px; padding: 0px;" >
-            <i class="fa fa-bell mt-1" style="font-size: 20px;"></i>
-        </a>    
+
+        @php
+            $unreadNotificationsCount = App\Models\NotificationDetail::where('user_id', Auth::user()->id)
+                ->where('status', 0)
+                ->count();
+        @endphp
+        <!-- Notification container -->
+        <div class="notification">
+            <a href="#">
+                <div class="notBtn" href="#" id="notification-container"
+                    data-unread-count="{{ $unreadNotificationsCount }}">
+                    <!-- Number supports double digits and automatically hides itself when there is nothing between divs -->
+                    <i class="fa fa-bell text-dark pt-2 ps-2" style="font-size: 20px !important;"></i>
+                    <div class="box">
+                        <div class="display">
+                            <!-- Notification list will be dynamically appended here -->
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
 
         <div class="button_language dropdown p-2 ms-2">
 
@@ -105,3 +130,326 @@
         </div>
     </div>
 </section>
+
+<script>
+    var initialUnreadCount = {{ $unreadNotificationsCount ?? 0 }};
+</script>
+<script>
+    // $(document).ready(function() {
+    //     function fetchNotifications() {
+    //         $.ajax({
+    //             url: '{{ route('fetch-notifications') }}',
+    //             method: 'GET',
+    //             dataType: 'json',
+    //             headers: {
+    //                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    //             },
+    //             success: function(response) {
+    //                 updateNotifications(response.unreadNotificationsCount, response.notifications);
+    //             },
+    //             error: function(error) {
+    //                 console.error('Error fetching notifications:', error);
+    //             }
+    //         });
+    //     }
+
+    //     function updateNotifications(unreadNotificationsCount, notifications) {
+    //         var notificationContainer = document.getElementById('notification-container');
+
+    //         if (unreadNotificationsCount > 0) {
+    //             $("#notification-container").addClass('notBtn1');
+    //             // toastr.warning(unreadNotificationsCount + ' new notifications.');
+    //         }
+
+    //         if (unreadNotificationsCount == 0) {
+    //             $("#notification-container").removeClass('notBtn1');
+    //         }
+
+    //         if (notificationContainer) {
+    //             var notificationList = $('.display'); // Use jQuery selector to get the display element
+    //             if (notificationList) {
+    //                 notificationList.empty(); // Clear existing content
+    //                 notifications.forEach(function(notification) {
+    //                     var notificationDiv = $('<div>').addClass('sec');
+    //                     if (notification.notification_detail.some(detail => detail.user_id ===
+    //                             {{ Auth::user()->id }} && detail.status === 0)) {
+    //                         notificationDiv.addClass('new');
+    //                     }
+
+    //                     var link = $('<a>');
+    //                     var txtDiv = $('<div>').addClass('txt').text(notification.messages);
+    //                         var subTxtDiv = $('<div>').addClass('txt sub').text(moment(notification.created_at).fromNow());
+
+    //                     if (notification.notification_detail.some(detail => detail.user_id ===
+    //                             {{ Auth::user()->id }} && detail.status === 0)) {
+    //                         txtDiv.addClass('boldtxt');
+    //                         subTxtDiv.append(' (unread)');
+    //                     }
+
+    //                     link.append(txtDiv, subTxtDiv);
+    //                     notificationDiv.append(link,
+    //                     subTxtDiv); // Append subTxtDiv to notificationDiv here
+    //                     notificationList.append(notificationDiv);
+    //                 });
+    //             }
+
+    //         }
+
+    //     }
+
+
+    //     updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
+
+    //     setInterval(fetchNotifications, 5000);
+    // });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    function fetchNotifications() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '{{ route('fetch-notifications') }}', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                updateNotifications(response.unreadNotificationsCount, response.notifications);
+            } else {
+                console.error('Error fetching notifications:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Network error while fetching notifications');
+        };
+
+        xhr.send();
+    }
+
+    function updateNotifications(unreadNotificationsCount, notifications) {
+        var notificationContainer = document.getElementById('notification-container');
+
+        if (unreadNotificationsCount > 0) {
+            notificationContainer.classList.add('notBtn1');
+            // toastr.warning(unreadNotificationsCount + ' new notifications.');
+        }
+
+        if (unreadNotificationsCount === 0) {
+            notificationContainer.classList.remove('notBtn1');
+        }
+
+        if (notificationContainer) {
+            var notificationList = document.querySelector('.display');
+            if (notificationList) {
+                while (notificationList.firstChild) {
+                    notificationList.removeChild(notificationList.firstChild);
+                }
+
+                notifications.forEach(function (notification) {
+                    var notificationDiv = document.createElement('div');
+                    notificationDiv.classList.add('sec');
+
+                    if (notification.notification_detail.some(function (detail) {
+                        return detail.user_id === {{ Auth::user()->id }} && detail.status === 0;
+                    })) {
+                        notificationDiv.classList.add('new');
+                    }
+
+                    var link = document.createElement('a');
+                    var txtDiv = document.createElement('div');
+                    txtDiv.classList.add('txt');
+                    txtDiv.textContent = notification.messages;
+
+                    var subTxtDiv = document.createElement('div');
+                    subTxtDiv.classList.add('txt', 'sub');
+                    subTxtDiv.textContent = moment(notification.created_at).fromNow();
+
+                    if (notification.notification_detail.some(function (detail) {
+                        return detail.user_id === {{ Auth::user()->id }} && detail.status === 0;
+                    })) {
+                        txtDiv.classList.add('boldtxt');
+                        subTxtDiv.textContent += ' (unread)';
+                    }
+
+                    link.appendChild(txtDiv);
+                    link.appendChild(subTxtDiv);
+                    notificationDiv.appendChild(link);
+                    notificationList.appendChild(notificationDiv);
+                });
+            }
+        }
+    }
+
+    updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
+
+    setInterval(fetchNotifications, 5000);
+});
+
+</script>
+<style>
+    .box::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #F5F5F5;
+        border-radius: 5px;
+    }
+
+    .box::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+        border-radius: 5px;
+    }
+
+    .box::-webkit-scrollbar-thumb {
+        background-color: rgb(43, 43, 43);
+        border-radius: 5px;
+    }
+
+    .notification {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notBtn1 {
+        transition: 0.5s;
+        cursor: pointer
+    }
+
+    .notBtn1::before {
+        content: '';
+        position: absolute;
+        top: 6px;
+        /* Adjust the top position */
+        left: 18px;
+        /* Adjust the left position */
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        border-radius: 50%;
+        border: 1px solid #ffffff;
+    }
+
+
+    .box {
+        width: 400px;
+        height: 0;
+        border-radius: 10px;
+        transition: 0.5s;
+        position: absolute;
+        overflow-y: scroll;
+        padding: 0px;
+        left: -300px;
+        margin-top: 5px;
+        background-color: #F4F4F4;
+        -webkit-box-shadow: 10px 10px 23px 0px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 10px 10px 23px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: 10px 10px 23px 0px rgba(0, 0, 0, 0.1);
+        cursor: context-menu;
+        z-index: 999;
+    }
+
+    .fas:hover {
+        color: #d63031;
+    }
+
+    .notBtn:hover>.box {
+        height: 60vh
+    }
+
+    .content {
+        padding: 20px;
+        color: black;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .gry {
+        background-color: #F4F4F4;
+    }
+
+    .top {
+        color: black;
+        padding: 10px
+    }
+
+    .display {
+        position: relative;
+    }
+
+    .cont {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #F4F4F4;
+    }
+
+    .cont:empty {
+        display: none;
+    }
+
+    .stick {
+        text-align: center;
+        display: block;
+        font-size: 50pt;
+        padding-top: 70px;
+        padding-left: 80px
+    }
+
+    .stick:hover {
+        color: black;
+    }
+
+    .cent {
+        text-align: center;
+        display: block;
+    }
+
+    .sec {
+        padding: 10px 5px;
+        background-color: #F4F4F4;
+        transition: 0.5s;
+        text-align: center;
+    }
+
+    .profCont {
+        padding-left: 15px;
+    }
+
+    .profile {
+        -webkit-clip-path: circle(50% at 50% 50%);
+        clip-path: circle(50% at 50% 50%);
+        width: 75px;
+        float: left;
+    }
+
+    .txt {
+        vertical-align: top;
+        font-size: 17px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 40px;
+        padding-right: 40px;
+        text-align: center;
+        color: rgb(82, 82, 82);
+    }
+
+    .boldtxt {
+        font-weight: bolder;
+        color: rgb(43, 43, 43);
+    }
+
+    .sub {
+        /* font-size: 1rem; */
+        font-size: 13px;
+        color: grey;
+    }
+
+    .new {
+        border-style: none none solid none;
+        border-color: rgb(255, 84, 84);
+    }
+
+    .sec:hover {
+        background-color: #BFBFBF;
+    }
+</style>

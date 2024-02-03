@@ -51,7 +51,8 @@ if ($installed === false) {
 
         //------------------------------- dashboard Admin--------------------------\\
 
-        Route::group(['middleware' => 'auth', 'Is_Admin', 'Is_Active'], function () {
+        // Route::group(['middleware' => 'auth', 'Is_Admin', 'Is_Active'], function () {
+        Route::group(['middleware' => ['auth', 'Is_Admin', 'Is_Active']], function () {
             Route::get('dashboard/admin', "DashboardController@dashboard_admin")->name('dashboard');
 
             //------------------------------------------------------------------\\
@@ -67,7 +68,6 @@ if ($installed === false) {
                 'as' => 'update_lastStep',
                 'uses' => 'UpdateController@lastStep',
             ]);
-
         });
 
         Route::middleware(['auth', 'Is_Active'])->group(function () {
@@ -193,7 +193,7 @@ if ($installed === false) {
             Route::get('invoice_pos/{id}', 'PosController@Print_Invoice_POS');
             Route::get('GetCategories', 'PosController@GetCategories')->name('GetCategories');
             Route::post('flushCart', 'PosController@flushCart')->name('flushCart');
-            
+
             //---------------------- Hold Order ----------------------\\
             //------------------------------------------------------------------\\
             Route::post('hold-order', 'HoldOrdersController@create')->name('hold_order');
@@ -209,6 +209,8 @@ if ($installed === false) {
             Route::post('complete-order', 'OrderListController@completeOrder')->name('complete_order');
             Route::post('undo-order', 'OrderListController@undoOrder')->name('undo_order');
 
+            //---------------------- Notification ----------------------\\
+            Route::get('/fetch-notifications', 'NotificationController@fetchNotifications')->name('fetch-notifications');
 
             //------------------------------- transfers --------------------------\\
             Route::resource('transfer/transfers', 'TransfersController');
@@ -323,9 +325,9 @@ if ($installed === false) {
                 Route::get('/employee/show/{id}', 'EmployeeController@show')->name('employees.show');
                 Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
                 Route::post('/employee/delete', 'EmployeeController@deleteEmployee')->name('employees.delete');
-    
+
                 // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
-                
+
                 // Attendance Routes
                 Route::get('/attendance', 'AttendanceController@index')->name('attendance.index');
                 Route::get('/attendance/create', 'AttendanceController@create')->name('attendance.create');
@@ -344,18 +346,18 @@ if ($installed === false) {
                 Route::get('/leave-type/getData', 'LeaveTypeController@getData')->name('leaveType.getData');
 
                 // leave Request Routes
-                Route::get('/leave/request','LeaveRequestController@index')->name('leaveRequest.index');
-                Route::get('/leave/request/create','LeaveRequestController@create')->name('leaveRequest.create');
-                Route::post('/leave/request/store','LeaveRequestController@store')->name('leaveRequest.store');
+                Route::get('/leave/request', 'LeaveRequestController@index')->name('leaveRequest.index');
+                Route::get('/leave/request/create', 'LeaveRequestController@create')->name('leaveRequest.create');
+                Route::post('/leave/request/store', 'LeaveRequestController@store')->name('leaveRequest.store');
                 Route::get('/leave/request/getData', 'LeaveRequestController@getData')->name('leaveRequest.getData');
                 Route::get('/leave/request/edit/{id}', 'LeaveRequestController@edit')->name('leaveRequest.edit');
                 Route::put('/leave/request/update/{id}', 'LeaveRequestController@update')->name('leaveRequest.update');
                 Route::post('/leave/request/delete', 'LeaveRequestController@deleteRequest')->name('leaveRequest.delete');
 
                 // holidays Routes
-                Route::get('/holidays','HolidayController@index')->name('holiday.index');
-                Route::get('/holidays/create','HolidayController@create')->name('holiday.create');
-                Route::post('/holidays/store','HolidayController@store')->name('holiday.store');
+                Route::get('/holidays', 'HolidayController@index')->name('holiday.index');
+                Route::get('/holidays/create', 'HolidayController@create')->name('holiday.create');
+                Route::post('/holidays/store', 'HolidayController@store')->name('holiday.store');
                 Route::get('/holidays/getData', 'HolidayController@getData')->name('holiday.getData');
                 Route::get('/holidays/edit/{id}', 'HolidayController@edit')->name('holiday.edit');
                 Route::put('/holidays/update/{id}', 'HolidayController@update')->name('holiday.update');
@@ -451,7 +453,6 @@ if ($installed === false) {
 
                 // update_backup_settings
                 Route::post('update_backup_settings', 'SettingController@update_backup_settings');
-
             });
 
             Route::get('GenerateBackup', 'BackupController@GenerateBackup');
@@ -479,7 +480,6 @@ if ($installed === false) {
                 Route::post("deposit_category/delete/by_selection", "DepositCategoryController@delete_by_selection");
                 Route::post("payment_methods/delete/by_selection", "PaymentMethodController@delete_by_selection");
             });
-
         });
 
 
@@ -493,10 +493,7 @@ if ($installed === false) {
         Route::post('delete_product_from_cart', 'AddToCartController@deleteProductFromCart')->name('delete_product_from_cart');
         Route::post('add_qty', 'AddToCartController@addQty')->name('add_qty');
         Route::post('remove_qty', 'AddToCartController@removeQty')->name('remove_qty');
-
-
     });
-
 } else {
 
     Route::get(
@@ -576,12 +573,4 @@ if ($installed === false) {
     Route::get('setup/lastStep', function () {
         return redirect('/setup', 301);
     });
-
-
-
-
 }
-
-
-
-

@@ -69,8 +69,8 @@
     </div>
     <div class="container">
         <div class="row">
-            <div id="orderListContainer" style="display: flex; justify-content: center; flex-direction: column;"
-                class="card-container">
+            <div id="orderListContainer" style="display: flex; justify-content: center; flex-direction: row;"
+                class="card-container col-md-12">
                 <!-- OrderList content will be dynamically updated here -->
             </div>
         </div>
@@ -130,10 +130,11 @@
 
             function updateOrderListCards(orderList, currentPage, itemsPerPage) {
                 var container = $('#orderListContainer');
+                var paginationDiv = $('#paginationContainer');
                 container.empty();
 
                 if (!orderList || orderList.length === 0) {
-                    container.append('<p>No orders found.</p>');
+                    container.append('<p class="h4 text-center mt-5 mb-5 text-white">No orders found.</p>');
                     return;
                 }
 
@@ -178,12 +179,13 @@
                     paginationContainer.append(pageLink);
                 }
 
-                container.append(paginationContainer);
+                paginationDiv.empty();
+                paginationDiv.append(paginationContainer);
             }
 
             // Example usage:
             var currentPage = 1;
-            var itemsPerPage = 1;
+            var itemsPerPage = 6;
 
             function fetchOrderList() {
                 $.ajax({

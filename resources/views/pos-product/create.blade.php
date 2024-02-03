@@ -231,12 +231,6 @@
                 });
             }
         }
-
-
-
-
-
-
     });
 </script>
 @endsection

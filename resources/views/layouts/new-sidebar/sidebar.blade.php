@@ -109,6 +109,7 @@ $setting = DB::table('settings')
             @endif
 
             {{-- HRM --}}
+            @if (auth()->user()->can('hrm_view'))
             <li>
                 <div @click="selectCollapse('HRM')" :class="selected == 'HRM' ? 'collapse-active' : 'collapse-deactive'" class="collapse-button">
                     <div class="d-flex align-items-center">
@@ -183,9 +184,17 @@ $setting = DB::table('settings')
                     </ul>
                 </div>
             </li>
+            @endif
             {{-- HRM end     --}}
 
             {{-- POS PRODUCT --}}
+            @if (auth()->user()->can('products_add') ||
+                    auth()->user()->can('products_view') ||
+                    auth()->user()->can('category') ||
+                    auth()->user()->can('brand') ||
+                    auth()->user()->can('unit') ||
+                    auth()->user()->can('warehouse') ||
+                    auth()->user()->can('print_labels'))
             <li>
                 <div @click="selectCollapse('pos-product')" :class="selected == 'pos-product' ? 'collapse-active' : 'collapse-deactive'" class="collapse-button">
                     <div class="d-flex align-items-center">
@@ -212,6 +221,7 @@ $setting = DB::table('settings')
                     </ul>
                 </div>
             </li>
+            @endif
             {{-- POS PRODUCT end     --}}
 
             {{-- Products --}}
