@@ -891,7 +891,6 @@
                     for (const element of data.data.holdProducts) {
                         await addToCartRequest(element, element.quantity);
                     }
-
                     console.log("All addToCart requests completed successfully");
                 } catch (error) {
                     console.log("Error:", error);

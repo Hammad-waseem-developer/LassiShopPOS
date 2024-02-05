@@ -16,8 +16,6 @@ class AddToCartController extends Controller
     {
         // Retrieve the cart
         $cart = Session::get('cart') ?? [];
-        // dd($cart);
-        // $OrderList = Session::get('OrderList') ?? [];
         // Keep track of out-of-stock items
         $outOfStockItems = [];
         $canAddToCart = true; // Assume the products can be added until proven otherwise
@@ -33,17 +31,9 @@ class AddToCartController extends Controller
         // $simulatedOrderList = $OrderList;
         if (array_key_exists($productId, $simulatedCart)) {
             $simulatedCart[$productId]['quantity'] += 1;
-            // $simulatedOrderList[$productId]['quantity'] += 1;
 
         } else {
             $simulatedCart[$productId] = [
-                'id' => $productId,
-                'name' => $productName,
-                'price' => $productPrice,
-                'img_path' => $productImgPath,
-                'quantity' => 1,
-            ];
-            $simulatedOrderList[$productId] = [
                 'id' => $productId,
                 'name' => $productName,
                 'price' => $productPrice,
@@ -103,7 +93,6 @@ class AddToCartController extends Controller
         // Update the actual cart if the stock check passes
         if (array_key_exists($productId, $cart)) {
             $cart[$productId]['quantity'] += 1;
-            // $OrderList[$productId]['quantity'] += 1;
         } else {
             $cart[$productId] = [
                 'id' => $productId,
@@ -112,20 +101,10 @@ class AddToCartController extends Controller
                 'img_path' => $productImgPath,
                 'quantity' => 1,
             ];
-            // $OrderList[$productId] = [
-            //     'id' => $productId,
-            //     'name' => $productName,
-            //     'price' => $productPrice,
-            //     'img_path' => $productImgPath,
-            //     'quantity' => 1,
-            // ];
         }
 
         // Update the cart in the session
-        Session::forget('cart');
         Session::put('cart', $cart);
-        // Session::put('OrderList', $OrderList);
-        // event(new OrderListEvent($OrderList));
 
         // Return the updated cart in the response
         return response()->json(['cart' => $cart]);
