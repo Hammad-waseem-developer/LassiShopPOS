@@ -9,8 +9,8 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Posly - Ultimate Inventory Management System</title>
-  <link rel=icon href={{ asset('images/logo.svg') }}>
+  <title>{{ $settings->CompanyName }} - Ultimate Inventory Management System</title>
+  <link rel=icon href={{ asset('images/'.$settings->logo) }}>
 
   <!-- CSS Files -->
   <link rel="stylesheet" href="{{asset('assets/styles/vendor/invoice_pos.css')}}">

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Config;
 use App\utils\helpers;
+use App\Models\Setting;
 use App\Models\Notification;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
             $helpers           = new helpers();
             $currency          = $helpers->Get_Currency();
             $symbol_placement  = $helpers->get_symbol_placement();
+            $settings          = Setting::where('deleted_at', '=', null)->first();
             $notifications = Notification::with('NotificationDetail')
                 // ->where('notification_details.user_id', auth()->user()->id)
                 ->orderBy('id', 'desc')
@@ -42,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
                 'currency'         => $currency,
                 'symbol_placement' => $symbol_placement,
                 'notifications' => $notifications,
+                'settings'         => $settings
             ]);
         } catch (\Exception $e) {
 

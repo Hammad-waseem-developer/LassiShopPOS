@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Session;
 class AddToCartController extends Controller
 {
     public function add_to_cart(Request $request)
-    {
+{
+    try {
         // Retrieve the cart
         $cart = Session::get('cart') ?? [];
         // dd($cart);
@@ -122,13 +123,19 @@ class AddToCartController extends Controller
         }
 
         // Update the cart in the session
+        Session::forget('cart');
         Session::put('cart', $cart);
         // Session::put('OrderList', $OrderList);
         // event(new OrderListEvent($OrderList));
 
         // Return the updated cart in the response
         return response()->json(['cart' => $cart]);
+    } catch (\Exception $e) {
+        \Log::error('Exception in add_to_cart: ' . $e->getMessage());
+        return response()->json(['error' => 'An error occurred while processing the request.']);
     }
+}
+
 
 
     public function deleteProductFromCart(Request $request)
