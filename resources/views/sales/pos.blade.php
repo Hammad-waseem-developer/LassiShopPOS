@@ -8,7 +8,7 @@
     <title>{{ $settings->CompanyName }} - Ultimate Inventory Management System with POS</title>
 
     <!-- Favicon icon -->
-    <link rel=icon href={{ asset('images/'.$settings->logo) }}>
+    <link rel=icon href={{ asset('images/' . $settings->logo) }}>
     <!-- Base Styling  -->
 
     <link rel="stylesheet" href="{{ asset('assets/pos/main/css/fonts.css') }}">
@@ -745,19 +745,26 @@
                         const categoryId = $(".category-item.CategorySelected").data(
                             "id"); // Get the selected category ID
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
-                        data.data.holdProducts.forEach(element => {
-                            if (element.quantity === 1) {
-                                addToCart(element.product_id, element.price, element
-                                    .name, element.img_path);
-                            }
+                        // data.data.holdProducts.forEach(element => {
+                        //     if (element.quantity === 1) {
+                        //         addToCart(element.product_id, element.price, element
+                        //             .name, element.img_path);
+                        //     }
 
-                            if (element.quantity > 1) {
-                                for (let i = 0; i < element.quantity; i++) {
-                                    addToCart(element.product_id, element.price, element
-                                        .name, element.img_path);
-                                }
+                        //     if (element.quantity > 1) {
+                        //         for (let i = 0; i < element.quantity; i++) {
+                        //             addToCart(element.product_id, element.price, element
+                        //                 .name, element.img_path);
+                        //         }
+                        //     }
+                        // })
+                        data.data.holdProducts.forEach(element => {
+                            // Update the condition to correctly handle the quantity
+                            for (let i = 0; i < element.quantity; i++) {
+                                addToCart(element.product_id, element.price, element
+                                    .name, element.img_path, warehouseId);
                             }
-                        })
+                        });
                     },
                     error: function(data) {
                         console.log(data);
