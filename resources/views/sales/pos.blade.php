@@ -877,6 +877,7 @@
                                 if (response.message) {
                                     toastr.error("Out of stock");
                                 } else {
+                                    console.log(response);
                                     updateCartBox(response);
                                     console.log("Add success");
                                 }
