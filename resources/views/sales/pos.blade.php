@@ -822,85 +822,96 @@
             // });
 
 
-            $("body").on("click", "#editHold", async function () {
-    var HoldId = $(this).data("id");
+            $("body").on("click", "#editHold", async function() {
+                var HoldId = $(this).data("id");
 
-    try {
-        const data = await $.ajax({
-            url: "{{ route('edit_hold_order') }}",
-            type: "POST",
-            dataType: "json",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}",
-            },
-            data: {
-                id: HoldId,
-            },
-        });
-
-        // ... (other code remains unchanged)
-
-        // Define a function to perform the AJAX request with retry mechanism
-        const addToCartRequestWithRetry = async (element, quantity) => {
-            const requestData = {
-                id: element.product_id,
-                price: element.price,
-                name: element.name,
-                img_path: element.img_path,
-                warehouse_id: $("#warehouse_id").val(),
-            };
-
-            const maxRetries = 3; // Set your desired number of retries
-            let retries = 0;
-
-            while (retries < maxRetries) {
                 try {
-                    // Run addToCart function according to the quantity
-                    for (let i = 0; i < quantity; i++) {
-                        const response = await $.ajax({
-                            url: routes.addToCart,
-                            type: "POST",
-                            dataType: "json",
-                            headers: {
-                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                            },
-                            data: requestData,
-                        });
+                    const data = await $.ajax({
+                        url: "{{ route('edit_hold_order') }}",
+                        type: "POST",
+                        dataType: "json",
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        },
+                        data: {
+                            id: HoldId,
+                        },
+                    });
 
-                        if (response.message) {
-                            toastr.error("Out of stock");
-                        } else {
-                            console.log(response);
-                            updateCartBox(response);
-                            console.log("Add success");
+                    console.log(data);
+                    $("#shipping").val(data.data.holdOrder.shipping);
+                    $("#orderTax").val(data.data.holdOrder.orderTax);
+                    $("#discount").val(data.data.holdOrder.discount);
+                    $(elements.discountSelect).val(data.data.holdOrder.discountType);
+                    $("#warehouse_id").val(data.data.holdOrder.warehouse_id);
+                    $("#reference-number").val(data.data.holdOrder.reference_no);
+                    const warehouseId = data.data.holdOrder.warehouse_id;
+                    warehouse_id = warehouseId;
+                    const categoryId = $(".category-item.CategorySelected").data(
+                        "id"); // Get the selected category ID
+                    ProductByCategory(categoryId, warehouseId, "Warehouse");
+
+                    // Define a function to perform the AJAX request with retry mechanism
+                    const addToCartRequestWithRetry = async (element, quantity) => {
+                        const requestData = {
+                            id: element.product_id,
+                            price: element.price,
+                            name: element.name,
+                            img_path: element.img_path,
+                            warehouse_id: $("#warehouse_id").val(),
+                        };
+
+                        const maxRetries = 3; // Set your desired number of retries
+                        let retries = 0;
+
+                        while (retries < maxRetries) {
+                            try {
+                                // Run addToCart function according to the quantity
+                                for (let i = 0; i < quantity; i++) {
+                                    const response = await $.ajax({
+                                        url: routes.addToCart,
+                                        type: "POST",
+                                        dataType: "json",
+                                        headers: {
+                                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                        },
+                                        data: requestData,
+                                    });
+
+                                    if (response.message) {
+                                        toastr.error("Out of stock");
+                                    } else {
+                                        console.log(response);
+                                        updateCartBox(response);
+                                        console.log("Add success");
+                                    }
+                                }
+
+                                // Break the loop if the requests are successful
+                                break;
+                            } catch (error) {
+                                console.log("Error:", error);
+                                retries++;
+                                // Add a delay before retrying (e.g., using setTimeout)
+                                await new Promise((resolve) => setTimeout(resolve, 1000));
+                            }
                         }
+
+                        if (retries === maxRetries) {
+                            console.log("Max retries reached. Unable to update cart.");
+                        }
+                    };
+
+                    // Process each item using for...of loop and async/await
+                    for (const element of data.data.holdProducts) {
+                        await addToCartRequestWithRetry(element, element.quantity);
                     }
 
-                    // Break the loop if the requests are successful
-                    break;
+                    console.log("All addToCart requests completed successfully");
                 } catch (error) {
                     console.log("Error:", error);
-                    retries++;
-                    // Add a delay before retrying (e.g., using setTimeout)
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
                 }
-            }
-
-            if (retries === maxRetries) {
-                console.log("Max retries reached. Unable to update cart.");
-            }
-        };
-
-        // Process each item using for...of loop and async/await
-        for (const element of data.data.holdProducts) {
-            await addToCartRequestWithRetry(element, element.quantity);
-        }
-
-        console.log("All addToCart requests completed successfully");
-    } catch (error) {
-        console.log("Error:", error);
-    }
-});
+            });
 
 
 
