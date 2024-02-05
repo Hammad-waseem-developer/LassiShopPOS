@@ -132,11 +132,11 @@
     <input type="hidden" name="notification_id" id="notification_id">
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="notificationmodal" tabindex="-1" aria-labelledby="notificationmodalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
+                    <h5 class="modal-title" id="notificationmodalLabel">Notification</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="notification-details">
@@ -278,7 +278,7 @@
                         var txtDiv = document.createElement('div');
                         // Add the data-bs-toggle and data-bs-target attributes
                         txtDiv.setAttribute('data-bs-toggle', 'modal');
-                        txtDiv.setAttribute('data-bs-target', '#exampleModal');
+                        txtDiv.setAttribute('data-bs-target', '#notificationmodal');
                         txtDiv.setAttribute('data-id', notification.id);
                         txtDiv.classList.add('notificationBox'); // Use class instead of ID
 
