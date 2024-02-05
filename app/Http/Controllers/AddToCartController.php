@@ -31,6 +31,7 @@ class AddToCartController extends Controller
         // $simulatedOrderList = $OrderList;
         if (array_key_exists($productId, $simulatedCart)) {
             $simulatedCart[$productId]['quantity'] += 1;
+
         } else {
             $simulatedCart[$productId] = [
                 'id' => $productId,
@@ -106,27 +107,6 @@ class AddToCartController extends Controller
         Session::put('cart', $cart);
 
         // Return the updated cart in the response
-        return response()->json(['cart' => $cart]);
-    }
-
-    public function addToCart2(Request $request)
-    {
-
-        $cart = Session::get('cart') ?? [];
-        if (array_key_exists($request->id, $cart)) {
-            $cart[$request->id]['quantity'] += 1;
-            Session::put('cart', $cart);
-        } else {
-            $cart[$request->id] = [
-                'id' => $request->id,
-                'name' => $request->name,
-                'price' => $request->price,
-                'img_path' => $request->img_path,
-                'quantity' => 1,
-            ];
-            Session::put('cart', $cart);
-        }
-
         return response()->json(['cart' => $cart]);
     }
 

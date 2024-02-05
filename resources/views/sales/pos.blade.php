@@ -496,7 +496,6 @@
         const routes = {
             getProducts: "{{ route('get_products') }}",
             addToCart: "{{ route('add_to_cart') }}",
-            addToCart1: "{{ route('add_to_cart1') }}",
             deleteProductFromCart: "{{ route('delete_product_from_cart') }}",
             addQuantity: "{{ route('add_qty') }}",
             removeQuantity: "{{ route('remove_qty') }}",
@@ -866,7 +865,7 @@
                             // Run addToCart function according to the quantity
                             for (let i = 0; i < quantity; i++) {
                                 const response = await $.ajax({
-                                    url: routes.addToCart1,
+                                    url: routes.addToCart,
                                     type: "POST",
                                     dataType: "json",
                                     headers: {
