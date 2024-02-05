@@ -743,22 +743,31 @@
                         const warehouseId = data.data.holdOrder.warehouse_id;
                         warehouse_id = warehouseId;
                         const categoryId = $(".category-item.CategorySelected").data(
-                            "id"); // Get the selected category ID
+                        "id"); // Get the selected category ID
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
+
                         data.data.holdProducts.forEach(element => {
                             if (element.quantity === 1) {
-                                addToCart(element.product_id, element.price, element
-                                    .name, element.img_path);
+                                // Use setTimeout to add a delay of 1000 milliseconds (1 second)
+                                setTimeout(function() {
+                                    addToCart(element.product_id, element.price,
+                                        element.name, element.img_path);
+                                }, 1000);
                             }
 
                             if (element.quantity > 1) {
                                 for (let i = 0; i < element.quantity; i++) {
-                                    addToCart(element.product_id, element.price, element
-                                        .name, element.img_path);
+                                    // Use setTimeout to add a delay of 1000 milliseconds (1 second)
+                                    setTimeout(function() {
+                                        addToCart(element.product_id, element
+                                            .price, element.name, element
+                                            .img_path);
+                                    }, 1000 * i);
                                 }
                             }
-                        })
+                        });
                     },
+
                     error: function(data) {
                         console.log(data);
                     }
