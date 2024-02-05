@@ -269,61 +269,6 @@ class AddToCartController extends Controller
         );
     }
 
-
-    // public function addQty(Request $request)
-    // {
-    //     $cart = Session::get('cart');
-    //     // Calculate the total quantity needed for all items in the cart
-    //     $totalQuantityNeeded = 0;
-    //     // Keep track of out-of-stock items
-    //     $outOfStockItems = [];
-
-    //     foreach ($cart as $item) {
-    //         $productDetails = NewProductDetail::where('new_product_id', $request->id)->get();
-    //         foreach ($productDetails as $productDetail) {
-    //             $unit = Unit::where('id', $productDetail->unit_id)->first();
-    //             $ingredientWarehouse = product_warehouse::where('product_id', $productDetail->base_product_id)
-    //                 ->where('warehouse_id', $request->warehouse_id)
-    //                 ->first();
-
-    //             if ($unit && $ingredientWarehouse) {
-    //                 // Calculate quantity in the base unit
-    //                 $quantityInBaseUnit = $productDetail->qty * $item['quantity'];
-
-    //                 // Check if unit conversion is needed
-    //                 if ($unit->name !== 'Units') {
-    //                     // Apply unit conversion
-    //                     if ($unit->operator === '/' && $unit->operator_value !== 0) {
-    //                         $quantityInBaseUnit /= $unit->operator_value;
-    //                     } elseif ($unit->operator === '*' && $unit->operator_value !== 0) {
-    //                         $quantityInBaseUnit *= $unit->operator_value;
-    //                     } else {
-    //                         throw new \Exception('Invalid conversion for unit: ' . $unit->name);
-    //                     }
-    //                 }
-
-    //                 // Add the quantity needed for the current item to the total
-    //                 $totalQuantityNeeded += $quantityInBaseUnit;
-
-    //                 if ($totalQuantityNeeded > $ingredientWarehouse->qte) {
-    //                     // Track out-of-stock item
-    //                     return response()->json(['cart' => $cart, 'message' => 'Out of stock']);
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     // Continue with the rest of the code for increasing the quantity
-    //     $productId = $request->id;
-    //     $cart[$productId]['quantity'] += 1;
-    //     Session::put('cart', $cart);
-    //     return response()->json(
-    //         [
-    //             'cart' => $cart
-    //         ]
-    //     );
-    // }
-
     public function removeQty(Request $request)
     {
         $cart = Session::get('cart');

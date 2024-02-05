@@ -747,16 +747,71 @@
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
                         data.data.holdProducts.forEach(element => {
                             if (element.quantity === 1) {
-                                addToCart(element.product_id, element.price, element
-                                    .name, element.img_path);
+                                // addToCart(element.product_id, element.price, element
+                                //     .name, element.img_path);
+                                $.ajax({
+                                    url: routes.addToCart,
+                                    type: "POST",
+                                    token: "{{ csrf_token() }}",
+                                    dataType: "json",
+                                    headers: {
+                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                    },
+                                    data: {
+                                        id: element.product_id,
+                                        price: element.price,
+                                        name: element.name,
+                                        img_path: element.img_path,
+                                        warehouse_id: $("#warehouse_id").val()
+                                    },
+                                    success: function(response) {
+                                        if (response.message) {
+                                            toastr.error('Out of stock');
+                                        } else {
+                                            updateCartBox(response);
+                                            console.log("Add success");
+                                        }
+                                    },
+                                    error: function(data) {
+                                        console.log("Error:", data);
+                                    }
+                                });
                             }
 
                             if (element.quantity > 1) {
                                 for (let i = 0; i < element.quantity; i++) {
-                                    addToCart(element.product_id, element.price, element
-                                        .name, element.img_path);
+                                    // addToCart(element.product_id, element.price, element
+                                    //     .name, element.img_path);
+                                    $.ajax({
+                                    url: routes.addToCart,
+                                    type: "POST",
+                                    token: "{{ csrf_token() }}",
+                                    dataType: "json",
+                                    headers: {
+                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                    },
+                                    data: {
+                                        id: element.product_id,
+                                        price: element.price,
+                                        name: element.name,
+                                        img_path: element.img_path,
+                                        warehouse_id: $("#warehouse_id").val()
+                                    },
+                                    success: function(response) {
+                                        if (response.message) {
+                                            toastr.error('Out of stock');
+                                        } else {
+                                            updateCartBox(response);
+                                            console.log("Add success");
+                                        }
+                                    },
+                                    error: function(data) {
+                                        console.log("Error:", data);
+                                    }
+                                });
                                 }
                             }
+
                         })
                     },
                     error: function(data) {
