@@ -743,31 +743,22 @@
                         const warehouseId = data.data.holdOrder.warehouse_id;
                         warehouse_id = warehouseId;
                         const categoryId = $(".category-item.CategorySelected").data(
-                        "id"); // Get the selected category ID
+                            "id"); // Get the selected category ID
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
-
                         data.data.holdProducts.forEach(element => {
                             if (element.quantity === 1) {
-                                // Use setTimeout to add a delay of 1000 milliseconds (1 second)
-                                setTimeout(function() {
-                                    addToCart(element.product_id, element.price,
-                                        element.name, element.img_path);
-                                }, 1000);
+                                addToCart(element.product_id, element.price, element
+                                    .name, element.img_path);
                             }
 
                             if (element.quantity > 1) {
                                 for (let i = 0; i < element.quantity; i++) {
-                                    // Use setTimeout to add a delay of 1000 milliseconds (1 second)
-                                    setTimeout(function() {
-                                        addToCart(element.product_id, element
-                                            .price, element.name, element
-                                            .img_path);
-                                    }, 1000 * i);
+                                    addToCart(element.product_id, element.price, element
+                                        .name, element.img_path);
                                 }
                             }
-                        });
+                        })
                     },
-
                     error: function(data) {
                         console.log(data);
                     }
@@ -1086,6 +1077,7 @@
             }
 
             function addToCart(id, price, name, img_path) {
+                console.log("run");
                 // Add to cart
                 $.ajax({
                     url: routes.addToCart,
