@@ -22,8 +22,8 @@
             {{ __('translate.Create') }}</a>
           @endcan
 
-          <a href="{{route('print.products')}}" class=" btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
-           Print</a>
+          <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
+            class="i-Add me-2 font-weight-bold"></i>Print</button>
 
           <a class="btn btn-outline-success btn-md m-1" id="Show_Modal_Filter"><i class="i-Filter-2 me-2 font-weight-bold"></i>
             {{ __('translate.Filter') }}</a>
@@ -357,6 +357,30 @@
 
 </script>
 
+{{-- print --}}
+<script>
+  document.getElementById("printButton").addEventListener("click", function() {
+        var table = document.getElementById("product_table");
+        if (table) {
+            // Clone the table
+            var tableClone = table.cloneNode(true);
 
+            // Exclude the "image" column
+            Array.from(tableClone.rows).forEach(function(row) {
+            row.deleteCell(9); // Remove the first column
+            row.deleteCell(0); // Remove the second column
+        });
+            
+            var newWin = window.open('', 'Print-Window');
+            newWin.document.open();
+            newWin.document.write('<html><head></head><body>' + tableClone.outerHTML + '</body></html>');
+            newWin.document.close();
+            setTimeout(function() {
+                newWin.print();
+                newWin.close();
+            }, 10);
+        }
+    });
+</script>
 
 @endsection

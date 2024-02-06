@@ -1780,8 +1780,4 @@ class ProductsController extends Controller
             ]
         );
     }
-    public function print(){
-        $products = Product::with('category','brand','PurchaseDetail')->get();
-        return view('products.printProducts',compact('products'));
-    }
 }
