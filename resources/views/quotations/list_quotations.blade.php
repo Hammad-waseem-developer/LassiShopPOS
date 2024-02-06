@@ -514,7 +514,7 @@
             var tableClone = table.cloneNode(true);
 
             // Exclude the "image" column
-            Array.from(tableClone.rows).forEach(function(row) {n
+            Array.from(tableClone.rows).forEach(function(row) {
             row.deleteCell(5); // Remove the first column
         });
             
@@ -530,4 +530,5 @@
     });
 
   </script>
+  
 @endsection
