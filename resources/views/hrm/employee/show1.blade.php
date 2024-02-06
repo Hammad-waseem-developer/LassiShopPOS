@@ -19,69 +19,69 @@
                     <div class="form-group col-md-4 {{ $errors->has('first_name') ? 'has-error' : '' }}">
                         <label for="designation">{{ __('First Name') }} <span class="field_required">*</span></label>
                         <input type="text" class="form-control" name="first_name"
-                            placeholder="{{ __('First Name') }}" value="{{ $employee->first_name }}" readonly>
+                            placeholder="{{ __('First Name') }}" value="{{ $employee->first_name ?? '' }}" readonly>
 
                     </div>
                     <div class="form-group col-md-4 {{ $errors->has('designation') ? 'has-error' : '' }}">
                         <label for="designation">{{ __('Last Name') }} <span class="field_required">*</span></label>
                         <input type="text" class="form-control" name="last_name" placeholder="{{ __('Last Name') }}"
-                            value="{{ $employee->last_name }}" readonly>
+                            value="{{ $employee->last_name ?? '' }}" readonly>
 
                     </div>
                     <div class="form-group col-md-4 {{ $errors->has('phone') ? 'has-error' : '' }}">
                         <label for="designation">{{ __('Phone') }} <span class="field_required">*</span></label>
                         <input type="tel" class="form-control" name="phone" pattern="[0-9+()-]{4,20}"
                             title="Enter a valid phone number (4-20 digits)" placeholder="{{ __('Phone Number') }}"
-                            value="{{ $employee->phone }}" readonly>
+                            value="{{ $employee->phone ?? '' }}" readonly>
 
                     </div>
                     <div class="form-group col-md-4 {{ $errors->has('office') ? 'has-error' : '' }}">
                         <label for="office">{{ __('office') }} <span class="field_required">*</span></label>
-                        <input type="text" class="form-control" value="{{ $office->name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $office->name ?? ''}}" readonly>
                     </div>
                     <div class="form-group col-md-4 {{ $errors->has('designation') ? 'has-error' : '' }}">
                         <label for="office">{{ __('Designation') }} <span class="field_required">*</span></label>
-                        <input type="text" class="form-control" value="{{ $designations->name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $designations->name ?? '' }}" readonly>
                     </div>
 
                     <div class="form-group col-md-4 {{ $errors->has('department') ? 'has-error' : '' }}">
                         <label for="office">{{ __('Office Shift') }} <span class="field_required">*</span></label>
-                        <input type="text" class="form-control" value="{{ $departments->name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $departments->name ?? '' }}" readonly>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4 {{ $errors->has('email') ? 'has-error' : '' }}">
                         <label for="email">{{ __('Email Address') }} <span class="field_required">*</span></label>
                         <input type="email" class="form-control" name="email"
-                            placeholder="{{ __('Email Address') }}" value="{{ $employee->email }}" readonly>
+                            placeholder="{{ __('Email Address') }}" value="{{ $employee->email ?? '' }}" readonly>
 
                     </div>
                     <div class="form-group col-md-4 {{ $errors->has('address') ? 'has-error' : '' }}">
                         <label for="address">{{ __('Address') }} <span class="field_required">*</span></label>
                         <input type="text" class="form-control" name="address" placeholder="{{ __('Address') }}"
-                            value="{{ $employee->address }}" readonly>
+                            value="{{ $employee->address ?? '' }}" readonly>
 
                     </div>
                     <div class="form-group col-md-4 {{ $errors->has('country') ? 'has-error' : '' }}">
                         <label for="country">{{ __('Country') }} <span class="field_required">*</span></label>
                         <input type="text" class="form-control" name="country" placeholder="{{ __('Country') }}"
-                            value="{{ $employee->country }}" readonly>
+                            value="{{ $employee->country ?? '' }}" readonly>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-4 {{ $errors->has('city') ? 'has-error' : '' }}">
                             <label for="City">{{ __('City') }} <span class="field_required">*</span></label>
                             <input type="text" class="form-control" name="city" placeholder="{{ __('City') }}"
-                                value="{{ $employee->city }}" readonly>
+                                value="{{ $employee->city ?? '' }}" readonly>
                         </div>
                         <div class="form-group col-md-4 {{ $errors->has('province') ? 'has-error' : '' }}">
                             <label for="province">{{ __('Province') }} <span class="field_required">*</span></label>
                             <input type="text" class="form-control" name="province"
-                                placeholder="{{ __('Province') }}" value="{{ $employee->province }}" readonly>
+                                placeholder="{{ __('Province') }}" value="{{ $employee->province ?? '' }}" readonly>
                         </div>
                         <div class="form-group col-md-4 {{ $errors->has('zip') ? 'has-error' : '' }}">
                             <label for="zip">{{ __('Zip') }} <span class="field_required">*</span></label>
                             <input type="number" class="form-control" name="zip"
-                                placeholder="{{ __('Zip') }}" value="{{ $employee->zip }}" readonly>
+                                placeholder="{{ __('Zip') }}" value="{{ $employee->zip ?? '' }}" readonly>
                         </div>
                     </div>
                     <div class="row">
@@ -180,7 +180,7 @@
                                 <label for="skype">{{ __('Skype') }} <span
                                         class="field_required">*</span></label>
                                         <input type="text" class="form-control" name="social_social"
-                                        value="{{ $social->skype }}" readonly>                          
+                                        value="{{ $social->skype ?? '' }}" readonly>                          
                             </div>
 
 
@@ -188,14 +188,14 @@
                                 <label for="facebook">{{ __('Facebook') }} <span
                                         class="field_required">*</span></label>
                                         <input type="text" class="form-control" name="social_social"
-                                        value="{{ $social->facebook }}" readonly>
+                                        value="{{ $social->facebook ?? '' }}" readonly>
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="whatsApp">{{ __('WhatsApp') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="whatsApp"
-                            value="{{ $social->whatsapp }}" readonly>
+                            value="{{ $social->whatsapp ?? '' }}" readonly>
                               
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                                 <label for="linkedIn">{{ __('LinkedIn') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="linkedIn"
-                              value="{{ $social->linkedin }}" readonly>
+                              value="{{ $social->linkedin ?? '' }}" readonly>
                               
                             </div>
 
@@ -212,7 +212,7 @@
                                 <label for="twitter">{{ __('Twitter') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="twitter"
-                                  value="{{ $social->twitter }}" readonly>
+                                  value="{{ $social->twitter ?? '' }}" readonly>
                          
                             </div>
                         </div>
@@ -226,14 +226,14 @@
                             <label for="bank_name">{{ __('Bank Name') }} <span
                                     class="field_required">*</span></label>
                             <input type="text" class="form-control" name="bank_name"
-                                value="{{ $bank->bank_name }}" readonly>
+                                value="{{ $bank->bank_name ?? '' }}" readonly>
                         
                         </div>
                         <div class="form-group col-md-6">
                             <label for="bank_branch">{{ __('Bank Branch *') }} <span
                                     class="field_required">*</span></label>
                             <input type="text" class="form-control" name="bank_branch"
-                            value="{{ $bank->bank_branch }}" readonly>
+                            value="{{ $bank->bank_branch ?? '' }}" readonly>
                        
                         </div>
                     </div>
@@ -243,13 +243,13 @@
                             <label for="bank_number">{{ __('Bank Number') }} <span
                                     class="field_required">*</span></label>
                             <input type="text" class="form-control" name="bank_no"
-                            value="{{ $bank->bank_no }}" readonly>
+                            value="{{ $bank->bank_no ?? '' }}" readonly>
                           
                         </div>
                         <label for="bank_detail">{{ __('Bank Please provide any details') }} <span
                                 class="field_required">*</span></label>
                         <div class="form-group col-md-6">
-                            <textarea name="bank_detail" rows="3" cols="40"> {{ $bank->details }}
+                            <textarea name="bank_detail" rows="3" cols="40"> {{ $bank->details ?? '' }}
                             </textarea>
                         </div>
                     </div>
@@ -259,7 +259,7 @@
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="title">{{ __('Title') }} <span class="field_required">*</span></label>
-                            <input type="title" class="form-control" name="title" value="{{$experience->title}}" readonly>   
+                            <input type="title" class="form-control" name="title" value="{{ $experience->title ?? ''}}" readonly>   
                         </div>
 
 
@@ -267,14 +267,14 @@
                             <label for="company_name">{{ __('Company Name') }} <span
                                     class="field_required">*</span></label>
                             <input type="text" class="form-control" name="company_name"
-                               value="{{$experience->company_name}}" readonly>
+                               value="{{ $experience->company_name ?? '' }}" readonly>
                      
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="location">{{ __('Location') }} <span class="field_required">*</span></label>
                             <input type="text" class="form-control" name="location"
-                   value=" {{$experience->location}}" readonly>
+                   value="{{ $experience->location ?? '' }}" readonly>
                        
                         </div>
                     </div>
@@ -283,14 +283,14 @@
                             <label for="start_date">{{ __('Start Date') }} <span
                                     class="field_required">*</span></label>
                             <input type="date" class="form-control" name="start_date"
-                        value="{{$experience->start_date}}" readonly>
+                        value="{{ $experience->start_date ?? '' }}" readonly>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="finish_date">{{ __('Finish date') }} <span
                                     class="field_required">*</span></label>
                             <input type="date" class="form-control" name="finish_date"
-                        value="{{$experience->finish_date}}" readonly>
+                        value="{{ $experience->finish_date ?? '' }}" readonly>
                         </div>
 
                         <div class="form-group col-md-4 {{ $errors->has('employment_type') ? 'has-error' : '' }}">
@@ -311,7 +311,7 @@
                         <label for="description">{{ __('Description') }} <span
                                 class="field_required">*</span></label>
                         <div class="form-group col-md-12">
-                            <textarea name="description" id="" cols="144" rows="4"> {{$experience->description}}
+                            <textarea name="description" id="" cols="144" rows="4"> {{$experience->description ?? '' }}
                              </textarea>
                         </div>
                     </div>
