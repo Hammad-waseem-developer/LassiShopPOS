@@ -11,7 +11,6 @@
   </div>
   
   <div class="separator-breadcrumb border-top"></div>
-
   <div id="section_payment_sale">
     <div class="row">
         <div class="col-md-12">
@@ -24,6 +23,8 @@
                 <a class="btn btn-outline-success btn-md m-1" id="Show_Modal_Filter"><i
                         class="i-Filter-2 me-2 font-weight-bold"></i>
                     {{ __('translate.Filter') }}</a>
+                    <button id="printButton" class="btn btn-outline-primary ms-3 fw-bolder" ><i
+                        class="i-Add me-2 font-weight-bold"></i>Print</button>
             </div>
             <div class="table-responsive">
                 <table id="payment_sale_table" class="display table table-hover">
@@ -312,17 +313,17 @@
                         extend: 'collection',
                         text: "{{ __('translate.EXPORT') }}",
                         buttons: [
-                          {
-                            extend: 'print',
-                            text: 'Print',
-                            exportOptions: {
-                                columns: ':visible:Not(.not_show)',
-                                rows: ':visible'
-                            },
-                            title: function(){
-                                return 'Report Payment Sell';
-                            },
-                          },
+                        //   {
+                        //     extend: 'print',
+                        //     text: 'Print',
+                        //     exportOptions: {
+                        //         columns: ':visible:Not(.not_show)',
+                        //         rows: ':visible'
+                        //     },
+                        //     title: function(){
+                        //         return 'Report Payment Sell';
+                        //     },
+                        //   },
                           {
                             extend: 'pdf',
                             text: 'Pdf',
@@ -409,6 +410,26 @@
     });
 </script>
 
-
+// print
+<script>
+    document.getElementById("printButton").addEventListener("click", function() {
+          var table = document.getElementById("payment_sale_table");
+          if (table) {
+              // Clone the table
+              var tableClone = table.cloneNode(true);
+  
+              
+              var newWin = window.open('', 'Print-Window');
+              newWin.document.open();
+              newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
+              newWin.document.close();
+              setTimeout(function() {
+                  newWin.print();
+                  newWin.close();
+              }, 10);
+          }
+      });
+  
+    </script>
 
 @endsection
