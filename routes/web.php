@@ -131,6 +131,7 @@ if ($installed === false) {
                 Route::get('import_products', 'ProductsController@import_products_page');
                 Route::post('import_products', 'ProductsController@import_products');
                 Route::get('search_products', 'ProductsController@search_products')->name('search_products');
+                Route::get('print', 'ProductsController@print')->name('print.products');
 
                 Route::post('ProductByCategory', 'ProductsController@ProductByCategory')->name('ProductByCategory');
 

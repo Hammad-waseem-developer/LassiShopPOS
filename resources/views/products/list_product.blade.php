@@ -21,6 +21,10 @@
           <a href="/products/products/create" class=" btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
             {{ __('translate.Create') }}</a>
           @endcan
+
+          <a href="{{route('print.products')}}" class=" btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
+           Print</a>
+
           <a class="btn btn-outline-success btn-md m-1" id="Show_Modal_Filter"><i class="i-Filter-2 me-2 font-weight-bold"></i>
             {{ __('translate.Filter') }}</a>
         </div>
@@ -187,7 +191,6 @@
                     {data: 'action'},
                 
                 ],
-            
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 dom: "<'row'<'col-sm-12 col-md-7'lB><'col-sm-12 col-md-5 p-0'f>>rtip",
                 oLanguage: {
