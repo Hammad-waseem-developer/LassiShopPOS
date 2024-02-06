@@ -167,14 +167,14 @@ $setting = DB::table('settings')
                                 </li>
                             @endif
 
-                            @if (auth()->user()->can('employee_view_own') || auth()->user()->id == 1)
+                            {{-- @if (auth()->user()->can('employee_view_own') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('employee.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
                                         <span class="item-name">Employee Shift</span>
                                     </a>
                                 </li>
-                            @endif
+                            @endif --}}
                             @if (auth()->user()->can('employee_view_all') || auth()->user()->id == 1)
                             <li class="">
                                 <a href="{{ route('employee.index') }}" class="nav-item child-nav ">
@@ -191,14 +191,14 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('attendance_view_own') || auth()->user()->id == 1)
+                            {{-- @if (auth()->user()->can('attendance_view_own') || auth()->user()->id == 1)
                             <li class="">
                                 <a href="{{ route('attendance.index') }}" class="nav-item child-nav ">
                                     <span class="prefix rounded-circle"></span>
                                     <span class="item-name">Attendance</span>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
                             @if (auth()->user()->can('leavetype_view-all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('leaveType.index') }}" class="nav-item child-nav ">
