@@ -434,14 +434,14 @@
                         extend: 'collection',
                         text: "{{ __('translate.EXPORT') }}",
                         buttons: [
-                          {
-                            extend: 'print',
-                            text: 'print',
-                            exportOptions: {
-                                columns: ':visible:Not(.not_show)',
-                                rows: ':visible'
-                            },
-                          },
+                        //   {
+                        //     extend: 'print',
+                        //     text: 'print',
+                        //     exportOptions: {
+                        //         columns: ':visible:Not(.not_show)',
+                        //         rows: ':visible'
+                        //     },
+                        //   },
                           {
                             extend: 'pdf',
                             text: 'pdf',
@@ -944,7 +944,7 @@
               
               var newWin = window.open('', 'Print-Window');
               newWin.document.open();
-              newWin.document.write('<html><head></head><body>' + tableClone.outerHTML + '</body></html>');
+              newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
               newWin.document.close();
               setTimeout(function() {
                   newWin.print();
