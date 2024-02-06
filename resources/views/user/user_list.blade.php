@@ -20,6 +20,8 @@
           <div class="text-end mb-3">
             <a class="new_user btn btn-outline-primary btn-md m-1" @click="New_User"><i class="i-Add me-2 font-weight-bold"></i></i>
               {{ __('translate.Create') }}</a>
+              <a class="btn btn-outline-success ms-3 fw-bolder" href="{{route('usermanagement.printblade')}}"><i
+                class="i-Add me-2 font-weight-bold"></i>Print</a>
           </div>
           @endcan
           <div class="table-responsive">
@@ -273,14 +275,14 @@
                         extend: 'collection',
                         text: "{{ __('translate.EXPORT') }}",
                         buttons: [
-                          {
-                            extend: 'print',
-                            text: 'print',
-                            exportOptions: {
-                                columns: ':visible:Not(.not_show)',
-                                rows: ':visible'
-                            },
-                          },
+                          // {
+                          //   extend: 'print',
+                          //   text: 'print',
+                          //   exportOptions: {
+                          //       columns: ':visible:Not(.not_show)',
+                          //       rows: ':visible'
+                          //   },
+                          // },
                           {
                             extend: 'pdf',
                             text: 'pdf',
