@@ -191,11 +191,6 @@ class PermissionsController extends Controller
         return abort('403', __('You are not authorized'));
         
     }
-
-    public function printblade(){
-        $roles = Role::where('deleted_at', '=', null)->get();
-        return view('permissions.permissions_print', ['roles' => $roles]);
-    }
     
 
 }
