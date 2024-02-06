@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @if (Auth::user()->can('holiday_create'))
+                    @if (Auth::user()->can('holiday_create') || auth()->user()->id == 1)
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('holiday.create') }}">
                             <i class="i-Add me-2 font-weight-bold"></i>{{ __('Create') }}
                         </a>
@@ -201,7 +201,7 @@
 
                             return `
                     <div class="dropdown">
-                        @if (Auth::user()->can('holiday_edit'))
+                        @if (Auth::user()->can('holiday_edit') || auth()->user()->id == 1)
                         <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                             id="dropdownMenuButton" type="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Action</button>
@@ -210,7 +210,7 @@
                                 <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Holiday
                             </a>
                             @endif
-                            @if (Auth::user()->can('holiday_delete'))
+                            @if (Auth::user()->can('holiday_delete') || auth()->user()->id == 1)
                             <a class="dropdown-item delete cursor-pointer"
                               data-id="${full.id}" id="delete">
                                 <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Holiday

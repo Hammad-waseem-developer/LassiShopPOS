@@ -109,7 +109,7 @@ $setting = DB::table('settings')
             @endif
 
             {{-- HRM --}}
-            {{-- @if (auth()->user()->can('hrm')) --}}
+            @if (auth()->user()->can('hrm') || auth()->user()->id == 1)
                 <li>
                     <div @click="selectCollapse('HRM')"
                         :class="selected == 'HRM' ? 'collapse-active' : 'collapse-deactive'" class="collapse-button">
@@ -133,7 +133,7 @@ $setting = DB::table('settings')
                     <div x-ref="HRM" x-bind:style="activeCollapse($refs, 'HRM', selected)" class="collapse-content"
                         style="">
                         <ul class="list-group">
-                            @if (auth()->user()->can('company_view_all'))
+                            @if (auth()->user()->can('company_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('company.index') }}" class="nav-item child-nav">
                                         <span class="prefix rounded-circle"></span>
@@ -142,7 +142,7 @@ $setting = DB::table('settings')
                                 </li>
                             @endif
 
-                            @if (auth()->user()->can('department_view_all'))
+                            @if (auth()->user()->can('department_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('department.index') }}" class="nav-item child-nav">
                                         <span class="prefix rounded-circle"></span>
@@ -150,7 +150,7 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('designation_view_all'))
+                            @if (auth()->user()->can('designation_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('designations.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -158,7 +158,7 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('office_view_all'))
+                            @if (auth()->user()->can('office_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('office.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -167,7 +167,7 @@ $setting = DB::table('settings')
                                 </li>
                             @endif
 
-                            @if (auth()->user()->can('employee_view_own'))
+                            @if (auth()->user()->can('employee_view_own') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('employee.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -175,7 +175,7 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('employee_view_all'))
+                            @if (auth()->user()->can('employee_view_all') || auth()->user()->id == 1)
                             <li class="">
                                 <a href="{{ route('employee.index') }}" class="nav-item child-nav ">
                                     <span class="prefix rounded-circle"></span>
@@ -183,7 +183,7 @@ $setting = DB::table('settings')
                                 </a>
                             </li>
                         @endif
-                            @if (auth()->user()->can('attendance_view_all'))
+                            @if (auth()->user()->can('attendance_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('attendance.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -191,7 +191,7 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('attendance_view_own'))
+                            @if (auth()->user()->can('attendance_view_own') || auth()->user()->id == 1)
                             <li class="">
                                 <a href="{{ route('attendance.index') }}" class="nav-item child-nav ">
                                     <span class="prefix rounded-circle"></span>
@@ -199,7 +199,7 @@ $setting = DB::table('settings')
                                 </a>
                             </li>
                         @endif
-                            @if (auth()->user()->can('leavetype_view-all'))
+                            @if (auth()->user()->can('leavetype_view-all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('leaveType.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -208,7 +208,7 @@ $setting = DB::table('settings')
                                 </li>
                             @endif
 
-                            @if (auth()->user()->can('leaverequest_view_all'))
+                            @if (auth()->user()->can('leaverequest_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('leaveRequest.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -217,7 +217,7 @@ $setting = DB::table('settings')
                                 </li>
                             @endif
 
-                            @if (auth()->user()->can('holiday_view_all'))
+                            @if (auth()->user()->can('holiday_view_all') || auth()->user()->id == 1)
                                 <li class="">
                                     <a href="{{ route('holiday.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -228,7 +228,7 @@ $setting = DB::table('settings')
                         </ul>
                     </div>
                 </li>
-            {{-- @endif --}}
+            @endif
             {{-- @endif --}}
             {{-- HRM end     --}}
 

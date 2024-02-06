@@ -17,7 +17,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @if (Auth::user()->can('office_create'))
+                    @if (Auth::user()->can('office_create') || auth()->user()->id == 1)
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('office.create') }}"><i
                                 class="i-Add me-2 font-weight-bold"></i>
                             {{ __('translate.Create') }}</a>
@@ -176,7 +176,7 @@
                         <td>${element.clock_out}</td>
                         <td>
                             <div class="dropdown">
-                                @if (Auth::user()->can('office_edit'))
+                                @if (Auth::user()->can('office_edit') || auth()->user()->id == 1)
                                 <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                                     id="dropdownMenuButton" type="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
@@ -189,7 +189,7 @@
                                         Office Shift
                                     </a>   
                                     @endif 
-                                    @if (Auth::user()->can('office_delete'))
+                                    @if (Auth::user()->can('office_delete') || auth()->user()->id == 1)
                                     <a class="dropdown-item delete cursor-pointer"
                                     data-id="${element.id}" id="delete">
                                         <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Office Shift

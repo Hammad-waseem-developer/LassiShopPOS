@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @if (Auth::user()->can('leavetype_create'))
+                    @if (Auth::user()->can('leavetype_create') || auth()->user()->id == 1)
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('leaveType.create') }}">
                             <i class="i-Add me-2 font-weight-bold"></i>{{ __('Create') }}
                         </a>
@@ -163,7 +163,7 @@
                                             aria-haspopup="true" aria-expanded="false">
                                             Action
                                         </button>
-                                        @if (Auth::user()->can('leavetype_edit'))
+                                        @if (Auth::user()->can('leavetype_edit') || auth()->user()->id == 1)
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item"
                                                 href="/hrm/leave-type/edit/${element.id}">
@@ -171,7 +171,7 @@
                                                 Departments
                                             </a>
                                             @endif
-                                            @if (Auth::user()->can('leavetype_delete'))
+                                            @if (Auth::user()->can('leavetype_delete') || auth()->user()->id == 1)
                                             <a data-toggle="modal" data-target="#deleteModal"
                                                 class="dropdown-item delete cursor-pointer" data-id="${element.id}" id="delete">
                                                 <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete

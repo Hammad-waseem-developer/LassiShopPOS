@@ -18,7 +18,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @if (Auth::user()->can('company_create'))
+                    @if (Auth::user()->can('company_create') || auth()->user()->id == 1)
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('company.create') }}"><i
                                 class="i-Add me-2 font-weight-bold"></i>
                             {{ __('translate.Create') }}</a>
@@ -161,7 +161,7 @@
 
                                     <td>
                                         <div class="dropdown">
-                                            @if (Auth::user()->can('company_edit'))
+                                            @if (Auth::user()->can('company_edit') || auth()->user()->id == 1)
                                             <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                                                 id="dropdownMenuButton" type="button" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">Action</button>
@@ -174,7 +174,7 @@
                                                     <i class="nav-icon i-Edit font-weight-bold mr-2"></i>Edit Department
                                                 </a>
                                                 @endif
-                                                @if (Auth::user()->can('company_delete'))
+                                                @if (Auth::user()->can('company_delete') || auth()->user()->id == 1)
                                                 <a class="dropdown-item delete cursor-pointer"
                                                 data-id="${element.id}" id="delete">
                                                 <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Department
