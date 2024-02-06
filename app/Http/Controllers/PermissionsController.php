@@ -111,7 +111,7 @@ class PermissionsController extends Controller
     public function edit($id)
     {
         $user_auth = auth()->user();
-		if ($user_auth->can('group_permission')  && $id != 1){
+		if ($user_auth->can('group_permission')){
 
             $Role = Role::where('deleted_at', '=', null)->with('permissions')->findOrFail($id);
             if ($Role) {
@@ -143,7 +143,7 @@ class PermissionsController extends Controller
     public function update(Request $request, $id)
     {
         $user_auth = auth()->user();
-		if ($user_auth->can('group_permission') && $id != 1){
+		if ($user_auth->can('group_permission')){
 
             request()->validate([
                 'name' => 'required',
