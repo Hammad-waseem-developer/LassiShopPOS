@@ -158,12 +158,12 @@
                                 <td>${element.type}</td>
                                 <td>
                                     <div class="dropdown">
+                                        @if (Auth::user()->can('leavetype_edit') || auth()->user()->id == 1)
                                         <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                                             id="dropdownMenuButton" type="button" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
                                             Action
                                         </button>
-                                        @if (Auth::user()->can('leavetype_edit') || auth()->user()->id == 1)
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item"
                                                 href="/hrm/leave-type/edit/${element.id}">
