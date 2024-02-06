@@ -20,8 +20,8 @@
           <div class="text-end mb-3">
             <a class="new_user btn btn-outline-primary btn-md m-1" @click="New_User"><i class="i-Add me-2 font-weight-bold"></i></i>
               {{ __('translate.Create') }}</a>
-              <a class="btn btn-outline-success ms-3 fw-bolder" href="{{route('usermanagement.printblade')}}"><i
-                class="i-Add me-2 font-weight-bold"></i>Print</a>
+              <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
+                class="i-Add me-2 font-weight-bold"></i>Print</button>
           </div>
           @endcan
           <div class="table-responsive">
@@ -190,14 +190,6 @@
                 </span>
               </div>
 
-              <div class="form-group col-md-6">
-                <label for="is_employee">Is_Employee</label>
-                <input type="checkbox" v-model="user.is_employee" class="form-check-input" id="is_employee">
-                <span class="error" v-if="errors && errors.is_employee">
-                  @{{ errors.is_employee[0] }}
-                </span>
-              </div>
-
               <hr/>
 
               <div class="form-group col-md-12">
@@ -344,7 +336,6 @@
                 status: 1,
                 avatar: "",
                 role_users_id: "",
-                is_employee: 0
             }, 
             old_photo: '',
         },
@@ -407,7 +398,6 @@
                     status: 1,
                     avatar: "",
                     role_users_id: "",
-                    is_employee: 0
                 };
                 this.errors = {};
                 this.assigned_warehouses = [];
@@ -472,7 +462,6 @@
                 self.data.append("password_confirmation", self.user.password_confirmation);
                 self.data.append("status", self.user.status);
                 self.data.append("avatar", self.user.avatar);
-                self.data.append("is_employee", self.user.is_employee);
                 self.data.append("role_users_id", self.user.role_users_id);
                 self.data.append("is_all_warehouses", self.user.is_all_warehouses);
 
@@ -511,7 +500,6 @@
                 self.data.append("password", self.user.password);
                 self.data.append("password_confirmation", self.user.password_confirmation);
                 self.data.append("status", self.user.status);
-                self.data.append("is_employee", self.user.is_employee);
                 self.data.append("is_all_warehouses", self.user.is_all_warehouses);
 
                 if(self.old_photo != self.user.avatar){
@@ -589,5 +577,30 @@
     })
 
 </script>
+<script>
+  document.getElementById("printButton").addEventListener("click", function() {
+        var table = document.getElementById("ul-contact-list");
+        if (table) {
+            // Clone the table
+            var tableClone = table.cloneNode(true);
 
+            // Exclude the "image" column
+            Array.from(tableClone.rows).forEach(function(row) {
+            row.deleteCell(6); // Remove the first column
+            row.deleteCell(5); // Remove the first column
+            row.deleteCell(0); // Remove the second column
+        });
+            
+            var newWin = window.open('', 'Print-Window');
+            newWin.document.open();
+            newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
+            newWin.document.close();
+            setTimeout(function() {
+                newWin.print();
+                newWin.close();
+            }, 10);
+        }
+    });
+
+  </script>
 @endsection

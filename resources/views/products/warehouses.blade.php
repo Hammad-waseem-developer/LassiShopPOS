@@ -18,6 +18,8 @@
         <div class="text-end  mb-3">
           <a class="new_Warehouse btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
             {{ __('translate.Create') }}</a>
+            <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
+              class="i-Add me-2 font-weight-bold"></i>Print</button>
         </div>
 
         <div class="table-responsive">
@@ -411,6 +413,29 @@
 
 </script>
 
+{{-- print --}}
+<script>
+  document.getElementById("printButton").addEventListener("click", function() {
+        var table = document.getElementById("warehouse_table");
+        if (table) {
+            // Clone the table
+            var tableClone = table.cloneNode(true);
 
+            // Exclude the "image" column
+            Array.from(tableClone.rows).forEach(function(row) {
+            row.deleteCell(6); // Remove the first column
+        });
+            
+            var newWin = window.open('', 'Print-Window');
+            newWin.document.open();
+            newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
+            newWin.document.close();
+            setTimeout(function() {
+                newWin.print();
+                newWin.close();
+            }, 10);
+        }
+    });
+</script>
 
 @endsection

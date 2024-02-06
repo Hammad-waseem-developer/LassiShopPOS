@@ -397,14 +397,9 @@ if ($installed === false) {
             //------------------------------- users & permissions --------------------------\\
             Route::prefix('user-management')->group(function () {
                 Route::resource('users', 'UserController');
-                // users print
-                Route::get('UsersPrint', 'UserController@printblade')->name('usermanagement.printblade');
-
                 Route::post('assignRole', 'UserController@assignRole');
 
                 Route::resource('permissions', 'PermissionsController');
-                // Roles Print
-                Route::get('/print', 'PermissionsController@printblade')->name('permissions.printblade');
             });
             //-------------------------------  --------------------------\\
 

@@ -330,9 +330,5 @@ class UserController extends Controller
         return abort('403', __('You are not authorized'));
     }
 
- public function printblade(){
-    $user =  User ::where('deleted_at', '=', null)->get();
-    return view('user.user_print', ['users' => $user]);
- }
 
 }
