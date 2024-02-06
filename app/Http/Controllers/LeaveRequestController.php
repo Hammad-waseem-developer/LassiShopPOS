@@ -32,7 +32,6 @@ class LeaveRequestController extends Controller
         $leaveTypes = LeaveType::get()->all();
         // $leaveRequest = LeaveRequest::all();
         return view('hrm.leaverequest.create', compact('company', 'departments', 'employees', 'leaveTypes'));
-
     }
 
     public function store(Request $request)
@@ -92,7 +91,6 @@ class LeaveRequestController extends Controller
      */
     public function show(LeaveRequest $leaveRequest)
     {
-
     }
 
     public function edit($id)
@@ -108,7 +106,7 @@ class LeaveRequestController extends Controller
     public function update(Request $request, $id)
     {
         $leaveRequest = LeaveRequest::find($id);
-        
+
         $validator = Validator::make($request->all(), [
             'company' => 'required|exists:company,id',
             'employee' => 'required|exists:employee_shift,id',
@@ -124,13 +122,13 @@ class LeaveRequestController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         if ($request->new_file) {
             $file = $request->new_file;
             $fileName = time() . '_' . $file->getClientOriginalName();
             $file->move('leave_requests', $fileName, 'public');
             $filePath = $fileName;
-            if(!empty($request->old_file)) {
+            if (!empty($request->old_file)) {
                 unlink('leave_requests/' . $request->old_file);
             }
             $leaveRequest->file_path = $filePath;
@@ -146,7 +144,7 @@ class LeaveRequestController extends Controller
         $leaveRequest->start_date = $request->start_date;
         $leaveRequest->end_date = $request->end_date;
         $leaveRequest->status = $request->status;
-        
+
         $leaveRequest->reason = $request->reason;
         $leaveRequest->save();
 
@@ -167,7 +165,12 @@ class LeaveRequestController extends Controller
 
     public function getData()
     {
-        $leaveRequest = LeaveRequest::with(['employee', 'company', 'department', 'leave'])->get();
+        if (auth()->user()->can('leaverequest_view_own')) {
+            $leaveRequest = LeaveRequest::where('emp_id', auth()->user()->id)->with(['employee', 'company', 'department', 'leave'])->get();
+        }
+        if (auth()->user()->can('leaverequest_view_all')) {
+            $leaveRequest = LeaveRequest::with(['employee', 'company', 'department', 'leave'])->get();
+        }
         return response()->json(['data' => $leaveRequest]);
     }
 
@@ -176,7 +179,7 @@ class LeaveRequestController extends Controller
     {
         // dd($request->all());
         $leaveRequest = LeaveRequest::findOrFail($request->id);
-    
+
         if ($leaveRequest) {
             $leaveRequest->delete();
             return response()->json(['message' => 'Leave Request deleted successfully'], 200);

@@ -23,8 +23,15 @@ class EmployeeController extends Controller
     }
     public function index()
     {
-        $employee = Employee::all();
-        return view('hrm.employee.index', compact('employee'));
+        // dd(auth()->user()->can('employee_view_own'));
+        if(auth()->user()->can('employee_view_own')){
+            $employee = Employee::where('id', auth()->user()->id)->get();
+            return view('hrm.employee.index', compact('employee'));
+        }
+        if(auth()->user()->can('employee_view_all')){
+            $employee = Employee::all();
+            return view('hrm.employee.index', compact('employee'));
+        }
     }
 
     public function create()
@@ -167,7 +174,12 @@ class EmployeeController extends Controller
 
     public function getData()
     {
-        $employees = Employee::with(['office', 'designation', 'department'])->get();
+        if(auth()->user()->can('employee_view_own')){
+            $employees = Employee::where('id', auth()->user()->id)->with(['office', 'designation', 'department'])->get();
+        }
+        if(auth()->user()->can('employee_view_all')){
+            $employees = Employee::with(['office', 'designation', 'department'])->get();
+        }
         return response()->json(['data' => $employees]);
     }
 
