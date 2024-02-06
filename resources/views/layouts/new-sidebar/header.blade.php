@@ -218,6 +218,8 @@
     //     setInterval(fetchNotifications, 5000);
     // });
 
+        
+    
     document.addEventListener('DOMContentLoaded', function() {
         function fetchNotifications() {
             var xhr = new XMLHttpRequest();
@@ -344,9 +346,10 @@
 
         updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
 
-        setInterval(fetchNotifications, 1000);
-
+        setInterval(fetchNotifications, 5000);
     });
+
+
 </script>
 <style>
     .box::-webkit-scrollbar-track {

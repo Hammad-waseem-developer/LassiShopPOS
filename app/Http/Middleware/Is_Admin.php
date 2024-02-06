@@ -20,7 +20,8 @@ class Is_Admin
 
 			return $next($request);
 		}
-        return redirect("/dashboard/admin");
+        return redirect("/dashboard/employee")->with('error', 'You are not authorized to access this page');
+        dd('not admin');
 
     }
 }
