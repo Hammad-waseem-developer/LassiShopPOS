@@ -838,7 +838,8 @@
                         },
                     });
 
-                    console.log(data);
+                    console.log("Hold Order Data:", data);
+
                     $("#shipping").val(data.data.holdOrder.shipping);
                     $("#orderTax").val(data.data.holdOrder.orderTax);
                     $("#discount").val(data.data.holdOrder.discount);
@@ -904,6 +905,7 @@
 
                     // Process each item using for...of loop and async/await
                     for (const element of data.data.holdProducts) {
+                        console.log("Processing Product:", element);
                         await addToCartRequestWithRetry(element, element.quantity);
                     }
 
