@@ -10,7 +10,10 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        return view('hrm.company.index');
+        if (auth()->user()->can('company_view_all')) {
+            return view('hrm.company.index');
+        }
+        return abort('403', __('You are not authorized'));
     }
 
     public function create()

@@ -1373,7 +1373,7 @@
                                                                 for="department_delete">
                                                                 <input type="checkbox" v-model="permissions"
                                                                     id="department_delete"
-                                                                    value="department_delete"><span>Department view
+                                                                    value="department_delete"><span>Department Delete
                                                                 </span><span class="checkmark"></span>
                                                             </label>
                                                         </div>
