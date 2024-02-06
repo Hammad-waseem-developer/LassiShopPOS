@@ -20,11 +20,11 @@
 
                 <div class="text-end mb-3" style="display: flex;
                 justify-content: flex-end;">
-                    @can('client_add')
+                    @if (Auth::user()->can('employee_create'))
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('employees.create') }}"><i
                                 class="i-Add me-2 font-weight-bold"></i>
                             {{ __('translate.Create') }}</a>
-                    @endcan
+                    @endif
                     <div class="dropdown show" style="    display: flex;
                     align-items: center;">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -206,6 +206,7 @@
 
                             return `
                             <div class="dropdown">
+                                @if (Auth::user()->can('employee_edit'))
                                 <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                                     id="dropdownMenuButton" type="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">Action</button>
@@ -217,11 +218,13 @@
                                     data-id="${full.id}" id="delete">
                                         <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
                                     </a>
+                                    @endif
+                                    @if (Auth::user()->can('employee_delete'))
                                     <a class="dropdown-item"  href="${dynamicShowRoute}"
                                     data-id="${full.id}" id="show">
                                         <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
                                     </a>
-                                
+                                    @endif
                                 </div>
                             </div>
                         `;

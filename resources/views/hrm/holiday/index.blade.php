@@ -15,11 +15,11 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @can('client_add')
+                    @if (Auth::user()->can('holiday_create'))
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('holiday.create') }}">
                             <i class="i-Add me-2 font-weight-bold"></i>{{ __('Create') }}
                         </a>
-                    @endcan
+                    @endif
                 </div>
                 <div class="table-responsive">
                     <table id="client_list_table" class="display table">
@@ -201,6 +201,7 @@
 
                             return `
                     <div class="dropdown">
+                        @if (Auth::user()->can('holiday_edit'))
                         <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                             id="dropdownMenuButton" type="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Action</button>
@@ -208,10 +209,13 @@
                             <a class="dropdown-item" href="${dynamicEditRoute}">
                                 <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Holiday
                             </a>
+                            @endif
+                            @if (Auth::user()->can('holiday_delete'))
                             <a class="dropdown-item delete cursor-pointer"
                               data-id="${full.id}" id="delete">
                                 <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Holiday
                             </a>
+                            @endif
                         </div>
                     </div>
                 `;

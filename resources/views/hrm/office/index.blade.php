@@ -17,11 +17,11 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @can('client_add')
+                    @if (Auth::user()->can('office_create'))
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('office.create') }}"><i
                                 class="i-Add me-2 font-weight-bold"></i>
                             {{ __('translate.Create') }}</a>
-                    @endcan
+                    @endif
                 </div>
                 <div class="table-responsive">
                     <table id="client_list_table" class="display table">
@@ -176,6 +176,7 @@
                         <td>${element.clock_out}</td>
                         <td>
                             <div class="dropdown">
+                                @if (Auth::user()->can('office_edit'))
                                 <button class="btn btn-outline-info btn-rounded dropdown-toggle"
                                     id="dropdownMenuButton" type="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
@@ -186,11 +187,14 @@
                                         href="{{ url('/hrm/office/edit') }}/${element.id}" data-id="${element.id}">
                                         <i class="nav-icon i-Edit font-weight-bold mr-2" id="editOffice"></i>Edit
                                         Office Shift
-                                    </a>    
+                                    </a>   
+                                    @endif 
+                                    @if (Auth::user()->can('office_delete'))
                                     <a class="dropdown-item delete cursor-pointer"
                                     data-id="${element.id}" id="delete">
                                         <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Office Shift
                                     </a>
+                                    @endif
                                 </div>
                             </div>
                         </td>
