@@ -201,6 +201,8 @@ if ($installed === false) {
             Route::post('edit-hold-order', 'HoldOrdersController@edit')->name('edit_hold_order');
             Route::get('getHoldList', 'HoldOrdersController@getHoldList')->name('getHoldList');
             Route::post('delete-hold-order', 'HoldOrdersController@delete')->name('delete_hold_order');
+            // Employee Dashboard
+            Route::get('dashboard/employee', 'EmployeeController@dashboard')->name('dasboard.employee');
 
 
             //---------------------- Order List ----------------------\\

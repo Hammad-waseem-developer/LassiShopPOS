@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
+    public function dashboard(){
+      
+        return view('dashboard.dashboard_employee');
+    }
     public function index()
     {
         $employee = Employee::all();
