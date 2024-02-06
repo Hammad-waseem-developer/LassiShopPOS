@@ -798,8 +798,5 @@ class ClientController extends Controller
             return $amount . ' ' . $this->currency;
         }
     }
-public function printblade(){
-    $clients = Client::where('deleted_at', '=', null)->get();
-    return view('clients.print',compact('clients'));
-}
+
 }

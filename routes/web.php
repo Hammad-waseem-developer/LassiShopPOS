@@ -372,9 +372,7 @@ if ($installed === false) {
             Route::post('get_clients_datatable', 'ClientController@get_clients_datatable')->name('clients_datatable');
 
             Route::get('get_client_plafond/{id}', 'ClientController@get_client_plafond');
-            // Route for print customers
-            Route::get('clients/print', 'ClientController@printblade')->name('clients.printblade');
-            // 
+
             Route::get('get_client_debt_total/{id}', 'ClientController@get_client_debt_total');
             Route::get('get_client_debt_return_total/{id}', 'ClientController@get_client_debt_return_total');
 
