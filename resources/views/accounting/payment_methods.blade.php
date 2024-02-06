@@ -20,6 +20,8 @@
 
                 <a class="btn btn-outline-primary btn-md m-1" @click="New_payment_method"><i
                             class="i-Add me-2 font-weight-bold"></i>{{ __('translate.Create') }}</a>
+                            <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
+                                class="i-Add me-2 font-weight-bold"></i>Print</button>
                 </div>
             @endcan
 
@@ -274,11 +276,37 @@
                     extend: 'collection',
                     text: "{{ __('translate.EXPORT') }}",
                     buttons: [
-                        'csv','excel', 'pdf', 'print'
+                        'csv','excel', 'pdf'
                     ]
                 }]
         });
 
     });
 </script>
+{{-- prints --}}
+<script>
+    document.getElementById("printButton").addEventListener("click", function() {
+          var table = document.getElementById("payment_method_table");
+          if (table) {
+              // Clone the table
+              var tableClone = table.cloneNode(true);
+  
+              // Exclude the "image" column
+              Array.from(tableClone.rows).forEach(function(row) {
+              row.deleteCell(1); // Remove the first column
+  
+          });
+              
+              var newWin = window.open('', 'Print-Window');
+              newWin.document.open();
+              newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
+              newWin.document.close();
+              setTimeout(function() {
+                  newWin.print();
+                  newWin.close();
+              }, 10);
+          }
+      });
+  
+    </script>
 @endsection
