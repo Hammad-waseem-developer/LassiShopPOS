@@ -190,6 +190,13 @@
                 </span>
               </div>
 
+              <div class="form-group col-md-6">
+                <label for="is_employee">Is_Employee</label>
+                <input type="checkbox" v-model="user.is_employee" class="form-check-input" id="is_employee">
+                <span class="error" v-if="errors && errors.is_employee">
+                  @{{ errors.is_employee[0] }}
+                </span>
+              </div>
               <hr/>
 
               <div class="form-group col-md-12">
@@ -335,6 +342,7 @@
                 email: "",
                 status: 1,
                 avatar: "",
+                is_employee: 0,
                 role_users_id: "",
             }, 
             old_photo: '',
@@ -398,6 +406,7 @@
                     status: 1,
                     avatar: "",
                     role_users_id: "",
+                    is_employee: 0
                 };
                 this.errors = {};
                 this.assigned_warehouses = [];
@@ -464,6 +473,7 @@
                 self.data.append("avatar", self.user.avatar);
                 self.data.append("role_users_id", self.user.role_users_id);
                 self.data.append("is_all_warehouses", self.user.is_all_warehouses);
+                self.data.append("is_employee", self.user.is_employee);
 
                 // append array assigned_warehouses
                 if (self.assigned_warehouses.length) {
@@ -501,6 +511,7 @@
                 self.data.append("password_confirmation", self.user.password_confirmation);
                 self.data.append("status", self.user.status);
                 self.data.append("is_all_warehouses", self.user.is_all_warehouses);
+                self.data.append("is_employee", self.user.is_employee);
 
                 if(self.old_photo != self.user.avatar){
                  self.data.append("avatar", self.user.avatar);
