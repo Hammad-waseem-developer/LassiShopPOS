@@ -22,6 +22,8 @@
             @can('transfer_add')
             <a href="/transfer/transfers/create" class="btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
               {{ __('translate.Create') }}</a>
+              <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
+                class="i-Add me-2 font-weight-bold"></i>Print</button>
             @endcan
             <a class="btn btn-outline-success btn-md m-1" id="Show_Modal_Filter"><i class="i-Filter-2 me-2 font-weight-bold"></i>
               {{ __('translate.Filter') }}</a>
@@ -244,14 +246,14 @@
                         extend: 'collection',
                         text: "{{ __('translate.EXPORT') }}",
                         buttons: [
-                          {
-                            extend: 'print',
-                            text: 'print',
-                            exportOptions: {
-                                columns: ':visible:Not(.not_show)',
-                                rows: ':visible'
-                            },
-                          },
+                          // {
+                          //   extend: 'print',
+                          //   text: 'print',
+                          //   exportOptions: {
+                          //       columns: ':visible:Not(.not_show)',
+                          //       rows: ':visible'
+                          //   },
+                          // },
                           {
                             extend: 'pdf',
                             text: 'pdf',
@@ -386,7 +388,29 @@
     })
 
 </script>
+{{-- print --}}
 
+<script>
+  document.getElementById("printButton").addEventListener("click", function() {
+        var table = document.getElementById("transfer_table");
+        if (table) {
+            // Clone the table
+            var tableClone = table.cloneNode(true);
 
+            // Exclude the "image" column
+            Array.from(tableClone.rows).forEach(function(row) {
+            row.deleteCell(6); // Remove the first column
+        });            
+            var newWin = window.open('', 'Print-Window');
+            newWin.document.open();
+            newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
+            newWin.document.close();
+            setTimeout(function() {
+                newWin.print();
+                newWin.close();
+            }, 10);
+        }
+    });
 
+  </script>
 @endsection
