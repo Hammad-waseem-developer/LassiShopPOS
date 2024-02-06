@@ -301,7 +301,7 @@
                                     <label for="skype">{{ __('Skype') }} <span
                                             class="field_required">*</span></label>
                                     <input type="text" class="form-control" name="skype"
-                                        placeholder="{{ __('Skype') }}" value="{{$social->skype}}">
+                                        placeholder="{{ __('Skype') }}" value="{{$social->skype ?? ''}}">
                                     @if ($errors->has('skype'))
                                         <span class="help-block text-danger">{{ $errors->first('skype') }}</span>
                                     @endif
@@ -312,7 +312,7 @@
                                     <label for="facebook">{{ __('Facebook') }} <span
                                             class="field_required">*</span></label>
                                     <input type="text" class="form-control" name="facebook"
-                                        placeholder="{{ __('Facebook') }}" value="{{$social->facebook}}">
+                                        placeholder="{{ __('Facebook') }}" value="{{$social->facebook ?? ''}}">
                                     @if ($errors->has('facebook'))
                                         <span class="help-block text-danger">{{ $errors->first('facebook') }}</span>
                                     @endif
@@ -322,7 +322,7 @@
                                     <label for="whatsApp">{{ __('WhatsApp') }} <span
                                             class="field_required">*</span></label>
                                     <input type="text" class="form-control" name="whatsApp"
-                                        placeholder="{{ __('WhatsApp') }}" value="{{$social->whatsapp}}">
+                                        placeholder="{{ __('WhatsApp') }}" value="{{$social->whatsapp ?? ''}}">
                                     @if ($errors->has('whatsApp'))
                                         <span class="help-block text-danger">{{ $errors->first('whatsApp') }}</span>
                                     @endif
@@ -333,7 +333,7 @@
                                     <label for="linkedIn">{{ __('LinkedIn') }} <span
                                             class="field_required">*</span></label>
                                     <input type="text" class="form-control" name="linkedIn"
-                                        placeholder="{{ __('LinkedIn') }}" value="{{$social->linkedin}}">
+                                        placeholder="{{ __('LinkedIn') }}" value="{{$social->linkedin ?? ''}}">
                                     @if ($errors->has('linkedIn'))
                                         <span class="help-block text-danger">{{ $errors->first('linkedIn') }}</span>
                                     @endif
@@ -343,7 +343,7 @@
                                     <label for="twitter">{{ __('Twitter') }} <span
                                             class="field_required">*</span></label>
                                     <input type="text" class="form-control" name="twitter"
-                                        placeholder="{{ __('Twitter') }}" value="{{$social->twitter}}">
+                                        placeholder="{{ __('Twitter') }}" value="{{$social->twitter ?? ''}}">
                                     @if ($errors->has('twitter'))
                                         <span class="help-block text-danger">{{ $errors->first('twitter') }}</span>
                                     @endif
@@ -359,7 +359,7 @@
                                 <label for="bank_name">{{ __('Bank Name') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="bank_name"
-                                    placeholder="{{ __('Bank Name') }}" value="{{$bank->bank_name}}">
+                                    placeholder="{{ __('Bank Name') }}" value="{{$bank->bank_name ?? ''}}">
                                 @if ($errors->has('bank_name'))
                                     <span class="help-block text-danger">{{ $errors->first('bank_name') }}</span>
                                 @endif
@@ -368,7 +368,7 @@
                                 <label for="bank_branch">{{ __('Bank Branch ') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="bank_branch"
-                                    placeholder="{{ __('Bank Branch ') }}" value="{{$bank->bank_branch}}">
+                                    placeholder="{{ __('Bank Branch ') }}" value="{{$bank->bank_branch ?? ''}}">
                                 @if ($errors->has('bank_branch'))
                                     <span class="help-block text-danger">{{ $errors->first('bank_branch') }}</span>
                                 @endif
@@ -380,7 +380,7 @@
                                 <label for="bank_number">{{ __('Bank Number') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="bank_no"
-                                    placeholder="{{ __('Bank Number') }}" value="{{$bank->bank_no}}">
+                                    placeholder="{{ __('Bank Number') }}" value="{{$bank->bank_no ?? ''}}">
                                 @if ($errors->has('bank_no'))
                                     <span class="help-block text-danger">{{ $errors->first('bank_no') }}</span>
                                 @endif
@@ -388,7 +388,7 @@
                             <label for="bank_detail">{{ __('Bank Please provide any details') }} <span
                                     class="field_required">*</span></label>
                             <div class="form-group col-md-6">
-                                <textarea name="bank_detail" placeholder="{{ __('Enter Description') }}" rows="3" cols="40 " value="">{{$bank->details}}</textarea>
+                                <textarea name="bank_detail" placeholder="{{ __('Enter Description') }}" rows="3" cols="40 " value="">{{$bank->details ?? ''}}</textarea>
                                 @if ($errors->has('bank_detail'))
                                     <span class="help-block text-danger">{{ $errors->first('bank_detail') }}</span>
                                 @endif
@@ -402,7 +402,7 @@
                                 <label for="title">{{ __('Title') }} <span
                                         class="field_required">*</span></label>
                                 <input type="title" class="form-control" name="title"
-                                    placeholder="{{ __('Title') }}" value="{{$experience->title}}">
+                                    placeholder="{{ __('Title') }}" value="{{$experience->title ?? ''}}">
                                 @if ($errors->has('title'))
                                     <span class="help-block text-danger">{{ $errors->first('title') }}</span>
                                 @endif
@@ -413,7 +413,7 @@
                                 <label for="company_name">{{ __('Company Name') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="company_name"
-                                    placeholder="{{ __('Company Name') }}" value="{{$experience->company_name}}">
+                                    placeholder="{{ __('Company Name') }}" value="{{$experience->company_name ?? ''}}">
                                 @if ($errors->has('company_name'))
                                     <span class="help-block text-danger">{{ $errors->first('company_name') }}</span>
                                 @endif
@@ -423,7 +423,7 @@
                                 <label for="location">{{ __('Location') }} <span
                                         class="field_required">*</span></label>
                                 <input type="text" class="form-control" name="location"
-                                    placeholder="{{ __('Location') }}" value=" {{$experience->location}}">
+                                    placeholder="{{ __('Location') }}" value=" {{$experience->location ?? ''}}">
                                 @if ($errors->has('location'))
                                     <span class="help-block text-danger">{{ $errors->first('location') }}</span>
                                 @endif
@@ -434,7 +434,7 @@
                                 <label for="start_date">{{ __('Start Date') }} <span
                                         class="field_required">*</span></label>
                                 <input type="date" class="form-control" name="start_date"
-                                    placeholder="{{ __('Start Date') }}" value="{{$experience->start_date}}">
+                                    placeholder="{{ __('Start Date') }}" value="{{$experience->start_date ?? ''}}">
                                 @if ($errors->has('start_date'))
                                     <span class="help-block text-danger">{{ $errors->first('start_date') }}</span>
                                 @endif
@@ -444,7 +444,7 @@
                                 <label for="finish_date">{{ __('Finish date') }} <span
                                         class="field_required">*</span></label>
                                 <input type="date" class="form-control" name="finish_date"
-                                    placeholder="{{ __('Finish date') }}"  value="{{ $experience->finish_date }}">
+                                    placeholder="{{ __('Finish date') }}"  value="{{ $experience->finish_date ?? ''}}">
                                 @if ($errors->has('finish_date'))
                                     <span class="help-block text-danger">{{ $errors->first('finish_date') }}</span>
                                 @endif
@@ -494,7 +494,7 @@
                             <label for="description">{{ __('Description') }} <span
                                     class="field_required">*</span></label>
                             <div class="form-group col-md-12">
-                                <textarea name="description" id="" cols="144" rows="4">{{$experience->description}}
+                                <textarea name="description" id="" cols="144" rows="4">{{$experience->description ?? ''}}
                              </textarea>
                                 @if ($errors->has('description'))
                                     <span class="help-block text-danger">{{ $errors->first('description') }}</span>

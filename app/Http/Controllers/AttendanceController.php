@@ -91,7 +91,11 @@ class AttendanceController extends Controller
                 $value->work_duration = $workDuration;
                 $value->save();
             }
-            $attendance = Attendance::where('emp_id', auth()->user()->id)->with(['company', 'employee', 'office'])->get();
+            $attendance = Attendance::whereHas('employee', function ($query) {
+                // Add your condition on the employee table here
+                $query->where('user_id', auth()->user()->id);
+            })
+            ->with(['company', 'employee', 'office'])->get();
             return response()->json(['data' => $attendance]);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserWarehouse;
@@ -79,6 +80,7 @@ class UserController extends Controller
                 'password_confirmation' => 'required',
                 'avatar'    => 'nullable|image|mimes:jpeg,png,jpg,bmp,gif,svg|max:2048',
                 'status'    => 'required',
+                'is_employee'    => 'required',
                 'role_users_id'    => 'required',
             ]);
 
@@ -102,6 +104,12 @@ class UserController extends Controller
                     $is_all_warehouses = 0;
                 }
 
+                if($request['is_employee'] == '1' || $request['is_employee'] == 'true'){
+                    $is_employee = 1;
+                }else{
+                    $is_employee = 0;
+                }
+
                 $user = User::create([
                     'username'  => $request['username'],
                     'email'     => $request['email'],
@@ -110,7 +118,16 @@ class UserController extends Controller
                     'role_users_id'   => $request['role_users_id'],
                     'status'    => $request['status'],
                     'is_all_warehouses'    => $is_all_warehouses,
+                    'is_employee'    => $is_employee
                 ]);
+
+                if($is_employee == 1){
+                    Employee::create([
+                        'user_id'  => $user->id,
+                        'first_name'  => $request['username'],
+                        'email'     => $request['email'],
+                    ]);
+                }
 
                 $user->assignRole($request['role_users_id']);
 
@@ -228,6 +245,13 @@ class UserController extends Controller
                     $is_all_warehouses = 0;
                 }
 
+                if($request['is_employee'] == '1' || $request['is_employee'] == 'true'){
+
+                    $is_employee = 1;
+                }else{
+                    $is_employee = 0;
+                }
+
 
                 $user = User::whereId($id)->update([
                     'username'  => $request['username'],
@@ -236,6 +260,7 @@ class UserController extends Controller
                     'password'  => $pass,
                     'status'    => $request['status'],
                     'is_all_warehouses' => $is_all_warehouses,
+                    'is_employee' => $is_employee
                 ]);
 
                 $user_saved = User::where('deleted_at', '=', null)->findOrFail($id);

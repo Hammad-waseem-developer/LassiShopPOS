@@ -175,7 +175,8 @@ class EmployeeController extends Controller
     public function getData()
     {
         if(auth()->user()->can('employee_view_own')){
-            $employees = Employee::where('id', auth()->user()->id)->with(['office', 'designation', 'department'])->get();
+            $employees = Employee::where('user_id', auth()->user()->id)->with(['office', 'designation', 'department'])->get();
+            // dd($employees);
         }
         if(auth()->user()->can('employee_view_all')){
             $employees = Employee::with(['office', 'designation', 'department'])->get();

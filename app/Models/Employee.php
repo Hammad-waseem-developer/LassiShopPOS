@@ -13,6 +13,7 @@ class Employee extends Model
     use HasFactory;
         protected $table = "employee_shift";
         protected $fillable = [
+            'user_id',
             'first_name',
             'last_name',
             'phone',

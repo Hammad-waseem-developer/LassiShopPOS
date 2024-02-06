@@ -169,70 +169,139 @@
 
         getData();
 
-        function getData() {
-            $('#client_list_table').DataTable().destroy();
-            $('#client_list_table').DataTable({
-                ajax: '{{ route('employees.getData') }}',
-                processing: true,
-                columns: [{
-                        data: 'id'
-                    },
-                    {
-                        data: 'first_name'
-                    },
-                    {
-                        data: 'last_name'
-                    },
-                    {
-                        data: 'phone'
-                    },
-                    {
-                        data: 'office.name'
-                    },
-                    {
-                        data: 'designation.name'
-                    },
-                    {
-                        data: 'department.name'
-                    },
-                    {
-                        data: 'department.dept_head'
-                    },
-                    {
-                        targets: -1,
-                        render: function(data, type, full, meta) {
-                            var dynamicEditRoute = editRoute.replace(':id', full.id);
-                            var dynamicShowRoute = showRoute.replace(':id', full.id);
+        // function getData() {
+        //     $('#client_list_table').DataTable().destroy();
+        //     $('#client_list_table').DataTable({
+        //         ajax: '{{ route('employees.getData') }}',
+        //         processing: true,
+        //         columns: [{
+        //                 data: 'id'
+        //             },
+        //             {
+        //                 data: 'first_name'
+        //             },
+        //             {
+        //                 data: 'last_name'
+        //             },
+        //             {
+        //                 data: 'phone'
+        //             },
+        //             {
+        //                 data: 'office.name'
+        //             },
+        //             {
+        //                 data: 'designation.name'
+        //             },
+        //             {
+        //                 data: 'department.name'
+        //             },
+        //             {
+        //                 data: 'department.dept_head'
+        //             },
+        //             {
+        //                 targets: -1,
+        //                 render: function(data, type, full, meta) {
+        //                     var dynamicEditRoute = editRoute.replace(':id', full.id);
+        //                     var dynamicShowRoute = showRoute.replace(':id', full.id);
 
-                            return `
-                            <div class="dropdown">
-                                @if (Auth::user()->can('employee_edit') || auth()->user()->id == 1)
-                                <button class="btn btn-outline-info btn-rounded dropdown-toggle"
-                                    id="dropdownMenuButton" type="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Action</button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="${dynamicEditRoute}">
-                                        <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
-                                    </a>
-                                    <a class="dropdown-item delete cursor-pointer"
-                                    data-id="${full.id}" id="delete">
-                                        <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
-                                    </a>
-                                    @endif
-                                    @if (Auth::user()->can('employee_delete') || auth()->user()->id == 1)
-                                    <a class="dropdown-item"  href="${dynamicShowRoute}"
-                                    data-id="${full.id}" id="show">
-                                        <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
-                                    </a>
-                                    @endif
-                                </div>
+        //                     return `
+        //                     <div class="dropdown">
+        //                         @if (Auth::user()->can('employee_edit') || auth()->user()->id == 1)
+        //                         <button class="btn btn-outline-info btn-rounded dropdown-toggle"
+        //                             id="dropdownMenuButton" type="button" data-toggle="dropdown"
+        //                             aria-haspopup="true" aria-expanded="false">Action</button>
+        //                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        //                             <a class="dropdown-item" href="${dynamicEditRoute}">
+        //                                 <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
+        //                             </a>
+        //                             <a class="dropdown-item delete cursor-pointer"
+        //                             data-id="${full.id}" id="delete">
+        //                                 <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
+        //                             </a>
+        //                             @endif
+        //                             @if (Auth::user()->can('employee_delete') || auth()->user()->id == 1)
+        //                             <a class="dropdown-item"  href="${dynamicShowRoute}"
+        //                             data-id="${full.id}" id="show">
+        //                                 <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
+        //                             </a>
+        //                             @endif
+        //                         </div>
+        //                     </div>
+        //                 `;
+        //                 }
+        //             }
+        //         ]
+        //     });
+        // }
+
+        function getData() {
+    $('#client_list_table').DataTable().destroy();
+    $('#client_list_table').DataTable({
+        ajax: '{{ route('employees.getData') }}',
+        processing: true,
+        columns: [
+            { data: 'id' },
+            { data: 'first_name' },
+            { data: 'last_name' },
+            { data: 'phone' },
+            { 
+                data: function(row) {
+                    return row.office && row.office.name ? row.office.name : 'N/A';
+                }
+            },
+
+            { 
+                data: function(row) {
+                    return row.designation && row.designation.name ? row.designation.name : 'N/A';
+                }
+            },
+            { 
+                data: function(row) {
+                    return row.department && row.department.name ? row.department.name : 'N/A';
+                }
+            },
+
+            { 
+                data: function(row) {
+                    return row.department && row.department.dept_head ? row.department.dept_head : 'N/A';
+                }
+            },
+            {
+                targets: -1,
+                render: function(data, type, full, meta) {
+                    var dynamicEditRoute = editRoute.replace(':id', full.id);
+                    var dynamicShowRoute = showRoute.replace(':id', full.id);
+
+                    return `
+                        <div class="dropdown">
+                            @if (Auth::user()->can('employee_edit') || auth()->user()->id == 1)
+                            <button class="btn btn-outline-info btn-rounded dropdown-toggle"
+                                id="dropdownMenuButton" type="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Action</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="${dynamicEditRoute}">
+                                    <i class="nav-icon i-Edit font-weight-bold mr-2"></i> Edit Employee
+                                </a>
+                                <a class="dropdown-item delete cursor-pointer"
+                                data-id="${full.id}" id="delete">
+                                    <i class="nav-icon i-Close-Window font-weight-bold mr-2"></i>Delete Employee
+                                </a>
+                                @endif
+                                @if (Auth::user()->can('employee_delete') || auth()->user()->id == 1)
+                                <a class="dropdown-item"  href="${dynamicShowRoute}"
+                                data-id="${full.id}" id="show">
+                                    <i class="nav-icon i-Eye font-weight-bold mr-2"></i>Show
+                                </a>
+                                @endif
                             </div>
-                        `;
-                        }
-                    }
-                ]
-            });
-        }
+                        </div>
+                    `;
+                }
+            }
+        ]
+    });
+}
+
     });
 
 

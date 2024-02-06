@@ -166,7 +166,13 @@ class LeaveRequestController extends Controller
     public function getData()
     {
         if (auth()->user()->can('leaverequest_view_own')) {
-            $leaveRequest = LeaveRequest::where('emp_id', auth()->user()->id)->with(['employee', 'company', 'department', 'leave'])->get();
+            // $leaveRequest = LeaveRequest::where('emp_id', auth()->user()->id)->with(['employee', 'company', 'department', 'leave'])->get();
+            $leaveRequest = LeaveRequest::whereHas('employee', function ($query) {
+                    // Add your condition on the employee table here
+                    $query->where('user_id', auth()->user()->id);
+                })
+                ->with(['employee', 'company', 'department', 'leave'])
+                ->get();
         }
         if (auth()->user()->can('leaverequest_view_all')) {
             $leaveRequest = LeaveRequest::with(['employee', 'company', 'department', 'leave'])->get();
