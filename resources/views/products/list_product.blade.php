@@ -220,14 +220,14 @@
                         extend: 'collection',
                         text: "{{ __('translate.EXPORT') }}",
                         buttons: [
-                          {
-                            extend: 'print',
-                            text: 'print',
-                            exportOptions: {
-                                columns: ':visible:Not(.not_show)',
-                                rows: ':visible'
-                            },
-                          },
+                          // {
+                          //   extend: 'print',
+                          //   text: 'print',
+                          //   exportOptions: {
+                          //       columns: ':visible:Not(.not_show)',
+                          //       rows: ':visible'
+                          //   },
+                          // },
                           {
                             extend: 'pdf',
                             text: 'pdf',
