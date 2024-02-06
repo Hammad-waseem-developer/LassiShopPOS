@@ -19,6 +19,8 @@
 
           <a class="btn btn-outline-primary btn-md m-1" href="{{route('permissions.create')}}"><i
               class="i-Add me-2 font-weight-bold"></i> {{ __('translate.Create') }}</a>
+              <a class="btn btn-outline-success ms-3 fw-bolder" href="{{route('permissions.printblade')}}"><i
+                class="i-Add me-2 font-weight-bold"></i>Print</a>
         </div>
         <div class="table-responsive">
           <table id="permissions_table" class="display table">
@@ -158,14 +160,14 @@
                         extend: 'collection',
                         text: "{{ __('translate.EXPORT') }}",
                         buttons: [
-                          {
-                            extend: 'print',
-                            text: 'print',
-                            exportOptions: {
-                                columns: ':visible:Not(.not_show)',
-                                rows: ':visible'
-                            },
-                          },
+                          // {
+                          //   extend: 'print',
+                          //   text: 'print',
+                          //   exportOptions: {
+                          //       columns: ':visible:Not(.not_show)',
+                          //       rows: ':visible'
+                          //   },
+                          // },
                           {
                             extend: 'pdf',
                             text: 'pdf',

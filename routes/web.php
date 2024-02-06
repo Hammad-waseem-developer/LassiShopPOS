@@ -400,6 +400,7 @@ if ($installed === false) {
                 Route::post('assignRole', 'UserController@assignRole');
 
                 Route::resource('permissions', 'PermissionsController');
+                Route::get('/print', 'PermissionsController@printblade')->name('permissions.printblade');
             });
             //-------------------------------  --------------------------\\
 

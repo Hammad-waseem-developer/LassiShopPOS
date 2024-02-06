@@ -192,4 +192,10 @@ class PermissionsController extends Controller
         
     }
 
+    public function printblade(){
+        $roles = Role::where('deleted_at', '=', null)->get();
+        return view('permissions.permissions_print', ['roles' => $roles]);
+    }
+    
+
 }
