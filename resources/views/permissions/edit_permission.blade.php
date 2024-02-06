@@ -1285,404 +1285,479 @@
                                         <tr>
                                             <th>Hrm</th>
                                             <td>
-                                            
+
                                                 <div class="pt-3">
-                                                  {{-- hrm permissions --}}
-                                              <div class="pt-3">
-                                                <div class="form-check form-check-inline w-100">
-                                                  <label class="checkbox checkbox-primary"
-                                                      for="hrm">
-                                                      <input type="checkbox" v-model="permissions"
-                                                          id="hrm"
-                                                          value="hrm"><span>HRM
-                                                      </span><span class="checkmark"></span>
-                                                  </label>
-                                              </div>
-                                                    {{-- Company permissions --}}
-                                                    <div class="form-check form-check-inline w-100">
-                                                        <label class="checkbox checkbox-primary"
-                                                            for="company_view_all">
-                                                            <input type="checkbox" v-model="permissions"
-                                                                id="company_view_all"
-                                                                value="company_view_all"><span>Company view
-                                                            </span><span class="checkmark"></span>
-                                                        </label>
+                                                    {{-- hrm permissions --}}
+                                                    <div class="pt-3">
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary" for="hrm">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="hrm" value="hrm"><span>HRM
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        {{-- Company permissions --}}
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="company_view_all">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="company_view_all"
+                                                                    value="company_view_all"><span>Company view
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="company_create">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="company_create"
+                                                                    value="company_create"><span>Company Create
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="company_edit">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="company_edit"
+                                                                    value="company_edit"><span>Company Edit
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="company_delete">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="company_delete"
+                                                                    value="company_delete"><span>Company Delete
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        {{-- Company end --}}
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="department_view_all">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="department_view_all"
+                                                                    value="department_view_all"><span>Department view
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="department_create">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="department_create"
+                                                                    value="department_create"><span>Department Create
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="department_edit">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="department_edit"
+                                                                    value="department_edit"><span>Department Edit
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="department_delete">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="department_delete"
+                                                                    value="department_delete"><span>Department view
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        {{-- Department end --}}
+
+                                                        {{-- Designation permissions --}}
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="designation_view_all">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="designation_view_all"
+                                                                    value="designation_view_all"><span>Designation
+                                                                    view
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="designation_create">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="designation_create"
+                                                                    value="designation_create"><span>Designation
+                                                                    Create
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="designation_edit">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="designation_edit"
+                                                                    value="designation_edit"><span>Designation Edit
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="designation_delete">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="designation_delete"
+                                                                    value="designation_delete"><span>Designation
+                                                                    Delete
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        {{-- Designation end --}}
+
+                                                        {{-- Office permissions --}}
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="office_view_all">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="office_view_all"
+                                                                    value="office_view_all"><span>Office View
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="office_create">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="office_create"
+                                                                    value="office_create"><span>Office Create
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="office_edit">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="office_edit"
+                                                                    value="office_edit"><span>Office Edit
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="office_delete">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="office_delete"
+                                                                    value="office_delete"><span>Office Delete
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        {{-- Office end --}}
+                                                        {{-- Employee permissions --}}
+                                                        <div class="pt-3">
+
+                                                            {{-- <label class="radio radio-primary">
+                                                                <input type="radio"
+                                                                    name="radio_option[employee_view]"
+                                                                    value="employee_view_all">
+                                                                <span>Employees View All</span><span
+                                                                    class="checkmark"></span>
+                                                            </label>
+                                                            <label class="radio radio-primary">
+                                                                <input type="radio"
+                                                                    name="radio_option[employee_view]"
+                                                                    value="employee_view_own">
+                                                                <span>Employees View Own</span><span
+                                                                    class="checkmark"></span>
+                                                            </label> --}}
+
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="employee_view_own">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="employee_view_own"
+                                                                        value="employee_view_own"><span>Employees View Own
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="employee_view_all">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="employee_view_all"
+                                                                        value="employee_view_all"><span>Employees View All
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="employee_create">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="employee_create"
+                                                                        value="employee_create"><span>Employees Create
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="employee_edit">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="employee_edit"
+                                                                        value="employee_edit"><span>Employees Edit
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="employee_delete">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="employee_delete"
+                                                                        value="employee_delete"><span>Employees Delete
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {{-- Employees end --}}
+                                                        {{-- attendance permissions --}}
+
+                                                        <div class="pt-3">
+
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="attendance_view_all">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="attendance_view_all"
+                                                                        value="attendance_view_all"><span>Attendance
+                                                                        View All
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="attendance_view_own">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="attendance_view_own"
+                                                                        value="attendance_view_own"><span>Attendance
+                                                                        View Own
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            {{-- <label class="radio radio-primary">
+                                                                <input type="radio"
+                                                                    value="attendance_view_all"
+                                                                    id="attendance_view_all">
+                                                                <span>Attendance View All</span><span
+                                                                    class="checkmark"></span>
+                                                            </label>
+                                                            <label class="radio radio-primary">
+                                                                <input type="radio"
+                                                                    name="radio_option[attendance_view]"
+                                                                    value="attendance_view_own"
+                                                                    id="attendance_view_own">
+                                                                <span>Attendance View Own</span><span
+                                                                    class="checkmark"></span>
+                                                            </label> --}}
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="attendance_create">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="attendance_create"
+                                                                        value="attendance_create"><span>Attendance
+                                                                        Create
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="attendance_edit">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="attendance_edit"
+                                                                        value="attendance_edit"><span>Attendance Edit
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="attendance_delete">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="attendance_delete"
+                                                                        value="attendance_delete"><span>Attendance
+                                                                        Delete
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {{-- attendance end --}}
+
+                                                        {{-- leavetype permissions --}}
+                                                        <div class="form-check form-check-inline w-100 mt-5">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="leavetype_view-all">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="leavetype_view-all"
+                                                                    value="leavetype_view-all"><span>Leave Type View
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="leavetype_create">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="leavetype_create"
+                                                                    value="leavetype_create"><span>Leave Type Create
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="leavetype_edit">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="leavetype_edit"
+                                                                    value="leavetype_edit"><span>Leave Type Edit
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="leavetype_delete">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="leavetype_delete"
+                                                                    value="leavetype_delete"><span>Leave Type Delete
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="pt-3">
+
+                                                            <div class="form-check form-check-inline w-100 mt-5">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="leaverequest_view_all">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="leaverequest_view_all"
+                                                                        value="leaverequest_view_all"><span>
+                                                                        Leave Request View All</span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div>
+                                                                <label class="checkbox checkbox-primary"    
+                                                                    for="leaverequest_view_own">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="leaverequest_view_own"
+                                                                        value="leaverequest_view_own"><span>
+                                                                        Leave Request View Own</span><span
+                                                                        class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+
+                                                            {{-- <label class="radio radio-primary">
+                                                                <input type="radio"
+                                                                    name="radio_option[leaverequest_view]"
+                                                                    value="leaverequest_view_all">
+                                                                <span>Leave Request View All</span><span
+                                                                    class="checkmark"></span>
+                                                            </label>
+                                                            <label class="radio radio-primary">
+                                                                <input type="radio"
+                                                                    name="radio_option[leaverequest_view]"
+                                                                    value="leaverequest_view_own">
+                                                                <span>Leave Request View own</span><span
+                                                                    class="checkmark"></span>
+                                                            </label> --}}
+
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="leaverequest_create">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="leaverequest_create"
+                                                                        value="leaverequest_create"><span>Leave
+                                                                        Request Create
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="leaverequest_edit">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="leaverequest_edit"
+                                                                        value="leaverequest_edit"><span>Leave Request
+                                                                        Edit
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline w-100">
+                                                                <label class="checkbox checkbox-primary"
+                                                                    for="leaverequest_delete">
+                                                                    <input type="checkbox" v-model="permissions"
+                                                                        id="leaverequest_delete"
+                                                                        value="leaverequest_delete"><span>Leave
+                                                                        Request Delete
+                                                                    </span><span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {{-- leave Request end --}}
+
+                                                        {{-- holiday permissions --}}
+                                                        <div class="form-check form-check-inline w-100 mt-5">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="holiday_view_all">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="holiday_view_all"
+                                                                    value="holiday_view_all"><span>Holiday View
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="holiday_create">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="holiday_create"
+                                                                    value="holiday_create"><span>Holiday Create
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="holiday_edit">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="holiday_edit"
+                                                                    value="holiday_edit"><span>Holiday Edit
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline w-100">
+                                                            <label class="checkbox checkbox-primary"
+                                                                for="holiday_delete">
+                                                                <input type="checkbox" v-model="permissions"
+                                                                    id="holiday_delete"
+                                                                    value="holiday_delete"><span>Holiday Delete
+                                                                </span><span class="checkmark"></span>
+                                                            </label>
+                                                        </div>
+                                                        {{-- holday end --}}
                                                     </div>
-
-                                                    <div class="form-check form-check-inline w-100">
-                                                      <label class="checkbox checkbox-primary"
-                                                          for="company_create">
-                                                          <input type="checkbox" v-model="permissions"
-                                                              id="company_create"
-                                                              value="company_create"><span>Company Create
-                                                          </span><span class="checkmark"></span>
-                                                      </label>
-                                                  </div>
-
-                                                  <div class="form-check form-check-inline w-100">
-                                                    <label class="checkbox checkbox-primary"
-                                                        for="company_edit">
-                                                        <input type="checkbox" v-model="permissions"
-                                                            id="company_edit"
-                                                            value="company_edit"><span>Company Edit
-                                                        </span><span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check form-check-inline w-100">
-                                                  <label class="checkbox checkbox-primary"
-                                                      for="company_delete">
-                                                      <input type="checkbox" v-model="permissions"
-                                                          id="company_delete"
-                                                          value="company_delete"><span>Company Delete
-                                                      </span><span class="checkmark"></span>
-                                                  </label>
-                                              </div>
-                                              {{-- Company end --}}
-
-                                              <div class="form-check form-check-inline w-100">
-                                                <label class="checkbox checkbox-primary"
-                                                    for="department_view_all">
-                                                    <input type="checkbox" v-model="permissions"
-                                                        id="department_view_all"
-                                                        value="department_view_all"><span>Department view
-                                                    </span><span class="checkmark"></span>
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline w-100">
-                                              <label class="checkbox checkbox-primary"
-                                                  for="department_create">
-                                                  <input type="checkbox" v-model="permissions"
-                                                      id="department_create"
-                                                      value="department_create"><span>Department Create
-                                                  </span><span class="checkmark"></span>
-                                              </label>
-                                          </div>
-
-                                          <div class="form-check form-check-inline w-100">
-                                            <label class="checkbox checkbox-primary"
-                                                for="department_edit">
-                                                <input type="checkbox" v-model="permissions"
-                                                    id="department_edit"
-                                                    value="department_edit"><span>Department Edit
-                                                </span><span class="checkmark"></span>
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check form-check-inline w-100">
-                                          <label class="checkbox checkbox-primary"
-                                              for="department_delete">
-                                              <input type="checkbox" v-model="permissions"
-                                                  id="department_delete"
-                                                  value="department_delete"><span>Department view
-                                              </span><span class="checkmark"></span>
-                                          </label>
-                                      </div>
-                                      {{-- Department end --}}
-
-                                      {{-- Designation permissions --}}
-                                      <div class="form-check form-check-inline w-100">
-                                        <label class="checkbox checkbox-primary"
-                                            for="designation_view_all">
-                                            <input type="checkbox" v-model="permissions"
-                                                id="designation_view_all"
-                                                value="designation_view_all"><span>Designation view
-                                            </span><span class="checkmark"></span>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline w-100">
-                                      <label class="checkbox checkbox-primary"
-                                          for="designation_create">
-                                          <input type="checkbox" v-model="permissions"
-                                              id="designation_create"
-                                              value="designation_create"><span>Designation Create
-                                          </span><span class="checkmark"></span>
-                                      </label>
-                                  </div>
-
-                                  <div class="form-check form-check-inline w-100">
-                                    <label class="checkbox checkbox-primary"
-                                        for="designation_edit">
-                                        <input type="checkbox" v-model="permissions"
-                                            id="designation_edit"
-                                            value="designation_edit"><span>Designation Edit
-                                        </span><span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="form-check form-check-inline w-100">
-                                  <label class="checkbox checkbox-primary"
-                                      for="designation_delete">
-                                      <input type="checkbox" v-model="permissions"
-                                          id="designation_delete"
-                                          value="designation_delete"><span>Designation Delete
-                                      </span><span class="checkmark"></span>
-                                  </label>
-                              </div>
-{{-- Designation end --}}
-
-{{-- Office permissions --}}
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="office_view_all">
-      <input type="checkbox" v-model="permissions"
-          id="office_view_all"
-          value="office_view_all"><span>Office View
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="office_create">
-      <input type="checkbox" v-model="permissions"
-          id="office_create"
-          value="office_create"><span>Office Create
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="office_edit">
-      <input type="checkbox" v-model="permissions"
-          id="office_edit"
-          value="office_edit"><span>Office Edit
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="office_delete">
-      <input type="checkbox" v-model="permissions"
-          id="office_delete"
-          value="office_delete"><span>Office Delete
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-{{-- Office end --}}
-{{-- Employee permissions --}}
-<div class="pt-3">
-
-  <label class="radio radio-primary">
-      <input type="radio" name="radio_option[employee_view]"
-          value="employee_view_all">
-      <span>Employees View All</span><span
-          class="checkmark"></span>
-  </label>
-  <label class="radio radio-primary">
-    <input type="radio" name="radio_option[employee_view]"
-        value="employee_view_own">
-    <span>Employees View Own</span><span
-        class="checkmark"></span>
-</label>
-
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="employee_create">
-      <input type="checkbox" v-model="permissions"
-          id="employee_create"
-          value="employee_create"><span>Employees Create
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="employee_edit">
-      <input type="checkbox" v-model="permissions"
-          id="employee_edit"
-          value="employee_edit"><span>Employees Edit
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="employee_delete">
-      <input type="checkbox" v-model="permissions"
-          id="employee_delete"
-          value="employee_delete"><span>Employees Delete
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-</div>
-{{-- Employees end --}}
-{{-- attendance permissions --}}
-
-<div class="pt-3">
-
-  <label class="radio radio-primary">
-      <input type="radio" name="radio_option[attendance_view]"
-          value="attendance_view_all">
-      <span>Attendance View All</span><span
-          class="checkmark"></span>
-  </label>
-  <label class="radio radio-primary">
-    <input type="radio" name="radio_option[attendance_view]"
-        value="attendance_view_own">
-    <span>Attendance View Own</span><span
-        class="checkmark"></span>
-</label>
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="attendance_create">
-      <input type="checkbox" v-model="permissions"
-          id="attendance_create"
-          value="attendance_create"><span>Attendance Create
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="attendance_edit">
-      <input type="checkbox" v-model="permissions"
-          id="attendance_edit"
-          value="attendance_edit"><span>Attendance Edit
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-<div class="form-check form-check-inline w-100">
-  <label class="checkbox checkbox-primary"
-      for="attendance_delete">
-      <input type="checkbox" v-model="permissions"
-          id="attendance_delete"
-          value="attendance_delete"><span>Attendance Delete
-      </span><span class="checkmark"></span>
-  </label>
-</div>
-</div>
-  {{-- attendance end --}}
-
-  {{-- leavetype permissions --}}
-  <div class="form-check form-check-inline w-100 mt-5">
-    <label class="checkbox checkbox-primary"
-        for="leavetype_view-all">
-        <input type="checkbox" v-model="permissions"
-            id="leavetype_view-all"
-            value="leavetype_view-all"><span>Leave Type View
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="leavetype_create">
-        <input type="checkbox" v-model="permissions"
-            id="leavetype_create"
-            value="leavetype_create"><span>Leave Type Create
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="leavetype_edit">
-        <input type="checkbox" v-model="permissions"
-            id="leavetype_edit"
-            value="leavetype_edit"><span>Leave Type Edit
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="leavetype_delete">
-        <input type="checkbox" v-model="permissions"
-            id="leavetype_delete"
-            value="leavetype_delete"><span>Leave Type Delete
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-
-  <div class="pt-3">
-
-    <label class="radio radio-primary">
-        <input type="radio" name="radio_option[leaverequest_view]"
-            value="leaverequest_view_all">
-        <span>Leave Request View All</span><span
-            class="checkmark"></span>
-    </label>
-    <label class="radio radio-primary">
-      <input type="radio" name="radio_option[leaverequest_view]"
-          value="leaverequest_view_own">
-      <span>Leave Request View own</span><span
-          class="checkmark"></span>
-  </label>
-
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="leaverequest_create">
-        <input type="checkbox" v-model="permissions"
-            id="leaverequest_create"
-            value="leaverequest_create"><span>Leave Request Create
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="leaverequest_edit">
-        <input type="checkbox" v-model="permissions"
-            id="leaverequest_edit"
-            value="leaverequest_edit"><span>Leave Request Edit
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="leaverequest_delete">
-        <input type="checkbox" v-model="permissions"
-            id="leaverequest_delete"
-            value="leaverequest_delete"><span>Leave Request Delete
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-  </div>
-  {{-- leave Request end --}}
-
-  {{-- holiday permissions --}}
-  <div class="form-check form-check-inline w-100 mt-5">
-    <label class="checkbox checkbox-primary"
-        for="holiday_view_all">
-        <input type="checkbox" v-model="permissions"
-            id="holiday_view_all"
-            value="holiday_view_all"><span>Holiday View
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="holiday_create">
-        <input type="checkbox" v-model="permissions"
-            id="holiday_create"
-            value="holiday_create"><span>Holiday Create
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="holiday_edit">
-        <input type="checkbox" v-model="permissions"
-            id="holiday_edit"
-            value="holiday_edit"><span>Holiday Edit
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-
-  <div class="form-check form-check-inline w-100">
-    <label class="checkbox checkbox-primary"
-        for="holiday_delete">
-        <input type="checkbox" v-model="permissions"
-            id="holiday_delete"
-            value="holiday_delete"><span>Holiday Delete
-        </span><span class="checkmark"></span>
-    </label>
-  </div>
-  {{-- holday end --}}
-</div>
                                             </td>
                                         </tr>
 
@@ -1695,8 +1770,9 @@
                     <div class="row mt-3">
                         <div class="col-lg-6">
                             <button @click="Update_Permission" class="btn btn-primary" :disabled="SubmitProcessing">
-                                <span v-if="SubmitProcessing" class="spinner-border spinner-border-sm" role="status"
-                                    aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
+                                <span v-if="SubmitProcessing" class="spinner-border spinner-border-sm"
+                                    role="status" aria-hidden="true"></span> <i
+                                    class="i-Yes me-2 font-weight-bold"></i>
                                 {{ __('translate.Submit') }}
                             </button>
                         </div>

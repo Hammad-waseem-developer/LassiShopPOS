@@ -18,7 +18,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-end mb-3">
-                    @if (Auth::user()->can('attendance_create')|| auth()->user()->id == 1)
+                    @if (Auth::user()->can('attendance_create') || auth()->user()->id == 1)
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('attendance.create') }}"><i
                                 class="i-Add me-2 font-weight-bold"></i>
                             {{ __('Attendance ') }}</a>
@@ -80,14 +80,14 @@
     </div>
     <!-- Modal End-->
 </div>
-@if(Session::has('success'))
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
-<script>
-    $(document).ready(function() {
-        toastr.success("{{ Session::get('success') }}");
-    });
-</script>
+@if (Session::has('success'))
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            toastr.success("{{ Session::get('success') }}");
+        });
+    </script>
 @endif
 @endsection
 @section('page-js')

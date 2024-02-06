@@ -19,7 +19,6 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-
         return view('hrm.attendance.index');
     }
 
@@ -61,23 +60,40 @@ class AttendanceController extends Controller
 
     public function getData()
     {
+        if (auth()->user()->can('attendance_view_all')) {
+            $att = Attendance::all();
+            foreach ($att as $value) {
+                $clockIn = Carbon::parse($value->clock_in);
+                $clockOut = Carbon::parse($value->clock_out);
 
-        $att = Attendance::all();
-        foreach ($att as $value) {
-            $clockIn = Carbon::parse($value->clock_in);
-            $clockOut = Carbon::parse($value->clock_out);
+                if ($clockOut->lessThan($clockIn)) {
+                    $clockOut->addDay();
+                }
 
-            if ($clockOut->lessThan($clockIn)) {
-                $clockOut->addDay();
+                $workDuration = $clockOut->diffInHours($clockIn);
+                $value->work_duration = $workDuration;
+                $value->save();
             }
-
-            $workDuration = $clockOut->diffInHours($clockIn);
-            $value->work_duration = $workDuration;
-            $value->save();
+            $attendance = Attendance::with(['company', 'employee', 'office'])->get();
+            return response()->json(['data' => $attendance]);
         }
-        $attendance = Attendance::with(['company', 'employee', 'office'])->get();
-        // dd($attendance);
-        return response()->json(['data' => $attendance]);
+        if (auth()->user()->can('attendance_view_own')) {
+            $att = Attendance::where('emp_id', auth()->user()->id)->get();
+            foreach ($att as $value) {
+                $clockIn = Carbon::parse($value->clock_in);
+                $clockOut = Carbon::parse($value->clock_out);
+
+                if ($clockOut->lessThan($clockIn)) {
+                    $clockOut->addDay();
+                }
+
+                $workDuration = $clockOut->diffInHours($clockIn);
+                $value->work_duration = $workDuration;
+                $value->save();
+            }
+            $attendance = Attendance::where('emp_id', auth()->user()->id)->with(['company', 'employee', 'office'])->get();
+            return response()->json(['data' => $attendance]);
+        }
     }
 
 
@@ -126,5 +142,4 @@ class AttendanceController extends Controller
             return response()->json(['message' => 'Attendance not found'], 404);
         }
     }
-
 }
