@@ -17,7 +17,10 @@ class HolidayController extends Controller
      */
     public function index()
     {
-        return view('hrm.holiday.index');
+        if (auth()->user()->can('holiday_view_all')) {
+            return view('hrm.holiday.index');
+        }
+        return abort('403', __('You are not authorized'));
     }
 
     /**
@@ -27,93 +30,109 @@ class HolidayController extends Controller
      */
     public function create()
     {
-        $company = Company::get()->all();
-        return view('hrm.holiday.create', compact('company'));
+        if (auth()->user()->can('holiday_create')) {
+            $company = Company::get()->all();
+            return view('hrm.holiday.create', compact('company'));
+        }
+        return abort('403', __('You are not authorized'));
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        $validator = Validator::make($request->all(), [
-            'company_id' => 'required|exists:company,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'title' => 'required|string|max:255',
-            'status' => 'required|in:0,1,2',
-            'details' => 'required|string|max:500',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors())->withInput();
+        if (auth()->user()->can('holiday_create')) {
+            $validator = Validator::make($request->all(), [
+                'company_id' => 'required|exists:company,id',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'title' => 'required|string|max:255',
+                'status' => 'required|in:0,1,2',
+                'details' => 'required|string|max:500',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator->errors())->withInput();
+            }
+            Holiday::create([
+                'company_id' => $request->input('company_id'),
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
+                'name' => $request->input('title'),
+                'status' => $request->input('status'),
+                'details' => $request->input('details'),
+            ]);
+            return redirect()->route('holiday.index')->with('success', 'Holiday created successfully');
         }
-        Holiday::create([
-            'company_id' => $request->input('company_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-            'name' => $request->input('title'),
-            'status' => $request->input('status'),
-            'details' => $request->input('details'),
-        ]);
-        return redirect()->route('holiday.index')->with('success', 'Holiday created successfully');
+        return abort('403', __('You are not authorized'));
     }
 
     public function getData()
     {
-        $leaveRequest = Holiday::with(['company'])->get();
-        return response()->json(['data' => $leaveRequest]);
+        if (auth()->user()->can('holiday_view_all')) {
+            $leaveRequest = Holiday::with(['company'])->get();
+            return response()->json(['data' => $leaveRequest]);
+        }
+        return abort('403', __('You are not authorized'));
     }
 
 
     public function edit($id)
     {
-        $holiday = Holiday::get()->find($id);
-        $company = Company::get()->all();
-        if (!$holiday) {
-            // Handle the case where the holiday is not found, for example, redirect to index page
-            return redirect()->route('holiday.index')->with('error', 'Holiday not found');
+        if (auth()->user()->can('holiday_edit')) {
+            $holiday = Holiday::get()->find($id);
+            $company = Company::get()->all();
+            if (!$holiday) {
+                // Handle the case where the holiday is not found, for example, redirect to index page
+                return redirect()->route('holiday.index')->with('error', 'Holiday not found');
+            }
+            return view('hrm.holiday.edit', compact('holiday', 'company'));
         }
-
-        return view('hrm.holiday.edit', compact('holiday', 'company'));
+        return abort('403', __('You are not authorized'));
     }
 
 
     public function update(Request $request, $id)
     {
-        $holiday = Holiday::findOrFail($id);
+        if (auth()->user()->can('holiday_edit')) {
+            $holiday = Holiday::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'company_id' => 'required|exists:company,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'title' => 'required|string|max:255',
-            'status' => 'required|in:0,1,2',
-            'details' => 'required|string|max:500',
-        ]);
+            $validator = Validator::make($request->all(), [
+                'company_id' => 'required|exists:company,id',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'title' => 'required|string|max:255',
+                'status' => 'required|in:0,1,2',
+                'details' => 'required|string|max:500',
+            ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors([$validator->errors()->first()])->withInput();
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors([$validator->errors()->first()])->withInput();
+            }
+
+            $holiday->update([
+                'company_id' => $request->input('company_id'),
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
+                'name' => $request->input('title'),
+                'status' => $request->input('status'),
+                'details' => $request->input('details'),
+            ]);
+
+            return redirect()->route('holiday.index')->with('success', 'Holiday updated successfully');
         }
-
-        $holiday->update([
-            'company_id' => $request->input('company_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-            'name' => $request->input('title'),
-            'status' => $request->input('status'),
-            'details' => $request->input('details'),
-        ]);
-
-        return redirect()->route('holiday.index')->with('success', 'Holiday updated successfully');
+        return abort('403', __('You are not authorized'));
     }
 
     public function deleteholiday(Request $request)
     {
-        $holiday = Holiday::findOrFail($request->id);
-    
-        if ($holiday) {
-            $holiday->delete();
-            return response()->json(['message' => 'Holiday deleted successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Holiday not found'], 404);
+        if (auth()->user()->can('holiday_delete')) {
+            $holiday = Holiday::findOrFail($request->id);
+
+            if ($holiday) {
+                $holiday->delete();
+                return response()->json(['message' => 'Holiday deleted successfully'], 200);
+            } else {
+                return response()->json(['message' => 'Holiday not found'], 404);
+            }
         }
+        return abort('403', __('You are not authorized'));
     }
 }
