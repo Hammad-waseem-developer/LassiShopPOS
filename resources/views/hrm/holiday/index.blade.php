@@ -185,9 +185,9 @@
                                     statusText = 'Rejected';
                                     badgeClass = 'badge-danger';
                                     break;
-                                default:
-                                    statusText = 'Unknown';
-                                    badgeClass = 'badge-secondary';
+                                // default:
+                                //     statusText = 'Unknown';
+                                //     badgeClass = 'badge-secondary';
                             }
                             return '<span class="badge ' + badgeClass + '">' + statusText +
                                 '</span>';

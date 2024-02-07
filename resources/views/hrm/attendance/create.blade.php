@@ -18,72 +18,40 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="company">{{ __('Company') }} <span class="field_required">*</span></label>
-                                <!-- Use a select element for the dropdown -->
-                                <select class="form-control" name="company" id="company">
-                                    <!-- Add an option for the default or empty value -->
-                                    <option value="" selected disabled>{{ __('Select Company') }}</option>
-                                    @foreach ($company as $company)
-                                        <option value="{{ $company->id }}"
-                                                {{ old('company') == $company->id ? 'selected' : '' }}>
-                                            {{ $company->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" value="{{ $office->company->name }}" readonly>
+                                <input type="hidden" name="company" value="{{ $office->company->id }}">
                                 @error('company')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-
+                            
                             <div class="form-group col-md-4">
                                 <label for="employee">{{ __('Employee') }} <span class="field_required">*</span></label>
-                                <!-- Use a select element for the dropdown -->
-                                <select class="form-control" name="employee" id="employee">
-                                    <!-- Add an option for the default or empty value -->
-                                    <option value="" selected disabled>{{ __('Select Employee') }}</option>
-                                    @foreach ($employees as $employee)
-                                        <option value="{{ $employee->id }}"
-                                                {{ old('employee') == $employee->id ? 'selected' : '' }}>
-                                            {{ $employee->first_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" value="{{ $employee->first_name }}" readonly>
+                                <input type="hidden" name="employee" value="{{ $employee->id }}">
                                 @error('employee')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
-                            </div>
-
+                            </div>         
                             <div class="form-group col-md-4">
-                                <label for="shift_name">{{ __('Shift Name') }} <span class="field_required">*</span></label>
-                                <!-- Use a select element for the dropdown -->
-                                <select class="form-control" name="shift_name" id="shift_name">
-                                    <!-- Add an option for the default or empty value -->
-                                    <option value="" selected disabled>{{ __('Select Shift Name') }}</option>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}"
-                                                {{ old('shift_name') == $office->id ? 'selected' : '' }}>
-                                            {{ $office->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label for="office">{{ __('Office') }} <span class="field_required">*</span></label>
+                                <input type="text" class="form-control" value="{{ $employee->office->name }}" readonly>
+                                <input type="hidden" name="shift_name" value="{{ $employee->office->id }}">
                                 @error('office')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
-                            </div>
-
-
-                         
+                            </div>                                                   
                         </div>
-
+                        
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="designation">{{ __('Date') }} <span
-                                        class="field_required">*</span></label>
-                                <input type="date" class="form-control" name="date"
-                                       value="{{ old('date') }}">
+                                <label for="designation">{{ __('Date') }} <span class="field_required">*</span></label>
+                                <input type="date" class="form-control" name="date" value="{{ date('Y-m-d') }}" readonly>
                                 @error('date')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+                            
 
                         <div class="form-group col-md-4">
                             <label for="clock_in">{{ __('Clock In') }} <span

@@ -15,5 +15,10 @@ class Office extends Model
         'clock_out',
         'company_id', 
         ];
-        
+
+        public function company()
+        {
+            return $this->belongsTo(Company::class ,'company_id');
+
+        }
 }

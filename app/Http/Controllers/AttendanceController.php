@@ -27,10 +27,10 @@ class AttendanceController extends Controller
     public function create()
     {
         if (auth()->user()->can('attendance_create')) {
-            $company = DB::table('company')->get()->all();
-            $employees = Employee::get()->all();
-            $offices = Office::get()->all();
-            return view('hrm.attendance.create', compact('company', 'employees', 'offices'));
+            $userId = auth()->id();    
+            $employee = Employee::where('user_id', $userId)->with('office')->first();        
+            $office = Office::with('company')->first();          
+            return view('hrm.attendance.create', compact('employee', 'office'));
         }
         return abort('403', __('You are not authorized'));
     }
@@ -44,10 +44,9 @@ class AttendanceController extends Controller
                 'shift_name' => 'required|exists:office_shift,id',
                 'date' => 'required|date',
                 'clock_in' => 'required|date_format:H:i',
-                // 'clock_out' => 'required|date_format:H:i|after:clock_in',
                 'clock_out' => 'required|date_format:H:i|after:clock_in',
             ]);
-
+    
             // Create a new Attendance model and fill it with the form data
             $attendance = new Attendance();
             $attendance->company_id = $request->input('company');
@@ -56,10 +55,10 @@ class AttendanceController extends Controller
             $attendance->date = $request->input('date');
             $attendance->clock_in = $request->input('clock_in');
             $attendance->clock_out = $request->input('clock_out');
-
+    
             // Save the attendance record
             $attendance->save();
-
+    
             // Redirect to the index page or do any other necessary actions
             return redirect()->route('attendance.index')->with('success', 'Attendance record created successfully');
         }
