@@ -106,13 +106,13 @@
                                 <label for="status">{{ __('Status') }} <span class="field_required">*</span></label>
                                 <select class="form-control" name="status" id="status">
                                     <option value="" selected disabled>{{ __('Select Status') }}</option>
-                                    <option value="0" {{ old('status') == 'pending' ? 'selected' : '' }}>
+                                    <option value="2" {{ old('status') == 'pending' ? 'selected' : '' }}>
                                         {{ __('Pending') }}
                                     </option>
                                     <option value="1" {{ old('status') == 'approved' ? 'selected' : '' }}>
                                         {{ __('Approved') }}
                                     </option>
-                                    <option value="2" {{ old('status') == 'rejected' ? 'selected' : '' }}>
+                                    <option value="0" {{ old('status') == 'rejected' ? 'selected' : '' }}>
                                         {{ __('Rejected') }}
                                     </option>
                                 </select>
