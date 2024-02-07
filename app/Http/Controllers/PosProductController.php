@@ -163,7 +163,7 @@ class PosProductController extends Controller
             $filename = time() . '.' . $image->extension();
             $image->move(public_path('/images/products'), $filename);
             $product->img_path = $filename;
-            // unlink(public_path('/images/products/' . $request->old_image));
+            unlink(public_path('/images/products/' . $request->old_image));
         } else {
             $product->img_path = $request->old_image;
         }
