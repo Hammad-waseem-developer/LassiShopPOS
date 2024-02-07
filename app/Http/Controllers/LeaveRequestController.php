@@ -157,6 +157,7 @@ class LeaveRequestController extends Controller
 
     public function update(Request $request, $id)
     {
+        
         if (auth()->user()->can('leaverequest_edit')) {
             $leaveRequest = LeaveRequest::find($id);
 
@@ -174,6 +175,22 @@ class LeaveRequestController extends Controller
 
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            if($request->status == 1){
+                $user = Employee::where('id', $leaveRequest->emp_id)->first();
+                $notification = Notification::create([
+                    'messages' => 'Message: Your request has been approved. Reason provided: ( ' . $leaveRequest->reason . ' )',
+                ]);
+                NotificationDetail::create([
+                    'notification_id' => $notification->id,
+                    'user_id' => $user->user_id,
+                    'status' => 0,
+                    'read_at' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                event(new NotificationCreate($notification));
             }
 
             if ($request->new_file) {
@@ -200,6 +217,8 @@ class LeaveRequestController extends Controller
 
             $leaveRequest->reason = $request->reason;
             $leaveRequest->save();
+
+           
             return redirect()->route('leaveRequest.index')->with('success', 'Leave request updated successfully');
         }
         return abort('403', __('You are not authorized'));
