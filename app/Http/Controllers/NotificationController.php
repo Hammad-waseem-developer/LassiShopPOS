@@ -35,14 +35,23 @@ class NotificationController extends Controller
 
     public function fetchNotificationsMessage(Request $request)
     {
-        $notificationId = $request->id;
-        $notificationDetails = NotificationDetail::with('notification')->where('notification_id', $notificationId)->where('user_id', Auth::user()->id)->first();
-        // dd($notificationDetails);
-        $notificationDetails->status = 1;
-        $notificationDetails->read_at = now();
-        $notificationDetails->save();
-        $notification = Notification::where('id', $notificationId)->get();
-        event(new NotificationCreate($notification));
-        return response()->json(['notificationDetails' => $notificationDetails]);
+        // $notificationId = $request->id;
+        // $notificationDetails = NotificationDetail::with('notification')->where('notification_id', $notificationId)->where('user_id', Auth::user()->id)->first();
+        // // dd($notificationDetails);
+        // $notificationDetails->status = 1;
+        // $notificationDetails->read_at = now();
+        // $notificationDetails->save();
+        // $notification = Notification::where('id', $notificationId)->get();
+        // event(new NotificationCreate($notification));
+        // return response()->json(['notificationDetails' => $notificationDetails]);
+
+        $notificationDetailId = $request->id;
+        $Details = NotificationDetail::with('notification')->where('id',$notificationDetailId)->where('user_id', Auth::user()->id)->first();
+        $Details->status = 1;
+        $Details->read_at = now();
+        $Details->save();
+        $newNotification = DB::select('select * from notification inner join notification_details on notification.id = notification_details.notification_id where notification_details.id = ?',[$notificationDetailId]);
+        event(new NotificationCreate($newNotification));
+        return response()->json(['notificationDetails' => $Details]);
     }
 }

@@ -132,7 +132,8 @@
     <input type="hidden" name="notification_id" id="notification_id">
 
     <!-- Modal -->
-    <div class="modal fade" id="notificationmodal" tabindex="-1" aria-labelledby="notificationmodalLabel" aria-hidden="true">
+    <div class="modal fade" id="notificationmodal" tabindex="-1" aria-labelledby="notificationmodalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -218,8 +219,8 @@
     //     setInterval(fetchNotifications, 5000);
     // });
 
-        
-    
+
+
     document.addEventListener('DOMContentLoaded', function() {
         function fetchNotifications() {
             var xhr = new XMLHttpRequest();
@@ -262,84 +263,85 @@
                         notificationList.removeChild(notificationList.firstChild);
                     }
 
-                    notifications.forEach(function(notification) {
-                        var notificationDiv = document.createElement('div');
-                        notificationDiv.classList.add('sec');
-                        // if (notification.notification_detail.some(function(detail) {
-                        //         return detail.user_id === {{ Auth::user()->id }} && detail
-                        //             .status === 0;
-                        //     })) {
-                        //     notificationDiv.classList.add('new');
-                        // }
+                    if (notifications.length === 0) {
+                        var noNotificationMessage = document.createElement('div');
+                        noNotificationMessage.textContent = 'No Notifications';
+                        noNotificationMessage.classList.add('no-notification'); // Add your desired class here
+                        notificationList.appendChild(noNotificationMessage);
+                    } else {
+                        notifications.forEach(function(notification) {
+                            var notificationDiv = document.createElement('div');
+                            notificationDiv.classList.add('sec');
+                            // if (notification.notification_detail.some(function(detail) {
+                            //         return detail.user_id === {{ Auth::user()->id }} && detail
+                            //             .status === 0;
+                            //     })) {
+                            //     notificationDiv.classList.add('new');
+                            // }
 
-                        if(notification.status == 0){
-                            notificationDiv.classList.add('new');
-                        }
+                            if (notification.status == 0) {
+                                notificationDiv.classList.add('new');
+                            }
 
-                        var link = document.createElement('a');
-                        var txtDiv = document.createElement('div');
-                        // Add the data-bs-toggle and data-bs-target attributes
-                        txtDiv.setAttribute('data-bs-toggle', 'modal');
-                        txtDiv.setAttribute('data-bs-target', '#notificationmodal');
-                        txtDiv.setAttribute('data-id', notification.id);
-                        txtDiv.classList.add('notificationBox'); // Use class instead of ID
+                            var link = document.createElement('a');
+                            var txtDiv = document.createElement('div');
+                            // Add the data-bs-toggle and data-bs-target attributes
+                            txtDiv.setAttribute('data-bs-toggle', 'modal');
+                            txtDiv.setAttribute('data-bs-target', '#notificationmodal');
+                            txtDiv.setAttribute('data-id', notification.id);
+                            txtDiv.classList.add('notificationBox'); // Use class instead of ID
 
-                        txtDiv.classList.add('txt');
-                        txtDiv.textContent = notification.messages;
+                            txtDiv.classList.add('txt');
+                            txtDiv.textContent = notification.messages;
 
-                        var subTxtDiv = document.createElement('div');
-                        subTxtDiv.classList.add('txt', 'sub');
-                        subTxtDiv.textContent = moment(notification.created_at).fromNow();
+                            var subTxtDiv = document.createElement('div');
+                            subTxtDiv.classList.add('txt', 'sub');
+                            subTxtDiv.textContent = moment(notification.created_at).fromNow();
 
-                        // if (notification.notification_detail.some(function(detail) {
-                        //         return detail.user_id === {{ Auth::user()->id }} && detail
-                        //             .status === 0;
-                        //     })) {
-                        //     txtDiv.classList.add('boldtxt');
-                        //     subTxtDiv.textContent += ' (unread)';
-                        // }
+                            if (notification.status == 0) {
+                                txtDiv.classList.add('boldtxt');
+                                subTxtDiv.textContent += ' (unread)';
+                            }
 
-                        if(notification.status == 0){
-                            txtDiv.classList.add('boldtxt');
-                            subTxtDiv.textContent += ' (unread)';
-                        }
+                            link.appendChild(txtDiv);
+                            link.appendChild(subTxtDiv);
+                            notificationDiv.appendChild(link);
+                            notificationList.appendChild(notificationDiv);
 
-                        link.appendChild(txtDiv);
-                        link.appendChild(subTxtDiv);
-                        notificationDiv.appendChild(link);
-                        notificationList.appendChild(notificationDiv);
+                            // Add event listener to the modal within the loop
+                            txtDiv.addEventListener('click', function() {
+                                var id = this.getAttribute('data-id');
+                                document.getElementById('notification_id').value = id;
 
-                        // Add event listener to the modal within the loop
-                        txtDiv.addEventListener('click', function() {
-                            var id = this.getAttribute('data-id');
-                            document.getElementById('notification_id').value = id;
+                                var xhr = new XMLHttpRequest();
+                                var url = '{{ route('fetch-notifications-message') }}?id=' +
+                                    id; // Include id in the URL
+                                xhr.open('GET', url, true);
+                                xhr.setRequestHeader('Content-Type', 'application/json');
+                                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
-                            var xhr = new XMLHttpRequest();
-                            var url = '{{ route('fetch-notifications-message') }}?id=' +
-                            id; // Include id in the URL
-                            xhr.open('GET', url, true);
-                            xhr.setRequestHeader('Content-Type', 'application/json');
-                            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+                                xhr.onload = function() {
+                                    if (xhr.status >= 200 && xhr.status < 300) {
+                                        var response = JSON.parse(xhr.responseText);
+                                        document.getElementById('notification-details')
+                                            .innerHTML = ' ';
+                                        document.getElementById('notification-details')
+                                            .innerHTML = response.notificationDetails.notification.messages;
+                                    } else {
+                                        console.error('Error fetching notifications:', xhr
+                                            .statusText);
+                                    }
+                                };
 
-                            xhr.onload = function() {
-                                if (xhr.status >= 200 && xhr.status < 300) {
-                                    var response = JSON.parse(xhr.responseText);
-                                    console.log(response);
-                                    document.getElementById('notification-details').innerHTML = ' ';
-                                    document.getElementById('notification-details').innerHTML = response.notificationDetails.notification.messages;
-                                } else {
-                                    console.error('Error fetching notifications:', xhr
-                                        .statusText);
-                                }
-                            };
+                                xhr.onerror = function() {
+                                    console.error(
+                                        'Network error while fetching notifications');
+                                };
 
-                            xhr.onerror = function() {
-                                console.error('Network error while fetching notifications');
-                            };
-
-                            xhr.send();
+                                xhr.send();
+                            });
                         });
-                    });
+                    }
                 }
             }
         }
@@ -348,8 +350,6 @@
 
         setInterval(fetchNotifications, 5000);
     });
-
-
 </script>
 <style>
     .box::-webkit-scrollbar-track {
@@ -517,5 +517,19 @@
 
     .sec:hover {
         background-color: #BFBFBF;
+    }
+
+    .no-notification {
+        text-align: center;
+        padding: 10px;
+        color: rgb(82, 82, 82);
+        font-size: 15px;
+        font-weight: bolder;
+        background-color: #F4F4F4;
+        transition: 0.5s;
+        margin-top: 5px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        margin-top: 20px;
     }
 </style>
