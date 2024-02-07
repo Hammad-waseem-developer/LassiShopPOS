@@ -214,6 +214,7 @@ if ($installed === false) {
             //---------------------- Notification ----------------------\\
             Route::get('/fetch-notifications', 'NotificationController@fetchNotifications')->name('fetch-notifications');
             Route::get('/fetch-notifications-message', 'NotificationController@fetchNotificationsMessage')->name('fetch-notifications-message');
+            Route::post('/mark-all-as-read', 'NotificationController@markAllAsRead')->name('mark-all-as-read');
 
             //------------------------------- transfers --------------------------\\
             Route::resource('transfer/transfers', 'TransfersController');

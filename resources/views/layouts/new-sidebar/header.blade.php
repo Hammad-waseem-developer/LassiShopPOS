@@ -78,11 +78,17 @@
         <!-- Notification container -->
         <div class="notification">
             <a href="#">
-                <div class="notBtn" href="#" id="notification-container"
-                    data-unread-count="{{ $unreadNotificationsCount }}">
+                <div class="notBtn" href="#" id="notification-container" data-unread-count="{{ $unreadNotificationsCount }}">
                     <!-- Number supports double digits and automatically hides itself when there is nothing between divs -->
                     <i class="fa fa-bell text-dark pt-2 ps-2" style="font-size: 20px !important;"></i>
                     <div class="box">
+                        <a href="javascript:void(0)">
+                            <div class="row">
+                                <div class="col-md-8"></div>
+                                <div class="col-md-4"> <label for="markread" id="markread" class="mt-2">Mark All As Read</label></div>
+                                </div>
+                           
+                        </a>
                         <div class="display">
                             <!-- Notification list will be dynamically appended here -->
                         </div>
@@ -151,6 +157,28 @@
     var initialUnreadCount = {{ $unreadNotificationsCount ?? 0 }};
 </script>
 <script>
+     document.getElementById('markread').addEventListener('click', function() {
+        // Send an AJAX request to update notification statuses
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{{ route('mark-all-as-read') }}', true); // Adjust the route accordingly
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // On success, reload the notifications or update the UI as needed
+                fetchNotifications(); // Assuming you have a function to fetch and update notifications
+            } else {
+                console.error('Error marking all notifications as read:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error('Network error while marking all notifications as read');
+        };
+
+        xhr.send();
+    });
     // $(document).ready(function() {
     //     function fetchNotifications() {
     //         $.ajax({
