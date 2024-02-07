@@ -59,19 +59,19 @@
         color: $gray-200;
         height: 38px;
         &:hover {
-            color: $primary-base;
+            color: rgba(226, 40, 40, 0.871) !important;
             background: $gray-800;
             .prefix {
-                background: $primary-base !important;
+                background: rgba(226, 40, 40, 0.871) !important;
                 outline:  2px solid rgba(78, 151, 253, 0.3) !important;
             }
         }
         &.active {
-            color: $primary-base;
+            color:  rgba(226, 40, 40, 0.871) !important;
             background: $gray-800;
             .prefix {
-                background: $primary-base !important;
-                outline:  2px solid rgba(78, 151, 253, 0.3) !important;
+                background: rgba(226, 40, 40, 0.871) !important;
+                outline:  2px solid rgba(0, 106, 255, 0.3) !important;
             }
         }
         &.child-nav {
