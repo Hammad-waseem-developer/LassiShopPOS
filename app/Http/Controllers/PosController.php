@@ -229,8 +229,7 @@ class PosController extends Controller
                             $notification = Notification::create([
                                 'messages' => 'Product ( '.$productStockCheck->name.' ) is low in stock, please restock.',
                             ]);
-                            $users = User::all();
-                            foreach ($users as $user) {
+                            $user = User::where('id',1)->first();
                                 NotificationDetail::create([
                                     'notification_id' => $notification->id,
                                     'user_id' => $user->id,
@@ -239,7 +238,6 @@ class PosController extends Controller
                                     'created_at' => now(),
                                     'updated_at' => now(),
                                 ]);
-                            }
                             event(new NotificationCreate($notification));
                         }
                     }
