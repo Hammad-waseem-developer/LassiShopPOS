@@ -746,8 +746,7 @@
                         const categoryId = $(".category-item.CategorySelected").data(
                             "id"); // Get the selected category ID
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
-                        data.data.holdProducts.forEach(element => {
-
+                        // data.data.holdProducts.forEach(element => {
                             $.ajax({
                                 url: routes.addToCartWithQuantity,
                                 type: "POST",
@@ -756,20 +755,24 @@
                                 headers: {
                                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                                 },
+                                // data: {
+                                //     id: element.product_id,
+                                //     price: element.price,
+                                //     name: element.name,
+                                //     img_path: element.img_path,
+                                //     warehouse_id: $("#warehouse_id").val(),
+                                //     quantity: element.quantity
+                                // },
                                 data: {
-                                    id: element.product_id,
-                                    price: element.price,
-                                    name: element.name,
-                                    img_path: element.img_path,
-                                    warehouse_id: $("#warehouse_id").val(),
-                                    quantity: element.quantity
+                                    products: data.data.holdProducts,
+                                    warehouse_id: $("#warehouse_id").val()
                                 },
                                 success: function(response) {
                                     if (response.message) {
                                         toastr.error('Out of stock');
                                     } else {
                                         updateCartBox(response);
-                                        console.log("Add success");
+                                        // console.log("Add success" , response);
                                     }
                                 },
                                 error: function(data) {
@@ -777,7 +780,7 @@
                                 }
                             });
 
-                        })
+                        // })
                     },
                     error: function(data) {
                         console.log(data);

@@ -124,7 +124,7 @@ class PosProductController extends Controller
             'category' => 'required',
             'warehouse' => 'required',
             'price' => 'required|min:1',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'ingredient_id' => 'required',
             'ingredient_id.*' => [
                 'required',
@@ -163,7 +163,7 @@ class PosProductController extends Controller
             $filename = time() . '.' . $image->extension();
             $image->move(public_path('/images/products'), $filename);
             $product->img_path = $filename;
-            unlink(public_path('/images/products/' . $request->old_image));
+            // unlink(public_path('/images/products/' . $request->old_image));
         } else {
             $product->img_path = $request->old_image;
         }
