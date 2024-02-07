@@ -29,8 +29,9 @@ class AttendanceController extends Controller
         if (auth()->user()->can('attendance_create')) {
             $userId = auth()->id();    
             $employee = Employee::where('user_id', $userId)->with('office')->first();        
-            $office = Office::with('company')->first();          
-            return view('hrm.attendance.create', compact('employee', 'office'));
+            $office = $employee->office;
+            $company = $office->company;       
+            return view('hrm.attendance.create', compact('employee', 'office', 'company'));
         }
         return abort('403', __('You are not authorized'));
     }
@@ -44,7 +45,7 @@ class AttendanceController extends Controller
                 'shift_name' => 'required|exists:office_shift,id',
                 'date' => 'required|date',
                 'clock_in' => 'required|date_format:H:i',
-                'clock_out' => 'required|date_format:H:i|after:clock_in',
+                'clock_out' => 'date_format:H:i|after:clock_in',
             ]);
     
             // Create a new Attendance model and fill it with the form data
@@ -136,12 +137,12 @@ class AttendanceController extends Controller
     {
         if (auth()->user()->can('attendance_edit')) {
             $request->validate([
-                'company' => 'required|exists:company,id',
-                'employee' => 'required|exists:employee_shift,id',
-                'shift_name' => 'required|exists:office_shift,id',
-                'date' => 'required|date',
-                'clock_in' => 'required|date_format:H:i',
-                'clock_out' => 'required|date_format:H:i|after:clock_in',
+                'company' => 'exists:company,id',
+                'employee' => 'exists:employee_shift,id',
+                'shift_name' => 'exists:office_shift,id',
+                'date' => 'date',
+                'clock_in' => 'date_format:H:i',
+                'clock_out' => 'date_format:H:i|after:clock_in',
             ]);
 
             $attendance = Attendance::findOrFail($id);
