@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\LeaveType;
 use App\Models\Department;
 use App\Models\LeaveRequest;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Events\NotificationCreate;
+use App\Models\NotificationDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,7 +20,7 @@ class LeaveRequestController extends Controller
 {
 
     public function index()
-    {
+    { 
         if (auth()->user()->can('leaverequest_view_all') || auth()->user()->can('leaverequest_view_own')) {
             return view('hrm.leaverequest.index');
         }
@@ -30,14 +35,26 @@ class LeaveRequestController extends Controller
     public function create()
     {
         if (auth()->user()->can('leaverequest_create')) {
-            $company = Company::get()->all();
-            $departments = Department::get()->all();
-            $employees = Employee::get()->all();
-            $leaveTypes = LeaveType::get()->all();
+           if( auth()->id() == 1 ){
+            $company = Company::all();
+            $departments = Department::all();
+            $employees = Employee::all();
+            $leaveTypes = LeaveType::all();  
+           }else{
+            $userId = auth()->id();         
+            $employees = Employee::where('user_id', $userId)->with('office')->first();  
+            $office = $employees->office;
+            $departments = $employees->department;
+            $company = $office->company;  
+
+            $leaveTypes = LeaveType::all();   
+           }
+              
             return view('hrm.leaverequest.create', compact('company', 'departments', 'employees', 'leaveTypes'));
         }
         return abort('403', __('You are not authorized'));
     }
+    
 
     public function store(Request $request)
     {
@@ -51,16 +68,13 @@ class LeaveRequestController extends Controller
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after_or_equal:start_date',
                 'status' => 'required|in:0,1,2',
-                'file' => 'nullable', // Assuming a maximum file size of 10MB
+                'file' => 'nullable|mimes:jpeg,png,jpg,pdf|max:10240',
                 'reason' => 'required|string|max:500',
             ]);
 
-            // If validation fails, return with errors
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-
-            // Handle file upload if provided
 
             $file = $request->file;
             if ($file) {
@@ -83,8 +97,24 @@ class LeaveRequestController extends Controller
                 'file_path' => $filePath,
                 'reason' => $request->input('reason'),
             ]);
-
-            // Redirect with success message or perform additional actions as needed
+            $username = Auth::user()->username;     
+            $notification = Notification::create([
+                'messages' => 'Leave request created by ' . $username . '. Please review.',
+            ]);
+    
+            $user = User::findOrFail(1);           
+            // Create notification detail
+            NotificationDetail::create([
+                'notification_id' => $notification->id,
+                'user_id' => $user->id,
+                'status' => 0,
+                'read_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            // Fire event for notification creation
+            event(new NotificationCreate($notification));
             return redirect()->route('leaveRequest.index')->with('success', 'Leave request created successfully');
         }
         return abort('403', __('You are not authorized'));

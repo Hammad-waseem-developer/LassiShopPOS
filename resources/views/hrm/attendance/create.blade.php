@@ -15,6 +15,59 @@
                 <form method="POST" action="{{ route('attendance.store') }}" @submit.prevent="Create_Client()">
                     @csrf
                     <div class="card-body">
+
+                        @if (auth()->id() == 1)
+                        <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="company">{{ __('Company') }} <span class="field_required">*</span></label>
+                            <!-- Use a select element for the dropdown -->
+                            <select class="form-control" name="company" id="company">
+                                <!-- Add options for company -->
+                                @foreach ($company as $company)
+                                    <option value="{{ $company->id }}">
+                                        {{ $company->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('company')
+                                <span class="help-block text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label for="employee">{{ __('Employee') }} <span class="field_required">*</span></label>
+                            <!-- Use a select element for the dropdown -->
+                            <select class="form-control" name="employee" id="employee">
+                                <!-- Add options for employees -->
+                                @foreach ($employee as $employee)
+                                    <option value="{{ $employee->id }}">
+                                        {{ $employee->first_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('employee')
+                                <span class="help-block text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label for="shift_name">{{ __('Shift Name') }} <span class="field_required">*</span></label>
+                            <!-- Use a select element for the dropdown -->
+                            <select class="form-control" name="shift_name" id="shift_name">
+                                <!-- Add options for offices -->
+                                @foreach ($office as $office)
+                                    <option value="{{ $office->id }}">
+                                        {{ $office->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('office')
+                                <span class="help-block text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                        
+                        @else
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="company">{{ __('Company') }} <span class="field_required">*</span></label>
@@ -42,6 +95,8 @@
                                 @enderror
                             </div>                                                   
                         </div>
+                        @endif
+                       
                         
                         <div class="row">
                             <div class="form-group col-md-4">

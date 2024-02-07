@@ -136,7 +136,10 @@
                                     <label for="new_file">{{ __('Choose File') }} <span
                                             class="field_required">*</span></label>
                                             <input type="file" name="new_file" class="form-control" id="new_file">
-                                    <a href="{{url('/')}}/leave_requests/{{ $leaveRequest->file_path }}" target="_blank">View File</a>
+                                             @if ($leaveRequest->file_path == null)
+                                  @else
+                                  <a href="{{url('/')}}/leave_requests/{{ $leaveRequest->file_path }}" target="_blank">View File</a>
+                                @endif
                                     @error('file')
                                         <span class="help-block text-danger">{{ $message }}</span>
                                     @enderror

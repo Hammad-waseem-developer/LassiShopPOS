@@ -27,10 +27,16 @@ class AttendanceController extends Controller
     public function create()
     {
         if (auth()->user()->can('attendance_create')) {
+            if( auth()->id() == 1){
+                $employee = Employee::all();        
+                $office = Office::all();
+                $company = Company::all();
+            }else{
             $userId = auth()->id();    
             $employee = Employee::where('user_id', $userId)->with('office')->first();        
             $office = $employee->office;
-            $company = $office->company;       
+            $company = $office->company;
+        }       
             return view('hrm.attendance.create', compact('employee', 'office', 'company'));
         }
         return abort('403', __('You are not authorized'));
