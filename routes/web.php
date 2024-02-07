@@ -499,6 +499,7 @@ if ($installed === false) {
 
         //------------------------------- Add To Cart --------------------------\\
         Route::post('add_to_cart', 'AddToCartController@add_to_cart')->name('add_to_cart');
+        Route::post('add_to_cart_with_quantity', 'AddToCartController@add_to_cart_with_quantity')->name('add_to_cart_with_quantity');
         Route::post('delete_product_from_cart', 'AddToCartController@deleteProductFromCart')->name('delete_product_from_cart');
         Route::post('add_qty', 'AddToCartController@addQty')->name('add_qty');
         Route::post('remove_qty', 'AddToCartController@removeQty')->name('remove_qty');
