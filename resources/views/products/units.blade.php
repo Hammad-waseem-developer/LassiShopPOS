@@ -17,8 +17,8 @@
     <div class="card">
       <div class="card-body">
         <div class="text-end mb-3">
-          <a class="new_unit btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
-            {{ __('translate.Create') }}</a>
+          {{-- <a class="new_unit btn btn-outline-primary btn-md m-1"><i class="i-Add me-2 font-weight-bold"></i>
+            {{ __('translate.Create') }}</a> --}}
             <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
               class="i-Add me-2 font-weight-bold"></i>Print</button>
         </div>
@@ -32,7 +32,7 @@
                 <th>{{ __('translate.Base_Unit') }}</th>
                 <th>{{ __('translate.Operator') }}</th>
                 <th>{{ __('translate.Operation_Value') }}</th>
-                <th class="not_show">{{ __('translate.Action') }}</th>
+                {{-- <th class="not_show">{{ __('translate.Action') }}</th> --}}
               </tr>
             </thead>
             <tbody>
@@ -55,10 +55,10 @@
          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-  
+
           <form @submit.prevent="editmode?Update_Unit():Create_Unit()" enctype="multipart/form-data">
             <div class="row">
-  
+
               <div class="form-group col-md-12">
                 <label for="name">{{ __('translate.Title') }} <span class="field_required">*</span></label>
                 <input type="text" v-model="unit.name" class="form-control" name="name" id="name"
@@ -67,7 +67,7 @@
                   @{{ errors.name[0] }}
                 </span>
               </div>
-  
+
               <div class="form-group col-md-12">
                 <label for="ShortName">{{ __('translate.ShortName') }} <span class="field_required">*</span></label>
                 <input type="text" v-model="unit.ShortName" class="form-control" name="ShortName" id="ShortName"
@@ -76,7 +76,7 @@
                   @{{ errors.ShortName[0] }}
                 </span>
               </div>
-  
+
               <div class="form-group col-md-12">
                 <label>{{ __('translate.Base_Unit') }} </label>
                 <v-select @input="Selected_Base_Unit" placeholder="{{ __('translate.Choose_Base_Unit') }}"
@@ -87,7 +87,7 @@
                   @{{ errors.base_unit[0] }}
                 </span>
               </div>
-  
+
               <div class="form-group col-md-12" v-show="show_operator">
                 <label>{{ __('translate.Operator') }} </label>
                 <v-select placeholder="{{ __('translate.Choose_Operator') }}" v-model="unit.operator"
@@ -101,7 +101,7 @@
                   @{{ errors.operator[0] }}
                 </span>
               </div>
-  
+
               <div class="form-group col-md-12" v-show="show_operator">
                 <label for="operator_value">{{ __('translate.Operation_Value') }}<span
                     class="field_required">*</span></label>
@@ -111,10 +111,10 @@
                   @{{ errors.operator_value[0] }}
                 </span>
               </div>
-  
+
             </div>
             <div class="row mt-3">
-  
+
               <div class="col-md-6">
                 <button type="submit" class="btn btn-primary" :disabled="SubmitProcessing">
                   <span v-if="SubmitProcessing" class="spinner-border spinner-border-sm" role="status"
@@ -122,12 +122,12 @@
                 </button>
               </div>
             </div>
-  
-  
+
+
           </form>
-  
+
         </div>
-  
+
       </div>
     </div>
   </div>
@@ -171,8 +171,8 @@
                     {data: 'base_unit_name', name: 'base_unit_name'},
                     {data: 'operator_value', name: 'operator_value'},
                     {data: 'operator', name: 'operator'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                
+                   // {data: 'action', name: 'action', orderable: false, searchable: false},
+
                 ],
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 dom: "<'row'<'col-sm-12 col-md-7'lB><'col-sm-12 col-md-5 p-0'f>>rtip",
@@ -182,7 +182,7 @@
                     sInfoEmpty: "{{ __('datatable.sInfoEmpty') }}",
                     sInfoFiltered: "{{ __('datatable.sInfoFiltered') }}",
                     sInfoThousands: "{{ __('datatable.sInfoThousands') }}",
-                    sLengthMenu: "_MENU_", 
+                    sLengthMenu: "_MENU_",
                     sLoadingRecords: "{{ __('datatable.sLoadingRecords') }}",
                     sProcessing: "{{ __('datatable.sProcessing') }}",
                     sSearch: "",
@@ -271,7 +271,7 @@
             app.reset_Form();
             var id = $(this).attr('id');
             app.Get_Data_Edit(id);
-           
+
             setTimeout(() => {
                 NProgress.done()
                 $('#modal_unit').modal('show');
@@ -307,10 +307,10 @@
                 operator_value: 1
             }
         },
-       
+
         methods: {
 
-        
+
             Selected_Base_Unit(value) {
                 if (value == null) {
                     this.show_operator = false;
@@ -328,10 +328,10 @@
                     this.units_base   = response.data.units_base;
                 })
                 .catch(error => {
-                    
+
                 });
             },
-          
+
             //---------------------- Get_Data_Edit  ------------------------------\\
             Get_Data_Edit(id) {
                 axios
@@ -346,7 +346,7 @@
                     }
                 })
                 .catch(error => {
-                    
+
                 });
             },
 
@@ -459,7 +459,7 @@
 
             },
 
-         
+
 
         },
         //-----------------------------Autoload function-------------------
@@ -482,7 +482,7 @@
             Array.from(tableClone.rows).forEach(function(row) {
             row.deleteCell(5); // Remove the first column
         });
-            
+
             var newWin = window.open('', 'Print-Window');
             newWin.document.open();
             newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');

@@ -31,10 +31,10 @@ class UnitsController extends Controller
                     } else {
                         $base_unit_name = 'ND';
                     }
-        
+
                     return $base_unit_name;
                 })
-            
+
                 ->addColumn('action', function($row){
 
                         $btn = '<a id="' .$row->id. '"  class="edit cursor-pointer ul-link-action text-success"
@@ -55,10 +55,10 @@ class UnitsController extends Controller
 
         }
         return abort('403', __('You are not authorized'));
-       
+
     }
 
-    
+
     public function create(Request $request)
     {
         $user_auth = auth()->user();
@@ -68,7 +68,7 @@ class UnitsController extends Controller
                 ->where('deleted_at', null)
                 ->orderBy('id', 'DESC')
                 ->get(['id', 'name']);
-                
+
             return response()->json([
                 'units_base' => $units_base,
             ]);
@@ -127,7 +127,7 @@ class UnitsController extends Controller
             ->where('deleted_at', null)
             ->orderBy('id', 'DESC')
             ->get(['id', 'name']);
-                
+
             return response()->json([
                 'unit' => $unit,
                 'units_base' => $units_base,
@@ -191,7 +191,7 @@ class UnitsController extends Controller
             } else {
                 return response()->json(['success' => false]);
             }
-            
+
         }
         return abort('403', __('You are not authorized'));
 
@@ -227,7 +227,7 @@ class UnitsController extends Controller
         $units = Unit::where('base_unit', $product_unit_id->unit_id)
                         ->orWhere('id', $product_unit_id->unit_id)
                         ->get();
-        
+
         return response()->json($units);
     }
 
