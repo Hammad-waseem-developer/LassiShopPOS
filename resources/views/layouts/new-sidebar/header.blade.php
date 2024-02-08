@@ -423,6 +423,7 @@
 
 
     .box {
+        overflow-x: hidden;
         width: 400px;
         height: 0;
         border-radius: 10px;
