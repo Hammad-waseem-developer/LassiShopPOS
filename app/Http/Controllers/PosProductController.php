@@ -10,9 +10,10 @@ use App\Models\Warehouse;
 use App\Models\NewProduct;
 use Illuminate\Http\Request;
 use App\Models\UserWarehouse;
-use App\Models\NewProductDetail;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Models\NewProductDetail;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class PosProductController extends Controller
 {
@@ -163,7 +164,9 @@ class PosProductController extends Controller
             $filename = time() . '.' . $image->extension();
             $image->move(public_path('/images/products'), $filename);
             $product->img_path = $filename;
-            unlink(public_path('/images/products/' . $request->old_image));
+            if (File::exists(public_path('/images/products/' . $request->old_image))) {
+                unlink(public_path('/images/products/' . $request->old_image));
+            }
         } else {
             $product->img_path = $request->old_image;
         }

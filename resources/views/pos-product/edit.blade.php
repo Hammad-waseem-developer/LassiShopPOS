@@ -76,9 +76,13 @@
                             </label>
                             <input type="file" class="form-control" name="image" id="image" value="">
                             <div class="error-message" id="image-error"></div>
-
-                            <a href="{{ asset('/images/products/' . $product->img_path) }}" target="_blank">View
-                                Image</a>
+                            <a @if(File::exists(public_path('/images/products/' . $product->img_path))) href="{{ asset('/images/products/' . $product->img_path) }}" target="_blank" @else href="#" @endif>
+                                @if(File::exists(public_path('/images/products/' . $product->img_path)))
+                                View Image
+                                @else
+                                No Image
+                                @endif
+                            </a>
                             <input type="hidden" name="old_image" value="{{ $product->img_path }}">
                             <input type="hidden" name="new_image" id="new_image" value="">
                         </div>
