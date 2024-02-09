@@ -20,11 +20,12 @@
 
                 <div class="text-end mb-3" style="display: flex;
                 justify-content: flex-end;">
-                    @if (Auth::user()->can('employee_create') || auth()->user()->id == 1)
+                    {{-- @if (Auth::user()->can('employee_create') || auth()->user()->id == 1)
                         <a class="btn btn-outline-primary btn-md m-1" href="{{ route('employees.create') }}"><i
                                 class="i-Add me-2 font-weight-bold"></i>
                             {{ __('translate.Create') }}</a>
-                    @endif
+                    @endif --}}
+                    
                     <div class="dropdown show" style="    display: flex;
                     align-items: center;">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"

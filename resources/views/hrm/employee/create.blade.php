@@ -306,6 +306,22 @@
                                     <span class="help-block text-danger">{{ $errors->first('salaray') }}</span>
                                 @endif
                             </div>
+                            <div class="form-group col-md-4">
+                                <label for="company">{{ __('Company') }} <span class="field_required">*</span></label>
+                                <select class="form-control" name="company" id="company">
+                                    <option value="" selected disabled>{{ __('Select Company') }}</option>
+                                    @foreach ($company as $comp)
+                                        <option value="{{ $comp->id }}"
+                                            {{ old('company') == $comp->id ? 'selected' : '' }}>
+                                            {{ $comp->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('company')
+                                    <span class="help-block text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                         </div>
                         {{-- Social Media --}}
                         <div class="social_media">

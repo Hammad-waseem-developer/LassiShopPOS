@@ -9,14 +9,12 @@
 </div>
 
 <div class="separator-breadcrumb border-top"></div>
-
 <div class="row" id="section_create_client">
     <div class="col-lg-12 mb-3">
         <div class="card">
             <form method="POST" enctype="multipart/form-data" action="{{ route('leaveRequest.store') }}"
                 @submit.prevent="Create_Client()">
                 @csrf
-
                 <div class="card-body">
                     @if (auth()->id() == 1)
                         <div class="row">

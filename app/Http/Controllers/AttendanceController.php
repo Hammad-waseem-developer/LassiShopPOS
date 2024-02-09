@@ -35,7 +35,7 @@ class AttendanceController extends Controller
             $userId = auth()->id();    
             $employee = Employee::where('user_id', $userId)->with('office')->first();        
             $office = $employee->office;
-            $company = $office->company;
+            $company = $employee->company; 
         }       
             return view('hrm.attendance.create', compact('employee', 'office', 'company'));
         }
@@ -146,8 +146,8 @@ class AttendanceController extends Controller
                 'company' => 'exists:company,id',
                 'employee' => 'exists:employee_shift,id',
                 'shift_name' => 'exists:office_shift,id',
-                'date' => 'date',
-                'clock_in' => 'date_format:H:i',
+                'date' => 'required|date',
+                'clock_in' => 'required|date_format:H:i',
                 'clock_out' => 'date_format:H:i|after:clock_in',
             ]);
 

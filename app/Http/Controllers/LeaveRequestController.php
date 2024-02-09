@@ -45,7 +45,7 @@ class LeaveRequestController extends Controller
             $employees = Employee::where('user_id', $userId)->with('office')->first();  
             $office = $employees->office;
             $departments = $employees->department;
-            $company = $office->company;  
+            $company = $employees->company;  
 
             $leaveTypes = LeaveType::all();   
            }

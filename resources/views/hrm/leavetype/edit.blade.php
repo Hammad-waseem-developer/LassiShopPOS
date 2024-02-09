@@ -18,6 +18,9 @@
                         <div class="form-group">
                             <label for="title">Leave Title</label>
                             <input type="text" class="form-control" name="type" value="{{ $leaveType->type }}">
+                            @error('type')
+                                <span class="help-block text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6">

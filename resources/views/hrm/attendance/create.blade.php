@@ -71,13 +71,13 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="company">{{ __('Company') }} <span class="field_required">*</span></label>
-                                <input type="text" class="form-control" value="{{ $office->company->name }}" readonly>
-                                <input type="hidden" name="company" value="{{ $office->company->id }}">
+                                <!-- Display company name -->
+                                <input type="text" class="form-control" value="{{ $company->name }}" readonly>
+                                <input type="hidden" name="company" value="{{ $company->id }}">
                                 @error('company')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            
                             <div class="form-group col-md-4">
                                 <label for="employee">{{ __('Employee') }} <span class="field_required">*</span></label>
                                 <input type="text" class="form-control" value="{{ $employee->first_name }}" readonly>

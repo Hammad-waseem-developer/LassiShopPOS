@@ -37,10 +37,11 @@ class EmployeeController extends Controller
     public function create()
     {
         if (auth()->user()->can('employee_create')) {
-            $company = DB::table('company')->get()->all();
+            // $company = DB::table('company')->get()->all();
             $departments = Department::get()->all();
             $designations = Designation::get()->all();
             $offices = Office::get()->all();
+            $company = Company::all();
             $employee = new Employee;
             return view('hrm.employee.create', compact('company', 'departments', 'designations', 'offices', 'employee'));
         }
@@ -73,6 +74,7 @@ class EmployeeController extends Controller
                 'remaining_leave' => 'nullable|numeric',
                 'hourly_late' => 'nullable|numeric',
                 'salaray' => 'nullable|numeric',
+                'company' => 'required|exists:company,id',
                 'skype' => 'nullable|string|max:255',
                 'facebook' => 'nullable|string|max:255',
                 'whatsApp' => 'nullable|string|max:255',
@@ -114,6 +116,7 @@ class EmployeeController extends Controller
             $employee->remaining_leave = $request->remaining_leave;
             $employee->hourly_late = $request->hourly_late;
             $employee->salary = $request->salaray;
+            $employee->company_id = $request->company;
             $employee->save();
 
 
@@ -177,7 +180,7 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         if (auth()->user()->can('employee_edit') && auth()->user()->can('employee_view_all')) {
-            $company = DB::table('company')->get()->all();
+            $company = Company::all();
             $departments = Department::get()->all();
             $designations = Designation::get()->all();
             $offices = Office::get()->all();
@@ -234,6 +237,7 @@ class EmployeeController extends Controller
                 'remaining_leave' => 'nullable|numeric',
                 'hourly_late' => 'nullable|numeric',
                 'salaray' => 'nullable|numeric',
+                'company' => 'required|exists:company,id',
                 'skype' => 'nullable|string|max:255',
                 'facebook' => 'nullable|string|max:255',
                 'whatsApp' => 'nullable|string|max:255',
@@ -277,6 +281,7 @@ class EmployeeController extends Controller
             $employee->remaining_leave = $request->remaining_leave;
             $employee->hourly_late = $request->hourly_late;
             $employee->salary = $request->salaray;
+            $employee->company_id = $request->company;
             $employee->save();
 
             $social = SocialMedia::where('emp_id', $employee->id)->firstOrNew([]);

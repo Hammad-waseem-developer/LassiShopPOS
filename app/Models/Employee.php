@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Company;
 use App\Models\Experience;
 use App\Models\BankAccount;
 use App\Models\SocialMedia;
@@ -36,7 +37,7 @@ class Employee extends Model
             'remaining_leave',
             'hourly_late',
             'salary',
-            // Add other fillable fields as needed
+            'company_id',
         ];
 
     // Define relationships with other models
@@ -54,5 +55,8 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
-  
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }
