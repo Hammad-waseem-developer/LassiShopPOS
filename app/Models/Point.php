@@ -18,8 +18,8 @@ class Point extends Model
         'updated_at',
     ];
 
-    public function user()
+    public function Clients()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Client::class, 'user_id', 'id');
     }
 }

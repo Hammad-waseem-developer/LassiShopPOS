@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificationCreate;
 use DB;
 use PDF;
 use Config;
@@ -13,6 +12,7 @@ use App\Models\Sale;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Brand;
+use App\Models\Point;
 use App\Mail\SaleMail;
 use App\Models\Client;
 use App\utils\helpers;
@@ -27,21 +27,22 @@ use App\Models\NewProduct;
 use App\Models\PosSetting;
 use App\Models\SaleDetail;
 use App\Models\PaymentSale;
+use App\Models\Notification;
 use App\Models\PosSaleItems;
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
 use App\Models\UserWarehouse;
+use App\Events\OrderListEvent;
 use App\Models\ProductVariant;
 use App\Models\NewProductDetail;
 use App\Models\product_warehouse;
+use App\Events\NotificationCreate;
+use App\Models\NotificationDetail;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
-use App\Events\OrderListEvent;
-use App\Models\Notification;
-use App\Models\NotificationDetail;
 
 class PosController extends Controller
 {
@@ -896,5 +897,14 @@ class PosController extends Controller
     {
         Session::forget('cart');
         return response()->json(['success' => "Cart is flushed"]);
+    }
+
+    public function getUserPoints(Request $request)
+    {
+        $points = Point::with('Clients')->where('user_id', $request->id)->get();
+        if($points == null){
+            $points = [];
+        }
+        return response()->json($points);
     }
 }

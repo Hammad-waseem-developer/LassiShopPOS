@@ -129,9 +129,9 @@
                                         {{-- Products will be displayed here using ajax --}}
                                     </div>
 
-                                    <div class="cart-summery">
+                                    <div class="cart-summery d-flex flex-row justify-content-center align-items-center">
 
-                                        <div>
+                                        <div class="col-md-8">
                                             <div class="summery-item mb-2 row">
                                                 <span
                                                     class="title mr-2 col-lg-12 col-sm-12">{{ __('translate.Shipping') }}</span>
@@ -180,7 +180,23 @@
                                             </div>
                                         </div>
 
-                                        <div class="pt-3 border-top border-gray-300 summery-total">
+                                        <div class="col-md-4">
+                                            <div
+                                                class="summery-item mb-3 d-flex flex-column justify-content-between align-items-center">
+                                                <h4>Customer Points</h4>
+                                                <div id="customer-points-details">
+                                                    {{-- Points Displayed Here Using Ajax --}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="half-circle half-circle-left"></div>
+                                        <div class="half-circle half-circle-right"></div>
+                                    </div>
+
+                                    <div class="cart-summery">
+                                        <div class="pt-1 border-top border-gray-300 summery-total">
                                             <h5 class="summery-item m-0">
                                                 <span>{{ __('translate.Total') }}</span>
                                                 <span id="GrandTotal"></span>
@@ -192,8 +208,6 @@
                                                 @endif --}}
                                             </h5>
                                         </div>
-                                        <div class="half-circle half-circle-left"></div>
-                                        <div class="half-circle half-circle-right"></div>
                                     </div>
 
                                     <div class="row">
@@ -500,6 +514,7 @@
             deleteProductFromCart: "{{ route('delete_product_from_cart') }}",
             addQuantity: "{{ route('add_qty') }}",
             removeQuantity: "{{ route('remove_qty') }}",
+            getUserPoints: "{{ route('getUserPoints') }}",
         };
 
         const elements = {
@@ -510,6 +525,10 @@
         };
 
         $(document).ready(function() {
+
+            //Get User Points
+            var client_id = $('#customer_id').val();
+            GetUserPoints(client_id);
 
             FlushCart();
 
@@ -747,38 +766,38 @@
                             "id"); // Get the selected category ID
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
                         // data.data.holdProducts.forEach(element => {
-                            $.ajax({
-                                url: routes.addToCartWithQuantity,
-                                type: "POST",
-                                token: "{{ csrf_token() }}",
-                                dataType: "json",
-                                headers: {
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                },
-                                // data: {
-                                //     id: element.product_id,
-                                //     price: element.price,
-                                //     name: element.name,
-                                //     img_path: element.img_path,
-                                //     warehouse_id: $("#warehouse_id").val(),
-                                //     quantity: element.quantity
-                                // },
-                                data: {
-                                    products: data.data.holdProducts,
-                                    warehouse_id: $("#warehouse_id").val()
-                                },
-                                success: function(response) {
-                                    if (response.message) {
-                                        toastr.error('Out of stock');
-                                    } else {
-                                        updateCartBox(response);
-                                        // console.log("Add success" , response);
-                                    }
-                                },
-                                error: function(data) {
-                                    console.log("Error:", data);
+                        $.ajax({
+                            url: routes.addToCartWithQuantity,
+                            type: "POST",
+                            token: "{{ csrf_token() }}",
+                            dataType: "json",
+                            headers: {
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            },
+                            // data: {
+                            //     id: element.product_id,
+                            //     price: element.price,
+                            //     name: element.name,
+                            //     img_path: element.img_path,
+                            //     warehouse_id: $("#warehouse_id").val(),
+                            //     quantity: element.quantity
+                            // },
+                            data: {
+                                products: data.data.holdProducts,
+                                warehouse_id: $("#warehouse_id").val()
+                            },
+                            success: function(response) {
+                                if (response.message) {
+                                    toastr.error('Out of stock');
+                                } else {
+                                    updateCartBox(response);
+                                    // console.log("Add success" , response);
                                 }
-                            });
+                            },
+                            error: function(data) {
+                                console.log("Error:", data);
+                            }
+                        });
 
                         // })
                     },
@@ -788,6 +807,48 @@
                 })
 
             });
+
+            // Get the customer id from the "customer_id" field and call the GetUserPoints function
+            $("#customer_id").on("change", function() {
+                var id = $("#customer_id").val();
+                console.log($("#customer_id").val());
+                GetUserPoints(id);
+            })
+
+            // Get Customer Points
+            function GetUserPoints(id) {
+                $.ajax({
+                    url: routes.getUserPoints,
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        if (!data || data.length === 0 || !data[0].clients) {
+                            $("#customer-points-details").empty();
+                            $("#customer-points-details").append(`
+                                <p class="text-center mt-2 mb-0"">Customer : N/A</p>
+                                <p class="text-center mt-0 mb-0">Points : N/A</p>
+                            `);
+                        } else {
+                            $("#customer-points-details").empty();
+                            $("#customer-points-details").append(`
+                                <p class="text-center mt-2 mb-0">Customer : ${data[0].clients.username}</p>
+                                <p class="text-center mt-0 mb-0">Points : ${data[0].remaining_user_point}</p>
+                            `);
+                        }
+                    },
+
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+            }
 
             $("#products-box").on("click", function() {
                 if (elements.cartItems.length > 0) {

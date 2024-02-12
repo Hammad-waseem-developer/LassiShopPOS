@@ -193,6 +193,7 @@ if ($installed === false) {
             Route::get('invoice_pos/{id}', 'PosController@Print_Invoice_POS');
             Route::get('GetCategories', 'PosController@GetCategories')->name('GetCategories');
             Route::post('flushCart', 'PosController@flushCart')->name('flushCart');
+            Route::post('getUserPoints', 'PosController@getUserPoints')->name('getUserPoints');
 
             //---------------------- Hold Order ----------------------\\
             //------------------------------------------------------------------\\
