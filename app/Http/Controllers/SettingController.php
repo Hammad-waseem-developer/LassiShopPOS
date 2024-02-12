@@ -21,7 +21,7 @@ class SettingController extends Controller
     public function index()
     {
         $user_auth = auth()->user();
-		if ($user_auth->can('settings')){      
+        if ($user_auth->can('settings')) {
             $setting_data = Setting::where('deleted_at', '=', null)->first();
 
             $backup_settings['dump_path'] = env('DUMP_PATH');
@@ -49,16 +49,18 @@ class SettingController extends Controller
             $setting['default_language'] = $setting_data->default_language;
             $setting['symbol_placement'] = $setting_data->symbol_placement;
             $setting['invoice_footer']   = $setting_data->invoice_footer;
-            $setting['timezone']         = env('APP_TIMEZONE') == null?'UTC':env('APP_TIMEZONE');
+            $setting['timezone']         = env('APP_TIMEZONE') == null ? 'UTC' : env('APP_TIMEZONE');
             $setting['on_register']   = $setting_data->on_register;
             $setting['on_register_ponit']   = $setting_data->on_register_ponit;
-            $setting['point_value']   = $setting_data->point_value;
-            
+            $setting['ponit_value']   = $setting_data->ponit_value;
+            $setting['on_purchase']   = $setting_data->on_purchase;
+            $setting['on_purchase_point']   = $setting_data->on_purchase_point;
+            $setting['on_purchase_value']   = $setting_data->on_purchase_value;
 
 
             $zones_array = array();
             $timestamp = time();
-            foreach(timezone_identifiers_list() as $key => $zone){
+            foreach (timezone_identifiers_list() as $key => $zone) {
                 date_default_timezone_set($zone);
                 $zones_array[$key]['zone'] = $zone;
                 $zones_array[$key]['diff_from_GMT'] = 'UTC/GMT ' . date('P', $timestamp);
@@ -68,29 +70,29 @@ class SettingController extends Controller
             $currencies = Currency::where('deleted_at', null)->get(['id', 'name']);
             $clients = client::where('deleted_at', '=', null)->get(['id', 'username']);
             $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
-            
-            return view('settings.system_settings_list', 
-            compact('setting','backup_settings','email_settings','currencies','clients','warehouses','zones_array'));
 
+            return view(
+                'settings.system_settings_list',
+                compact('setting', 'backup_settings', 'email_settings', 'currencies', 'clients', 'warehouses', 'zones_array')
+            );
         }
         return abort('403', __('You are not authorized'));
     }
 
 
-    
-     //-------------- Get Pos Settings ---------------\\
 
-     public function get_pos_Settings(Request $request)
-     {
+    //-------------- Get Pos Settings ---------------\\
+
+    public function get_pos_Settings(Request $request)
+    {
         $user_auth = auth()->user();
-		if ($user_auth->can('pos_settings')){
- 
+        if ($user_auth->can('pos_settings')) {
+
             $pos_settings = PosSetting::where('deleted_at', '=', null)->first();
 
             return view('settings.pos_settings', compact('pos_settings'));
         }
         return abort('403', __('You are not authorized'));
-    
     }
 
 
@@ -99,15 +101,15 @@ class SettingController extends Controller
     public function update_pos_settings(Request $request, $id)
     {
         $user_auth = auth()->user();
-		if ($user_auth->can('pos_settings')){
+        if ($user_auth->can('pos_settings')) {
 
             request()->validate([
                 'note_customer' => 'required',
             ]);
 
-            if($request['is_printable'] == '1' || $request['is_printable'] == 'true'){
+            if ($request['is_printable'] == '1' || $request['is_printable'] == 'true') {
                 $is_printable = 1;
-            }else{
+            } else {
                 $is_printable = 0;
             }
 
@@ -125,12 +127,10 @@ class SettingController extends Controller
             ]);
 
             return response()->json(['success' => true]);
-
         }
         return abort('403', __('You are not authorized'));
-
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -184,8 +184,9 @@ class SettingController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request)->all();
         $user_auth = auth()->user();
-		if ($user_auth->can('settings')){
+        if ($user_auth->can('settings')) {
 
             $request->validate([
                 'CompanyName'      => 'required|string|max:255',
@@ -193,12 +194,18 @@ class SettingController extends Controller
                 'email'            => 'required|string|email|max:255',
                 'app_name'         => 'required|string|max:20',
                 'CompanyAdress'    => 'required|string',
+                'on_register'    => 'nullable|string',
+                'on_register_ponit'    => 'nullable|string',
+                'ponit_value'    => 'nullable|string',
+                'on_purchase'    => 'required|string',
+                'on_purchase_point'    => 'required|string',
+                'on_purchase_value'    => 'required|string',
                 'currency_id'      => 'required',
                 'default_language' => 'required',
                 'symbol_placement' => 'required',
                 'logo'             => 'nullable|image|mimes:jpeg,png,jpg,bmp,gif,svg|max:2048',
             ]);
-            
+
             $setting = Setting::findOrFail($id);
             $currentAvatar = $setting->logo;
 
@@ -206,7 +213,7 @@ class SettingController extends Controller
                 if ($request->logo != $currentAvatar) {
 
                     $image = $request->file('logo');
-                    $filename = time().'.'.$image->extension();  
+                    $filename = time() . '.' . $image->extension();
                     $image->move(public_path('/images'), $filename);
                     $path = public_path() . '/images';
 
@@ -219,8 +226,7 @@ class SettingController extends Controller
                 } else {
                     $filename = $currentAvatar;
                 }
-
-            }else{
+            } else {
                 $filename = $currentAvatar;
             }
 
@@ -235,20 +241,20 @@ class SettingController extends Controller
             } else {
                 $currency_id = $request['currency_id'];
             }
-    
+
             if ($request['client_id'] == 'null' || $request['client_id'] == '') {
                 $client_id = NULL;
             } else {
                 $client_id = $request['client_id'];
             }
-    
+
             if ($request['warehouse_id'] == 'null' || $request['warehouse_id'] == '') {
                 $warehouse_id = NULL;
             } else {
                 $warehouse_id = $request['warehouse_id'];
             }
 
-    
+
             if ($request['default_language'] == 'null' || $request['default_language'] == '') {
                 $default_language = 'en';
             } else {
@@ -269,6 +275,12 @@ class SettingController extends Controller
                 'default_language'  => $default_language,
                 'symbol_placement'  => $symbol_placement,
                 'CompanyName'       => $request['CompanyName'],
+                'on_register'       => $request['on_register'],
+                'on_register_ponit'       => $request['on_register_ponit'],
+                'ponit_value'       => $request['ponit_value'],
+                'on_purchase'       => $request['on_purchase'],
+                'on_purchase_point'  => $request['on_purchase_point'],
+                'on_purchase_value'  => $request['on_purchase_value'],
                 'app_name'          => $request['app_name'],
                 'CompanyPhone'      => $request['CompanyPhone'],
                 'CompanyAdress'     => $request['CompanyAdress'],
@@ -277,16 +289,15 @@ class SettingController extends Controller
                 'invoice_footer'    => $invoice_footer,
                 'logo'              => $filename,
             ]);
-    
+
             $this->setEnvironmentValue([
-                'APP_TIMEZONE' => $request['timezone'] !== null?'"' . $request['timezone'] . '"':'"UTC"',
+                'APP_TIMEZONE' => $request['timezone'] !== null ? '"' . $request['timezone'] . '"' : '"UTC"',
             ]);
-    
+
             Artisan::call('config:cache');
             Artisan::call('config:clear');
 
             return response()->json(['success' => true]);
-
         }
         return abort('403', __('You are not authorized'));
     }
@@ -305,29 +316,26 @@ class SettingController extends Controller
     public function update_backup_settings(Request $request)
     {
         $user_auth = auth()->user();
-		if ($user_auth->can('settings')){
+        if ($user_auth->can('settings')) {
 
             request()->validate([
                 'dump_path'   => 'required|string|max:255',
             ]);
 
             $this->setEnvironmentValue([
-                'DUMP_PATH' => $request['dump_path'] !== null?$request['dump_path']:env('DUMP_PATH'),
+                'DUMP_PATH' => $request['dump_path'] !== null ? $request['dump_path'] : env('DUMP_PATH'),
             ]);
 
             Artisan::call('config:cache');
             Artisan::call('config:clear');
 
             return response()->json(['success' => true]);
-
-            
-
         }
         return abort('403', __('You are not authorized'));
     }
 
 
-    
+
     //-------------- Clear_Cache ---------------\\
 
     public function Clear_Cache(Request $request)
@@ -337,38 +345,38 @@ class SettingController extends Controller
         Artisan::call('route:clear');
     }
 
-       //-------------- Set Environment Value ---------------\\
+    //-------------- Set Environment Value ---------------\\
 
-       public function setEnvironmentValue(array $values)
-       {
-           $envFile = app()->environmentFilePath();
-           $str = file_get_contents($envFile);
-           $str .= "\r\n";
-           if (count($values) > 0) {
-               foreach ($values as $envKey => $envValue) {
-       
-                   $keyPosition = strpos($str, "$envKey=");
-                   $endOfLinePosition = strpos($str, "\n", $keyPosition);
-                   $oldLine = substr($str, $keyPosition, $endOfLinePosition - $keyPosition);
-       
-                   if (is_bool($keyPosition) && $keyPosition === false) {
-                       // variable doesnot exist
-                       $str .= "$envKey=$envValue";
-                       $str .= "\r\n";
-                   } else {
-                       // variable exist                    
-                       $str = str_replace($oldLine, "$envKey=$envValue", $str);
-                   }            
-               }
-           }
-       
-           $str = substr($str, 0, -1);
-           if (!file_put_contents($envFile, $str)) {
-               return false;
-           }
-       
-           app()->loadEnvironmentFrom($envFile);    
-       
-           return true;
-       }
+    public function setEnvironmentValue(array $values)
+    {
+        $envFile = app()->environmentFilePath();
+        $str = file_get_contents($envFile);
+        $str .= "\r\n";
+        if (count($values) > 0) {
+            foreach ($values as $envKey => $envValue) {
+
+                $keyPosition = strpos($str, "$envKey=");
+                $endOfLinePosition = strpos($str, "\n", $keyPosition);
+                $oldLine = substr($str, $keyPosition, $endOfLinePosition - $keyPosition);
+
+                if (is_bool($keyPosition) && $keyPosition === false) {
+                    // variable doesnot exist
+                    $str .= "$envKey=$envValue";
+                    $str .= "\r\n";
+                } else {
+                    // variable exist                    
+                    $str = str_replace($oldLine, "$envKey=$envValue", $str);
+                }
+            }
+        }
+
+        $str = substr($str, 0, -1);
+        if (!file_put_contents($envFile, $str)) {
+            return false;
+        }
+
+        app()->loadEnvironmentFrom($envFile);
+
+        return true;
+    }
 }

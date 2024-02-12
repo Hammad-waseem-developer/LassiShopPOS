@@ -201,7 +201,7 @@
               </div>
 
               <div class="form-group col-md-4">
-                <label for="ponit_value">Points Value
+                <label for="ponit_value">How much are points worth?
                   <span class="field_required">*</span></label>
                 <input type="text" v-model="setting.ponit_value" class="form-control" name="ponit_value"
                   id="ponit_value" placeholder="Points Value" />
@@ -210,7 +210,42 @@
                 </span>
               </div>
 
+              
+              {{-- Pos Products Points --}}
+              <h4 class="m-4">Pos Products Points</h4>
+              <div class="form-group col-md-4">
+                <label for="on_purchase">
+                  <span class="field_required">On Pos Products Will Get Points</span></label>
+                  <br>
+                  <input type="radio" name="on_purchase" id="on_purchase_points_yes" v-model="setting.on_purchase" value="1">
+                  <label for="on_purchase_points_yes">Yes</label>
+                  <input type="radio" name="on_purchase" id="on_purchase_points_no" v-model="setting.on_purchase" value="0">
+                  <label for="on_purchase_points_no">No</label>
+                <span class="error" v-if="errors_settings && errors_settings.on_purchase">
+                  @{{ errors_settings.on_purchase[0] }}
+                </span>          
+              </div>
 
+              <div class="form-group col-md-4">
+                <label for="on_purchase_point">How many points will customer get on purchase
+                  <span class="field_required">*</span></label>
+                <input type="text" v-model="setting.on_purchase_point" class="form-control" name="on_purchase_point"
+                  id="on_purchase_point" placeholder="Points Value" />
+                  <span class="error" v-if="errors_settings && errors_settings.on_purchase_point">
+                  @{{ errors_settings.on_purchase_point[0] }}
+                </span>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="on_purchase_value">On how much shopping  do we get the points
+                  <span class="field_required">*</span></label>
+                <input type="text" v-model="setting.on_purchase_value" class="form-control" name="on_purchase_value"
+                  id="on_purchase_value" placeholder="Points Value" />
+                  <span class="error" v-if="errors_settings && errors_settings.on_purchase_value">
+                    @{{ errors_settings.on_purchase_value[0] }}
+                  </span>
+                </div>       
+                {{-- Customer Loyalty Points End--}}
 
             </div>
 
@@ -472,6 +507,12 @@
                 self.data.append("CompanyName", self.setting.CompanyName);
                 self.data.append("CompanyPhone", self.setting.CompanyPhone);
                 self.data.append("CompanyAdress", self.setting.CompanyAdress);
+                self.data.append("on_register", self.setting.on_register);
+                self.data.append("on_register_ponit", self.setting.on_register_ponit);
+                self.data.append("ponit_value", self.setting.ponit_value);
+                self.data.append("on_purchase", self.setting.on_purchase);
+                self.data.append("on_purchase_point", self.setting.on_purchase_point);
+                self.data.append("on_purchase_value", self.setting.on_purchase_value);
                 self.data.append("footer", self.setting.footer);
                 self.data.append("developed_by", self.setting.developed_by);
                 self.data.append("app_name", self.setting.app_name);
