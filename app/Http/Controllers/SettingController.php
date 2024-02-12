@@ -21,8 +21,7 @@ class SettingController extends Controller
     public function index()
     {
         $user_auth = auth()->user();
-		if ($user_auth->can('settings')){
-            
+		if ($user_auth->can('settings')){      
             $setting_data = Setting::where('deleted_at', '=', null)->first();
 
             $backup_settings['dump_path'] = env('DUMP_PATH');
@@ -51,6 +50,11 @@ class SettingController extends Controller
             $setting['symbol_placement'] = $setting_data->symbol_placement;
             $setting['invoice_footer']   = $setting_data->invoice_footer;
             $setting['timezone']         = env('APP_TIMEZONE') == null?'UTC':env('APP_TIMEZONE');
+            $setting['on_register']   = $setting_data->on_register;
+            $setting['on_register_ponit']   = $setting_data->on_register_ponit;
+            $setting['point_value']   = $setting_data->point_value;
+            
+
 
             $zones_array = array();
             $timestamp = time();

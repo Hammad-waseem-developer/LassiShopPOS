@@ -8,7 +8,6 @@
 </div>
 
 <div class="separator-breadcrumb border-top"></div>
-
 <div id="section_System_Settings_list">
   {{-- System_Settings --}}
   <div class="row">
@@ -175,6 +174,43 @@
                   @{{ errors_settings.CompanyAdress[0] }}
                 </span>
               </div>
+
+              <h4 class="m-4">Customer Loyalty Points</h4>
+              <div class="form-group col-md-4">
+                <label for="on_register_ponit">
+                  <span class="field_required">On Register Customer Will Get Points</span></label>
+                  {{-- <span class="field_required">*</span> --}}
+                  <br>
+                  <input type="radio" name="on_register" id="on_register_points_yes" v-model="setting.on_register" value="1">
+                  <label for="on_register_points_yes">Yes</label>
+                  <input type="radio" name="on_register" id="on_register_points_no" v-model="setting.on_register" value="0">
+                  <label for="on_register_points_no">No</label>
+                <span class="error" v-if="errors_settings && errors_settings.on_register">
+                  @{{ errors_settings.on_register[0] }}
+                </span>          
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="on_register_ponit">How many points will customer get on register
+                  <span class="field_required">*</span></label>
+                <input type="text" v-model="setting.on_register_ponit" class="form-control" name="on_register_ponit"
+                  id="on_register_ponit" placeholder="Points Value" />
+                <span class="error" v-if="errors_settings && errors_settings.on_register_ponit">
+                  @{{ errors_settings.on_register_ponit[0] }}
+                </span>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="ponit_value">Points Value
+                  <span class="field_required">*</span></label>
+                <input type="text" v-model="setting.ponit_value" class="form-control" name="ponit_value"
+                  id="ponit_value" placeholder="Points Value" />
+                <span class="error" v-if="errors_settings && errors_settings.ponit_value">
+                  @{{ errors_settings.ponit_value[0] }}
+                </span>
+              </div>
+
+
 
             </div>
 
