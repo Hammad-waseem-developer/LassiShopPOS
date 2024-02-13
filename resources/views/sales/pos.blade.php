@@ -185,6 +185,7 @@
                                                 class="summery-item mb-3 d-flex flex-column justify-content-between align-items-center">
                                                 <h4>Customer Points</h4>
                                                 <input type="hidden"  name="customer_points" id="customer_points">
+                                                <input type="hidden"  name="is_points" id="is_points">
                                                 <div id="customer-points-details">
                                                     {{-- Points Displayed Here Using Ajax --}}
                                                 </div>
@@ -507,6 +508,11 @@
         var grandTotal = 0;
         var currentPage = 1;
 
+// IsYesOrNo() fucntion
+    function IsYesOrNo(value){
+        // console.log(value);
+        $("#is_points").val(value);
+    }
         // Define routes and elements
         const routes = {
             getProducts: "{{ route('get_products') }}",
@@ -524,7 +530,6 @@
             discountInput: $("#discount"),
             discountSelect: $("#inputGroupSelect02"),
         };
-
         $(document).ready(function() {
         // WHEN CLICK ON YES RADIO BUTTON
         $(document).on("change", 'input[type="radio"][name="points"]', function() {
@@ -541,7 +546,6 @@
             updateGrandTotalWithShippingAndTax();
             }
         });
-
 
 
             //Get User Points
@@ -860,9 +864,9 @@
                                 <p class="text-center mt-0 mb-0">Points : ${data[0].remaining_user_point}</p>
                                 <br>
                                 <label>Do you want to use points?</label>
-                                <input type="radio" class="form-check-input" id="yes" name="points" value="1">
+                                <input type="radio" class="form-check-input" id="yes" name="points" value="1" onclick="IsYesOrNo(1)">
                                 <label for="yes">Yes</label>
-                                <input type="radio" class="form-check-input" id="no" name="points" value="0">
+                                <input type="radio" class="form-check-input" id="no" name="points" value="0" onclick="IsYesOrNo(0)">
                                 <label for="no">No</label>
                             `);
                             $("#customer_points").val(data[0].remaining_user_point);
@@ -1524,6 +1528,7 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 data: {
+                    is_points: $("#is_points").val(),          
                     date: $("#date").val(),
                     warehouse_id: $("#warehouse_id").val(),
                     client_id: $("#customer_id").val(),

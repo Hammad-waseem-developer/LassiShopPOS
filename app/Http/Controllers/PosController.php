@@ -111,17 +111,17 @@ class PosController extends Controller
 
 
             return view('sales.pos', [
-                'clients'            => $clients,
-                'units'              => $units,
-                'products'            => $products,
-                'payment_methods'    => $payment_methods,
-                'accounts'           => $accounts,
-                'warehouses'         => $warehouses,
-                'settings'           => $settings,
-                'default_warehouse'  => $default_warehouse,
-                'default_Client'     => $default_Client,
-                'totalRows'          => $totalRows,
-                'holdList'           => $holdList,
+                'clients' => $clients,
+                'units' => $units,
+                'products' => $products,
+                'payment_methods' => $payment_methods,
+                'accounts' => $accounts,
+                'warehouses' => $warehouses,
+                'settings' => $settings,
+                'default_warehouse' => $default_warehouse,
+                'default_Client' => $default_Client,
+                'totalRows' => $totalRows,
+                'holdList' => $holdList,
             ]);
         } else {
             return abort('403', __('You are not authorized'));
@@ -137,7 +137,42 @@ class PosController extends Controller
 
     public function CreatePOS(Request $request)
     {
-        // dd($request);
+        // dd($request->all());
+        $settings = Setting::where('deleted_at', '=', null)->first();
+        $client_id = $request->client_id;
+
+        if ($request->is_points == 1) {
+            $point = Point::where('user_id', $client_id)->first();
+            if ($point === null) {
+                $user_remaining_point = 0;
+            } else {
+                $user_remaining_point = $point->remaining_user_point;
+                $user_remaining_point -= $user_remaining_point;
+                $update_remaining = Point::where('user_id', $client_id)->update(['remaining_user_point' => $user_remaining_point]);
+            }
+        }
+
+        if ($settings->on_purchase == 1) {
+            $GrandTotal = $request->GrandTotal;
+            $on_purchase_point = $settings->on_purchase_point;
+            $on_purchase_value = $settings->on_purchase_value;
+            $pointsEarned = floor($GrandTotal / $on_purchase_value) * $on_purchase_point;
+
+            // Fetch current remaining points
+            $point = Point::where('user_id', $client_id)->first();
+            $user_remaining_point = ($point !== null) ? $point->remaining_user_point : 0;
+            $user_total_point = ($point !== null) ? $point->total_user_point : 0;
+
+            // Add pointsEarned to current remaining points
+            $user_remaining_point += $pointsEarned;
+            $user_total_point += $pointsEarned;
+
+
+            // Update remaining points in the database
+            Point::where('user_id', $client_id)->update(['remaining_user_point' => $user_remaining_point , 'total_user_point' => $user_total_point]);
+        }
+
+
         request()->validate([
             'client_id' => 'required',
             'warehouse_id' => 'required',
@@ -169,36 +204,11 @@ class PosController extends Controller
 
             $order->save();
 
-            // $data = $request['details'];
             $data = Session::get('cart');
             foreach ($data as $key => $value) {
                 //Order Details
 
                 $newProductDetails = NewProductDetail::where('new_product_id', $value['id'])->get();
-
-
-                // foreach ($newProductDetails as $newProductDetail) {
-
-                //     $unit = Unit::where('id', $newProductDetail->unit_id)->first();
-
-                //     $productWarehouse = product_warehouse::where('product_id', $newProductDetail->base_product_id)
-                //         ->where('warehouse_id', $request->warehouse_id)
-                //         ->first();
-
-                //     if ($unit && $productWarehouse) {
-                //         $quantityInBaseUnit = $newProductDetail->qty;
-
-                //         // Convert quantity to base product unit
-                //         if ($unit->name !== 'Units') {
-                //             $quantityInBaseUnit = $quantityInBaseUnit / $unit->operator_value;
-                //         }
-
-                //         // Update product warehouse quantity
-                //         $productWarehouse->qte -= $quantityInBaseUnit;
-                //         $productWarehouse->save();
-                //     }
-
-                // }
 
                 foreach ($newProductDetails as $newProductDetail) {
                     $unit = Unit::where('id', $newProductDetail->unit_id)->first();
@@ -226,19 +236,19 @@ class PosController extends Controller
                         $productWarehouse->save();
 
                         $productStockCheck = Product::where('id', $newProductDetail->base_product_id)->first();
-                        if($productStockCheck->stock_alert >= $productWarehouse->qte ){
+                        if ($productStockCheck->stock_alert >= $productWarehouse->qte) {
                             $notification = Notification::create([
-                                'messages' => 'Product ( '.$productStockCheck->name.' ) is low in stock, please restock.',
+                                'messages' => 'Product ( ' . $productStockCheck->name . ' ) is low in stock, please restock.',
                             ]);
-                            $user = User::where('id',1)->first();
-                                NotificationDetail::create([
-                                    'notification_id' => $notification->id,
-                                    'user_id' => $user->id,
-                                    'status' => 0,
-                                    'read_at' => null,
-                                    'created_at' => now(),
-                                    'updated_at' => now(),
-                                ]);
+                            $user = User::where('id', 1)->first();
+                            NotificationDetail::create([
+                                'notification_id' => $notification->id,
+                                'user_id' => $user->id,
+                                'status' => 0,
+                                'read_at' => null,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
                             event(new NotificationCreate($notification));
                         }
                     }
@@ -260,19 +270,19 @@ class PosController extends Controller
                     }
 
                     $orderDetails[] = [
-                        'date'               => $order->date,
-                        'sale_id'            => $order->id,
-                        'sale_unit_id'       => $product->unit_sale_id ? $product->unit_sale_id : NULL,
-                        'quantity'           => $value['quantity'],
-                        'product_id'         => $product->id,
+                        'date' => $order->date,
+                        'sale_id' => $order->id,
+                        'sale_unit_id' => $product->unit_sale_id ? $product->unit_sale_id : NULL,
+                        'quantity' => $value['quantity'],
+                        'product_id' => $product->id,
                         // 'product_variant_id' => $value['product_variant_id'] ? $value['product_variant_id'] : NULL,
-                        'total'              => $total,
-                        'price'              => $product->price,
-                        'TaxNet'             => $product->TaxNet,
-                        'tax_method'         => $product->tax_method,
-                        'discount'           => 0,
+                        'total' => $total,
+                        'price' => $product->price,
+                        'TaxNet' => $product->TaxNet,
+                        'tax_method' => $product->tax_method,
+                        'discount' => 0,
                         // 'discount_method'    => $value['discount_Method'],
-                        'imei_number'        => '',
+                        'imei_number' => '',
                     ];
                 }
             }
@@ -296,15 +306,15 @@ class PosController extends Controller
                 }
 
                 PaymentSale::create([
-                    'sale_id'    => $order->id,
+                    'sale_id' => $order->id,
                     'account_id' => $request->account_id ? $request->account_id : NULL,
-                    'Ref'        => $this->generate_random_code_payment(),
-                    'date'       => $request->date,
-                    'payment_method_id'  => $request->payment_method_id,
-                    'montant'    => $request->paying_amount,
-                    'change'     => 0,
-                    'notes'      => $request->payment_notes,
-                    'user_id'    => Auth::user()->id,
+                    'Ref' => $this->generate_random_code_payment(),
+                    'date' => $request->date,
+                    'payment_method_id' => $request->payment_method_id,
+                    'montant' => $request->paying_amount,
+                    'change' => 0,
+                    'notes' => $request->payment_notes,
+                    'user_id' => Auth::user()->id,
                 ]);
 
                 $account = Account::where('id', $request->account_id)->exists();
@@ -597,13 +607,13 @@ class PosController extends Controller
                 $item['name'] = $product_warehouse['product']->name;
                 $item['barcode'] = $product_warehouse['product']->code;
 
-                $product_price =  $product_warehouse['product']->price;
+                $product_price = $product_warehouse['product']->price;
             }
 
             $item['product_type'] = $product_warehouse['product']->type;
-            $item['id']           = $product_warehouse->product_id;
-            $item['qty_min']      = $product_warehouse['product']->type != 'is_service' ? $product_warehouse['product']->qty_min : '---';
-            $item['image']        = $product_warehouse['product']->image;
+            $item['id'] = $product_warehouse->product_id;
+            $item['qty_min'] = $product_warehouse['product']->type != 'is_service' ? $product_warehouse['product']->qty_min : '---';
+            $item['image'] = $product_warehouse['product']->image;
 
             //check if product has promotion
             $todaydate = date('Y-m-d');
@@ -615,7 +625,7 @@ class PosController extends Controller
             ) {
                 $price_init = $product_warehouse['product']->promo_price;
                 $item['is_promotion'] = 1;
-                $item['promo_percent'] =  round(100 * ($product_price - $price_init) / $product_price);
+                $item['promo_percent'] = round(100 * ($product_price - $price_init) / $product_price);
             } else {
                 $price_init = $product_price;
                 $item['is_promotion'] = 0;
@@ -794,24 +804,24 @@ class PosController extends Controller
                 ->where('deleted_at', '=', null)
                 ->findOrFail($id);
 
-            $item['id']                     = $sale->id;
-            $item['Ref']                    = $sale->Ref;
-            $item['date']                   = Carbon::parse($sale->date)->format('d-m-Y H:i');
+            $item['id'] = $sale->id;
+            $item['Ref'] = $sale->Ref;
+            $item['date'] = Carbon::parse($sale->date)->format('d-m-Y H:i');
 
             if ($sale->discount_type == 'fixed') {
-                $item['discount']           = $this->render_price_with_symbol_placement(number_format($sale->discount, 2, '.', ','));
+                $item['discount'] = $this->render_price_with_symbol_placement(number_format($sale->discount, 2, '.', ','));
             } else {
-                $item['discount']           = $this->render_price_with_symbol_placement(number_format($sale->discount_percent_total, 2, '.', ',')) . '(' . $sale->discount . ' ' . '%)';
+                $item['discount'] = $this->render_price_with_symbol_placement(number_format($sale->discount_percent_total, 2, '.', ',')) . '(' . $sale->discount . ' ' . '%)';
             }
 
-            $item['shipping']               = $this->render_price_with_symbol_placement(number_format($sale->shipping, 2, '.', ','));
-            $item['taxe']                   = $this->render_price_with_symbol_placement(number_format($sale->TaxNet, 2, '.', ','));
-            $item['tax_rate']               = $sale->tax_rate;
-            $item['client_name']            = $sale['client']->username;
-            $item['warehouse_name']         = $sale['warehouse']->name;
-            $item['GrandTotal']             = $this->render_price_with_symbol_placement(number_format($sale->GrandTotal, 2, '.', ','));
-            $item['paid_amount']            = $this->render_price_with_symbol_placement(number_format($sale->paid_amount, 2, '.', ','));
-            $item['due']                    = $this->render_price_with_symbol_placement(number_format($sale->GrandTotal - $sale->paid_amount, 2, '.', ','));
+            $item['shipping'] = $this->render_price_with_symbol_placement(number_format($sale->shipping, 2, '.', ','));
+            $item['taxe'] = $this->render_price_with_symbol_placement(number_format($sale->TaxNet, 2, '.', ','));
+            $item['tax_rate'] = $sale->tax_rate;
+            $item['client_name'] = $sale['client']->username;
+            $item['warehouse_name'] = $sale['warehouse']->name;
+            $item['GrandTotal'] = $this->render_price_with_symbol_placement(number_format($sale->GrandTotal, 2, '.', ','));
+            $item['paid_amount'] = $this->render_price_with_symbol_placement(number_format($sale->paid_amount, 2, '.', ','));
+            $item['due'] = $this->render_price_with_symbol_placement(number_format($sale->GrandTotal - $sale->paid_amount, 2, '.', ','));
             foreach ($sale['details'] as $detail) {
 
                 $unit = Unit::where('id', $detail->sale_unit_id)->first();
@@ -847,7 +857,7 @@ class PosController extends Controller
             foreach ($payments as $payment) {
 
                 $payment_data['Reglement'] = $payment->payment_method->title;
-                $payment_data['montant']   = $this->render_price_with_symbol_placement(number_format($payment->montant, 2, '.', ','));
+                $payment_data['montant'] = $this->render_price_with_symbol_placement(number_format($payment->montant, 2, '.', ','));
 
                 $payments_details[] = $payment_data;
             }
@@ -902,7 +912,7 @@ class PosController extends Controller
     public function getUserPoints(Request $request)
     {
         $points = Point::with('Clients')->where('user_id', $request->id)->get();
-        if($points == null){
+        if ($points == null) {
             $points = [];
         }
         return response()->json($points);
