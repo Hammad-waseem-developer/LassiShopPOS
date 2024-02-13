@@ -1,9 +1,7 @@
 <?php
 $path = Request::path();
 $parentPath = explode('/', $path)[0];
-$setting = DB::table('settings')
-    ->where('deleted_at', '=', null)
-    ->first();
+$setting = DB::table('settings')->where('deleted_at', '=', null)->first();
 ?>
 
 <!-- start sidebar -->
@@ -33,8 +31,7 @@ $setting = DB::table('settings')
             </li>
 
             {{-- User Management --}}
-            @if (auth()->user()->can('user_view') ||
-                    auth()->user()->can('group_permission'))
+            @if (auth()->user()->can('user_view') || auth()->user()->can('group_permission'))
                 <li>
                     <div @click="selectCollapse('user-management')"
                         :class="selected == 'user-management' ? 'collapse-active' : 'collapse-deactive'"
@@ -85,8 +82,7 @@ $setting = DB::table('settings')
                     <div x-ref="people" x-bind:style="activeCollapse($refs, 'people', selected)"
                         class="collapse-content">
                         <ul class="list-group">
-                            @if (auth()->user()->can('client_view_all') ||
-                                    auth()->user()->can('client_view_own'))
+                            @if (auth()->user()->can('client_view_all') || auth()->user()->can('client_view_own'))
                                 <li class="">
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/people/clients',
@@ -94,8 +90,7 @@ $setting = DB::table('settings')
                                     ])
                                 </li>
                             @endif
-                            @if (auth()->user()->can('suppliers_view_all') ||
-                                    auth()->user()->can('suppliers_view_own'))
+                            @if (auth()->user()->can('suppliers_view_all') || auth()->user()->can('suppliers_view_own'))
                                 <li class="">
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/people/suppliers',
@@ -107,7 +102,20 @@ $setting = DB::table('settings')
                     </div>
                 </li>
             @endif
-
+            {{-- Points  Customer --}}
+            <li class="">
+                {{-- <a href="{{ route('points.index') }}" class="nav-item"> --}}
+                <a href="{{ route('clients.points') }}" class="nav-item">
+                    <!-- Points SVG -->
+                    <svg class="width_16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8C14 11.3137 11.3137 14 8 14Z"
+                            fill="currentColor" />
+                        <circle cx="8" cy="8" r="4" fill="currentColor" />
+                    </svg>
+                    <span class="item-name">Customer Points</span> <!-- Display "Points" as the heading name -->
+                </a>
+            </li>
             {{-- HRM --}}
             @if (auth()->user()->can('hrm') || auth()->user()->id == 1)
                 <li>
@@ -166,9 +174,7 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('employee_view_all') ||
-                                    auth()->user()->id == 1 ||
-                                    auth()->user()->can('employee_view_own'))
+                            @if (auth()->user()->can('employee_view_all') || auth()->user()->id == 1 || auth()->user()->can('employee_view_own'))
                                 <li class="">
                                     <a href="{{ route('employee.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -176,9 +182,7 @@ $setting = DB::table('settings')
                                     </a>
                                 </li>
                             @endif
-                            @if (auth()->user()->can('attendance_view_all') ||
-                                    auth()->user()->id == 1 ||
-                                    auth()->user()->can('attendance_view_own'))
+                            @if (auth()->user()->can('attendance_view_all') || auth()->user()->id == 1 || auth()->user()->can('attendance_view_own'))
                                 <li class="">
                                     <a href="{{ route('attendance.index') }}" class="nav-item child-nav ">
                                         <span class="prefix rounded-circle"></span>
@@ -363,8 +367,7 @@ $setting = DB::table('settings')
                     <div x-ref="adjustment" x-bind:style="activeCollapse($refs, 'adjustment', selected)"
                         class="collapse-content">
                         <ul class="list-group">
-                            @if (auth()->user()->can('adjustment_view_all') ||
-                                    auth()->user()->can('adjustment_view_own'))
+                            @if (auth()->user()->can('adjustment_view_all') || auth()->user()->can('adjustment_view_own'))
                                 <li>
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/adjustment/adjustments',
@@ -401,8 +404,7 @@ $setting = DB::table('settings')
                     <div x-ref="transfer" x-bind:style="activeCollapse($refs, 'transfer', selected)"
                         class="collapse-content">
                         <ul class="list-group">
-                            @if (auth()->user()->can('transfer_view_all') ||
-                                    auth()->user()->can('transfer_view_own'))
+                            @if (auth()->user()->can('transfer_view_all') || auth()->user()->can('transfer_view_own'))
                                 <li>
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/transfer/transfers',
@@ -439,8 +441,7 @@ $setting = DB::table('settings')
                     <div x-ref="quotation" x-bind:style="activeCollapse($refs, 'quotation', selected)"
                         class="collapse-content">
                         <ul class="list-group">
-                            @if (auth()->user()->can('quotations_view_all') ||
-                                    auth()->user()->can('quotations_view_own'))
+                            @if (auth()->user()->can('quotations_view_all') || auth()->user()->can('quotations_view_own'))
                                 <li>
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/quotation/quotations',
@@ -477,8 +478,7 @@ $setting = DB::table('settings')
                     <div x-ref="purchase" x-bind:style="activeCollapse($refs, 'purchase', selected)"
                         class="collapse-content">
                         <ul class="list-group">
-                            @if (auth()->user()->can('purchases_view_all') ||
-                                    auth()->user()->can('purchases_view_own'))
+                            @if (auth()->user()->can('purchases_view_all') || auth()->user()->can('purchases_view_own'))
                                 <li>
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/purchase/purchases',
@@ -500,9 +500,7 @@ $setting = DB::table('settings')
             @endif
 
             {{-- Sales --}}
-            @if (auth()->user()->can('sales_view_all') ||
-                    auth()->user()->can('sales_view_own') ||
-                    auth()->user()->can('sales_add'))
+            @if (auth()->user()->can('sales_view_all') || auth()->user()->can('sales_view_own') || auth()->user()->can('sales_add'))
                 <li>
                     <div @click="selectCollapse('sale')"
                         :class="selected == 'sale' ? 'collapse-active' : 'collapse-deactive'" class="collapse-button">
@@ -514,8 +512,7 @@ $setting = DB::table('settings')
                     <div x-ref="sale" x-bind:style="activeCollapse($refs, 'sale', selected)"
                         class="collapse-content">
                         <ul class="list-group">
-                            @if (auth()->user()->can('sales_view_all') ||
-                                    auth()->user()->can('sales_view_own'))
+                            @if (auth()->user()->can('sales_view_all') || auth()->user()->can('sales_view_own'))
                                 <li>
                                     @include('components.sidebar.child-navitem', [
                                         'href' => '/sale/sales',
@@ -537,8 +534,7 @@ $setting = DB::table('settings')
             @endif
 
             {{-- Sales Return --}}
-            @if (auth()->user()->can('sale_returns_view_all') ||
-                    auth()->user()->can('sale_returns_view_own'))
+            @if (auth()->user()->can('sale_returns_view_all') || auth()->user()->can('sale_returns_view_own'))
                 <li class="">
                     <a href="/sales-return/returns_sale"
                         class="nav-item @if ($path == 'sales-return/returns_sale') active @endif">
@@ -549,8 +545,7 @@ $setting = DB::table('settings')
             @endif
 
             {{-- Purchase Return --}}
-            @if (auth()->user()->can('purchase_returns_view_all') ||
-                    auth()->user()->can('purchase_returns_view_own'))
+            @if (auth()->user()->can('purchase_returns_view_all') || auth()->user()->can('purchase_returns_view_own'))
                 <li class="">
                     <a href="/purchase-return/returns_purchase"
                         class="nav-item @if ($path == 'purchase-return/returns_purchase') active @endif">
@@ -632,19 +627,8 @@ $setting = DB::table('settings')
                 </li>
             @endif
 
-             {{-- Points --}}
-             <li class="">
-                 {{-- <a href="{{ route('points.index') }}" class="nav-item"> --}}
-                <a href="{{route('clients.points')}}" class="nav-item">
-                    <!-- Points SVG -->
-                    <svg class="width_16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8C14 11.3137 11.3137 14 8 14Z" fill="currentColor"/>
-                        <circle cx="8" cy="8" r="4" fill="currentColor"/>
-                    </svg>
-                    <span class="item-name">Points</span> <!-- Display "Points" as the heading name -->
-                </a>
-            </li>
-            
+
+
             {{-- Settings --}}
             @if (auth()->user()->can('settings') ||
                     auth()->user()->can('backup') ||
