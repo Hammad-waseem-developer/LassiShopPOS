@@ -184,6 +184,7 @@
                                             <div
                                                 class="summery-item mb-3 d-flex flex-column justify-content-between align-items-center">
                                                 <h4>Customer Points</h4>
+                                                <input type="hidden"  name="customer_points" id="customer_points">
                                                 <div id="customer-points-details">
                                                     {{-- Points Displayed Here Using Ajax --}}
                                                 </div>
@@ -525,6 +526,23 @@
         };
 
         $(document).ready(function() {
+        // WHEN CLICK ON YES RADIO BUTTON
+        $(document).on("change", 'input[type="radio"][name="points"]', function() {
+            if ($(this).val() === "1") {
+                var pointValue = {{$settings->ponit_value}};
+                var CustomerPoints = $("#customer_points").val()
+                TotalPointsValue = pointValue * CustomerPoints;
+                $("#discount").val(TotalPointsValue);
+                $(elements.discountSelect).val("fixed");
+                updateGrandTotalWithShippingAndTax();
+            }else{
+                // WHEN CLICK ON NO RADIO BUTTON
+            $("#discount").val(""); 
+            updateGrandTotalWithShippingAndTax();
+            }
+        });
+
+
 
             //Get User Points
             var client_id = $('#customer_id').val();
@@ -811,7 +829,6 @@
             // Get the customer id from the "customer_id" field and call the GetUserPoints function
             $("#customer_id").on("change", function() {
                 var id = $("#customer_id").val();
-                console.log($("#customer_id").val());
                 GetUserPoints(id);
             })
 
@@ -834,13 +851,21 @@
                             $("#customer-points-details").append(`
                                 <p class="text-center mt-2 mb-0"">Customer : N/A</p>
                                 <p class="text-center mt-0 mb-0">Points : N/A</p>
+                              
                             `);
                         } else {
                             $("#customer-points-details").empty();
                             $("#customer-points-details").append(`
                                 <p class="text-center mt-2 mb-0">Customer : ${data[0].clients.username}</p>
                                 <p class="text-center mt-0 mb-0">Points : ${data[0].remaining_user_point}</p>
+                                <br>
+                                <label>Do you want to use points?</label>
+                                <input type="radio" class="form-check-input" id="yes" name="points" value="1">
+                                <label for="yes">Yes</label>
+                                <input type="radio" class="form-check-input" id="no" name="points" value="0">
+                                <label for="no">No</label>
                             `);
+                            $("#customer_points").val(data[0].remaining_user_point);
                         }
                     },
 
@@ -1017,6 +1042,8 @@
                     const id = $(this).data("id");
                     deleteProductFromCart(id);
                     updateGrandTotalWithShippingAndTax();
+                    $("#GrandTotal").text(0);
+                    $("#paying_amount_badge").text("Grand Total: " + 0);
                 });
 
                 $("body").on("click", "#addQty", function() {
@@ -1161,7 +1188,6 @@
             }
 
             function addToCart(id, price, name, img_path) {
-                console.log("run");
                 // Add to cart
                 $.ajax({
                     url: routes.addToCart,
@@ -1204,7 +1230,13 @@
                     data: {
                         id
                     },
-                    success: updateCartBox
+                    success: function(response) {
+                        updateCartBox(response);
+                        data = null;
+                    },
+                    error: function(data) {
+                        console.log("Error:", data);
+                    }
                 });
             }
 
@@ -1338,18 +1370,25 @@
 
                 // Update grand total including shipping, tax, and product amounts
                 const newGrandTotal = productAmountAfterDiscount + shippingAmount + taxNet;
-
-                // Update cart box including shipping, tax, and product amounts
-                elements.cartItems.empty();
-                for (const detailId in data.cart) {
-                    if (data.cart.hasOwnProperty(detailId)) {
-                        const detail = data.cart[detailId];
-                        renderCartItem(detail);
+                if(data != null) {
+                    // Update cart box including shipping, tax, and product amounts
+                    elements.cartItems.empty();
+                    for (const detailId in data.cart) {
+                        if (data.cart.hasOwnProperty(detailId)) {
+                            const detail = data.cart[detailId];
+                            renderCartItem(detail);
+                        }
                     }
+                    // Update grand total with TaxNet without changing the previous calculation
+                    updateGrandTotal(newGrandTotal, taxNet);
                 }
 
-                // Update grand total with TaxNet without changing the previous calculation
-                updateGrandTotal(newGrandTotal, taxNet);
+                if(data == null) {
+                    $("#GrandTotal").text("0");
+                    $("#paying_amount_badge").text("Grand Total: " + 0);
+                }
+                
+
             }
 
 
@@ -1467,6 +1506,15 @@
         $("#save_pos").click(function(e) {
             $("#form_Update_Detail").modal("hide");
             e.preventDefault();
+
+            var GrandTotalAmount = parseFloat($("#GrandTotal").text());
+            var paying_amount = parseFloat($("#paying_amount").val());
+            if (GrandTotalAmount > paying_amount) {
+                toastr.warning("Paying amount cannot be greater than Grand Total");
+                $("#paying_amount").val(GrandTotalAmount);
+                $("#paying_amount").focus();
+                return false;
+            }
             $.ajax({
                 url: "{{ url('pos/create_pos') }}",
                 type: "POST",
@@ -1510,7 +1558,6 @@
             })
         });
     </script>
-
 </body>
 
 </html>
