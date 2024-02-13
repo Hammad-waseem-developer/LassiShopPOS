@@ -395,7 +395,10 @@ if ($installed === false) {
                 Route::post('/product-ingredients', 'PosProductController@product_ingredients')->name('pos-product.product_ingredients');
             });
 
-
+            //------------------------------------Points Routes---------------------------------\\
+             Route::get('clients/points', 'PointController@points')->name('clients.points');
+             Route::get('clients/getPoints', 'PointController@getPoints')->name('clients.getPoints');
+            
             //------------------------------- users & permissions --------------------------\\
             Route::prefix('user-management')->group(function () {
                 Route::resource('users', 'UserController');
