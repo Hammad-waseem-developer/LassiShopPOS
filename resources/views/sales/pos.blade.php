@@ -180,15 +180,21 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mt-4">
-                                                    <label for="is_points" class="m-0 p-0"
-                                                        style="cursor: pointer; font-size:10px;">Use Points for
-                                                        Discount?</label>
-                                                    <input type="hidden" name="discountAmount" id="discountAmount">
-                                                    <input type="checkbox" name="is_points" id="is_points"
-                                                        class="m-0 p-0">
+
                                                 </div>
 
-
+                                                <div
+                                                    class="row d-flex justify-content-center align-items-center m-0 p-0">
+                                                    <div class="col-md-12 mt-4">
+                                                        <label for="is_points" class="m-0 p-0"
+                                                            style="cursor: pointer; font-size:12px;">Use Points for
+                                                            Discount?</label>
+                                                        <input type="hidden" name="discountAmount"
+                                                            id="discountAmount">
+                                                        <input type="checkbox" name="is_points" id="is_points"
+                                                            class="m-0 p-0">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4 position-relative" style="position: relative;">
@@ -210,9 +216,6 @@
                                                             <td>
                                                                 <input type="hidden" name="customer_points"
                                                                     id="customer_points">
-                                                                <div id="customer-points-content">
-                                                                    {{-- Points Displayed Here Using Ajax --}}
-                                                                </div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -902,10 +905,10 @@
                         if (!data || data.length === 0 || !data[0].clients) {
                             $("#customer-points-details").empty();
                             $("#customer-points-details").append(`
-                            <tr>
-                                <td style="font-size: 10px;">N/A</td>
-                                <td style="font-size: 10px;">N/A</td>
-                                <td style="font-size: 10px;">N/A</td>
+                            <tr class="text-center">
+                                <td style="font-size: 10px; text-align-center !important;">N/A</td>
+                                <td style="font-size: 10px; text-align-center !important;">N/A</td>
+                                <td style="font-size: 10px; text-align-center !important;">N/A</td>
                             </tr>                              
                             `);
                         } else {
@@ -913,7 +916,7 @@
                             UserPointsValue = UserPointsValue.toFixed(2);
                             $("#customer-points-details").empty();
                             $("#customer-points-details").append(`
-                            <tr>
+                            <tr class="text-center">
                                 <td style="font-size: 10px;">${data[0].clients.username}</td>
                                 <td style="font-size: 10px;">${data[0].remaining_user_point}</td>
                                 <td style="font-size: 10px;" id="customer_points_for_show"> ${UserPointsValue}</td>
