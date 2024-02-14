@@ -162,33 +162,61 @@
                                                 </div>
                                             </div>
 
-                                            <div class="summery-item mb-3 row">
-                                                <span
-                                                    class="title mr-2 col-lg-12 col-sm-12">{{ __('translate.Discount') }}</span>
-                                                <div class="col-lg-8 col-sm-12 summery-item-discount">
-
-                                                    <input type="text" class="no-focus form-control pos-discount"
-                                                        id="discount" />
-                                                    <span class="error"></span>
-                                                    <select class="input-group-text discount-select-type"
-                                                        id="inputGroupSelect02">
-                                                        <option value="fixed">{{ $currency }}</option>
-                                                        <option value="percent">%</option>
-                                                    </select>
-                                                    <input type="hidden" name="discountAmount" id="discountAmount">
+                                            <div
+                                                class="summery-item mb-3 row d-flex justify-content-center align-items-center">
+                                                <div class="col-md-8">
+                                                    <span
+                                                        class="title mr-2 col-lg-12 col-sm-12">{{ __('translate.Discount') }}</span>
+                                                    <div class="col-lg-12 col-sm-12 summery-item-discount">
+                                                        <input type="text"
+                                                            class="no-focus form-control pos-discount"
+                                                            id="discount" />
+                                                        <span class="error"></span>
+                                                        <select class="input-group-text discount-select-type"
+                                                            id="inputGroupSelect02">
+                                                            <option value="fixed">{{ $currency }}</option>
+                                                            <option value="percent">%</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
+                                                <div class="col-md-4 mt-4">
+                                                    <label for="is_points" class="m-0 p-0"
+                                                        style="cursor: pointer; font-size:10px;">Use Points for
+                                                        Discount?</label>
+                                                    <input type="hidden" name="discountAmount" id="discountAmount">
+                                                    <input type="checkbox" name="is_points" id="is_points"
+                                                        class="m-0 p-0">
+                                                </div>
+
+
                                             </div>
                                         </div>
-
-                                        <div class="col-md-4">
-                                            <div
-                                                class="summery-item mb-3 d-flex flex-column justify-content-between align-items-center">
-                                                <h4>Customer Points</h4>
-                                                <input type="hidden"  name="customer_points" id="customer_points">
-                                                <input type="hidden"  name="is_points" id="is_points">
-                                                <div id="customer-points-details">
-                                                    {{-- Points Displayed Here Using Ajax --}}
-                                                </div>
+                                        <div class="col-md-4 position-relative" style="position: relative;">
+                                            <div class="position-absolute"
+                                                style="position: absolute; bottom: 0; right: 0;">
+                                                <p class="text-center mt-2 mb-0">Customer Points</p>
+                                                <table class="table table-bordered table-sm"
+                                                    style="text-align: right;">
+                                                    <!-- Added inline style to align content to the right -->
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="font-size: 12px;">Name</th>
+                                                            <th style="font-size: 12px;">Points</th>
+                                                            <th style="font-size: 12px;">{{ $currency }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="customer-points-details">
+                                                        <tr>
+                                                            <td>
+                                                                <input type="hidden" name="customer_points"
+                                                                    id="customer_points">
+                                                                <div id="customer-points-content">
+                                                                    {{-- Points Displayed Here Using Ajax --}}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
 
@@ -507,12 +535,8 @@
         var data;
         var grandTotal = 0;
         var currentPage = 1;
-
-// IsYesOrNo() fucntion
-    function IsYesOrNo(value){
-        // console.log(value);
-        $("#is_points").val(value);
-    }
+        var pointsValue = {{ $settings->ponit_value }};
+        var UserPointsValue = 0;
         // Define routes and elements
         const routes = {
             getProducts: "{{ route('get_products') }}",
@@ -531,21 +555,56 @@
             discountSelect: $("#inputGroupSelect02"),
         };
         $(document).ready(function() {
-        // WHEN CLICK ON YES RADIO BUTTON
-        $(document).on("change", 'input[type="radio"][name="points"]', function() {
-            if ($(this).val() === "1") {
-                var pointValue = {{$settings->ponit_value}};
-                var CustomerPoints = $("#customer_points").val()
-                TotalPointsValue = pointValue * CustomerPoints;
-                $("#discount").val(TotalPointsValue);
-                $(elements.discountSelect).val("fixed");
-                updateGrandTotalWithShippingAndTax();
-            }else{
-                // WHEN CLICK ON NO RADIO BUTTON
-            $("#discount").val(""); 
-            updateGrandTotalWithShippingAndTax();
-            }
-        });
+
+            $("#is_points").on("change", function() {
+                var value = this.value = this.checked ? 1 : 0
+                $("#is_points").val(value);
+                if (value == 1) {
+                    $("#inputGroupSelect02 option[value='percent']").remove();
+                    $("#discount").val(0);
+                    $("#inputGroupSelect02").val("fixed");
+                    updateGrandTotalWithShippingAndTax();
+                }
+                if (value == 0) {
+                    $("#discount").val(0);
+                    $("#customer_points_for_show").text(UserPointsValue);
+                    if ($("#inputGroupSelect02 option[value='percent']").length == 0) {
+                        $("#inputGroupSelect02").append('<option value="percent">%</option>');
+                    }
+                    updateGrandTotalWithShippingAndTax();
+                }
+            });
+
+            // Discount Input Value Check For Points
+            $('#discount').on('input', function() {
+                if ($("#is_points").is(':checked')) {
+                    // var userPoints = parseFloat($('#customer_points_for_show').text());
+                    var userPoints = parseFloat($('#customer_points1').val());
+                    var discountValue = parseFloat($('#discount').val());
+                    if (discountValue > userPoints) {
+                        toastr.warning("Discount cannot be greater than Points!");
+                        $("#discount").val(0);
+                        updateGrandTotalWithShippingAndTax();
+                    }
+                }
+            });
+
+
+            // WHEN CLICK ON YES RADIO BUTTON
+            $(document).on("change", 'input[type="radio"][name="points"]', function() {
+                if ($(this).val() === "1") {
+                    var pointValue = {{ $settings->ponit_value }};
+                    var CustomerPoints = $("#customer_points").val()
+                    TotalPointsValue = pointValue * CustomerPoints;
+                    $("#discount").val(TotalPointsValue);
+                    $(elements.discountSelect).val("fixed");
+                    updateGrandTotalWithShippingAndTax();
+                } else {
+                    // WHEN CLICK ON NO RADIO BUTTON
+                    $("#discount").val("");
+                    updateGrandTotalWithShippingAndTax();
+                }
+            });
 
 
             //Get User Points
@@ -787,7 +846,6 @@
                         const categoryId = $(".category-item.CategorySelected").data(
                             "id"); // Get the selected category ID
                         ProductByCategory(categoryId, warehouseId, "Warehouse");
-                        // data.data.holdProducts.forEach(element => {
                         $.ajax({
                             url: routes.addToCartWithQuantity,
                             type: "POST",
@@ -796,14 +854,6 @@
                             headers: {
                                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
                             },
-                            // data: {
-                            //     id: element.product_id,
-                            //     price: element.price,
-                            //     name: element.name,
-                            //     img_path: element.img_path,
-                            //     warehouse_id: $("#warehouse_id").val(),
-                            //     quantity: element.quantity
-                            // },
                             data: {
                                 products: data.data.holdProducts,
                                 warehouse_id: $("#warehouse_id").val()
@@ -813,7 +863,6 @@
                                     toastr.error('Out of stock');
                                 } else {
                                     updateCartBox(response);
-                                    // console.log("Add success" , response);
                                 }
                             },
                             error: function(data) {
@@ -853,21 +902,23 @@
                         if (!data || data.length === 0 || !data[0].clients) {
                             $("#customer-points-details").empty();
                             $("#customer-points-details").append(`
-                                <p class="text-center mt-2 mb-0"">Customer : N/A</p>
-                                <p class="text-center mt-0 mb-0">Points : N/A</p>
-                              
+                            <tr>
+                                <td style="font-size: 10px;">N/A</td>
+                                <td style="font-size: 10px;">N/A</td>
+                                <td style="font-size: 10px;">N/A</td>
+                            </tr>                              
                             `);
                         } else {
+                            UserPointsValue = data[0].remaining_user_point * pointsValue;
+                            UserPointsValue = UserPointsValue.toFixed(2);
                             $("#customer-points-details").empty();
                             $("#customer-points-details").append(`
-                                <p class="text-center mt-2 mb-0">Customer : ${data[0].clients.username}</p>
-                                <p class="text-center mt-0 mb-0">Points : ${data[0].remaining_user_point}</p>
-                                <br>
-                                <label>Do you want to use points?</label>
-                                <input type="radio" class="form-check-input" id="yes" name="points" value="1" onclick="IsYesOrNo(1)">
-                                <label for="yes">Yes</label>
-                                <input type="radio" class="form-check-input" id="no" name="points" value="0" onclick="IsYesOrNo(0)">
-                                <label for="no">No</label>
+                            <tr>
+                                <td style="font-size: 10px;">${data[0].clients.username}</td>
+                                <td style="font-size: 10px;">${data[0].remaining_user_point}</td>
+                                <td style="font-size: 10px;" id="customer_points_for_show"> ${UserPointsValue}</td>
+                            </tr>
+                                <input type="hidden" id="customer_points1" value="${UserPointsValue}">
                             `);
                             $("#customer_points").val(data[0].remaining_user_point);
                         }
@@ -1374,7 +1425,7 @@
 
                 // Update grand total including shipping, tax, and product amounts
                 const newGrandTotal = productAmountAfterDiscount + shippingAmount + taxNet;
-                if(data != null) {
+                if (data != null) {
                     // Update cart box including shipping, tax, and product amounts
                     elements.cartItems.empty();
                     for (const detailId in data.cart) {
@@ -1387,17 +1438,23 @@
                     updateGrandTotal(newGrandTotal, taxNet);
                 }
 
-                if(data == null) {
+                if (data == null) {
                     $("#GrandTotal").text("0");
                     $("#paying_amount_badge").text("Grand Total: " + 0);
                 }
-                
+
 
             }
 
 
 
             function calculateDiscountAmount(total, type, value) {
+                if ($('#is_points').val() == 1) {
+                    var UserPointsValue = $("#customer_points1").val();
+                    UserPointsValue -= value;
+                    $("#customer_points_for_show").text(UserPointsValue.toFixed(2));
+                }
+                // Calculate discount amount based on type (fixed or percentage)
                 if (type === "percent") {
                     return (total * value) / 100;
                 } else if (type === "fixed") {
@@ -1528,7 +1585,7 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 data: {
-                    is_points: $("#is_points").val(),          
+                    is_points: $("#is_points").val(),
                     date: $("#date").val(),
                     warehouse_id: $("#warehouse_id").val(),
                     client_id: $("#customer_id").val(),
@@ -1600,5 +1657,9 @@
 
     .autocomplete-result-list li:hover {
         background-color: #f2f2f2;
+    }
+
+    .discount-select-type {
+        width: 125px !important;
     }
 </style>

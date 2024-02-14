@@ -142,14 +142,16 @@ class PosController extends Controller
         $client_id = $request->client_id;
 
         if ($request->is_points == 1) {
-            $point = Point::where('user_id', $client_id)->first();
-            if ($point === null) {
-                $user_remaining_point = 0;
-            } else {
-                $user_remaining_point = $point->remaining_user_point;
-                $user_remaining_point -= $user_remaining_point;
-                $update_remaining = Point::where('user_id', $client_id)->update(['remaining_user_point' => $user_remaining_point]);
-            }
+            $userPoints = Point::where('user_id', $client_id)->first();
+
+            $pointsValue  = $settings->ponit_value;
+            $discountInDarhum = $request->discount;
+
+            $points = $discountInDarhum * $pointsValue;
+            
+            $points = $userPoints->remaining_user_point -= $points;
+
+            $update_remaining = Point::where('user_id', $client_id)->update(['remaining_user_point' => $points]);
         }
 
         if ($settings->on_purchase == 1) {
@@ -162,11 +164,12 @@ class PosController extends Controller
             $point = Point::where('user_id', $client_id)->first();
             $user_remaining_point = ($point !== null) ? $point->remaining_user_point : 0;
             $user_total_point = ($point !== null) ? $point->total_user_point : 0;
-
+            
             // Add pointsEarned to current remaining points
             $user_remaining_point += $pointsEarned;
             $user_total_point += $pointsEarned;
-
+            
+            // dd($user_total_point);
 
             // Update remaining points in the database
             Point::where('user_id', $client_id)->update(['remaining_user_point' => $user_remaining_point , 'total_user_point' => $user_total_point]);
