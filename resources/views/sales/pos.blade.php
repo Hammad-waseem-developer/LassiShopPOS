@@ -374,7 +374,7 @@
                                         </svg>
                                         <h4 class="text-center my-3">Hold Invoice ? Same Reference will replace the old
                                             list if exist!!</h4>
-                                        <input type="text" id="reference-number" class="form-control"
+                                        <input type="text" id="reference-number" required class="form-control"
                                             placeholder="Enter Reference Number">
                                     </div>
                                     <div class="modal-footer d-flex justify-content-center">
