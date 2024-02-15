@@ -15,13 +15,13 @@ class HoldOrdersController extends Controller
     {
         // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'warehouse_id' => 'required',
-            'client_id' => 'required',
-            'reference_number' => 'required',
-            'shipping' => 'required',
-            'orderTax' => 'required',
-            'discount' => 'required',
-            'discountType' => 'required',
+            // 'warehouse_id' => 'required',
+            // 'client_id' => 'required',
+            // 'reference_number' => 'required',
+            // 'shipping' => 'required',
+            // 'orderTax' => 'required',
+            // 'discount' => 'required',
+            // 'discountType' => 'required',
             'hold_products.*' => 'required',
         ]);
         if ($validator->fails()) {
