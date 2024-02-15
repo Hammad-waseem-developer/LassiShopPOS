@@ -804,6 +804,12 @@
                             $("#discount").val("");
                             $("#GrandTotal").text("");
                             $("#discountType").val("");
+                            $("#warehouse_id").attr("disabled", false);
+                            $("#warehouse_id").css("cursor", "pointer");
+                            if ($("#inputGroupSelect02 option[value='percent']").length == 0) {
+                                $("#inputGroupSelect02").append(
+                                    '<option value="percent">%</option>');
+                            }
                             elements.cartItems.html("");
                             $("#cart-items").append(`
                             <div class="container mt-4">
