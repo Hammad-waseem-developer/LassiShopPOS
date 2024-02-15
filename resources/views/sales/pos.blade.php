@@ -1116,10 +1116,6 @@
                     updateGrandTotalWithShippingAndTax();
                     $("#GrandTotal").text(0);
                     $("#paying_amount_badge").text("Grand Total: " + 0);
-                    if (data == null) {
-                        $("#warehouse_id").attr("disabled", false);
-                        $("#warehouse_id").css("cursor", "pointer");
-                    }
                 });
 
                 $("body").on("click", "#addQty", function() {
@@ -1210,8 +1206,8 @@
 
                 for (let i = 1; i <= totalPages; i++) {
                     paginationContainer.append(`
-            <button class="btn btn-outline-primary btn-sm mx-1 pagination-link ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>
-        `);
+                <button class="btn btn-outline-primary btn-sm mx-1 pagination-link ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>
+            `);
                 }
 
                 paginationContainer.append(nextButton);
@@ -1307,6 +1303,10 @@
                         id
                     },
                     success: function(response) {
+                        if (response.cart.length == 0) {
+                            $("#warehouse_id").attr("disabled", false);
+                            $("#warehouse_id").css("cursor", "pointer");
+                        }
                         updateCartBox(response);
                         data = null;
                     },
@@ -1578,66 +1578,83 @@
                     }
                 });
             }
-        });
 
-        $("#PayNow").click(function(e) {
-            $("#form_Update_Detail").modal("show");
-            e.preventDefault();
-        });
+            $("#PayNow").click(function(e) {
+                $("#form_Update_Detail").modal("show");
+                e.preventDefault();
+            });
 
-        $("#save_pos").click(function(e) {
-            $("#form_Update_Detail").modal("hide");
-            e.preventDefault();
+            $("#save_pos").click(function(e) {
+                $("#form_Update_Detail").modal("hide");
+                e.preventDefault();
 
-            var GrandTotalAmount = parseFloat($("#GrandTotal").text());
-            var paying_amount = parseFloat($("#paying_amount").val());
-            if (GrandTotalAmount > paying_amount) {
-                toastr.warning("Paying amount cannot be greater than Grand Total");
-                $("#paying_amount").val(GrandTotalAmount);
-                $("#paying_amount").focus();
-                return false;
-            }
-            $.ajax({
-                url: "{{ url('pos/create_pos') }}",
-                type: "POST",
-                token: "{{ csrf_token() }}",
-                dataType: "json",
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                data: {
-                    is_points: $("#is_points").val(),
-                    date: $("#date").val(),
-                    warehouse_id: $("#warehouse_id").val(),
-                    client_id: $("#customer_id").val(),
-                    tax_rate: $("#orderTax").val(),
-                    TaxNet: $("#TaxNet").text(),
-                    discount: $("#discount").val(),
-                    discount_type: $("#inputGroupSelect02").val(),
-                    discount_percent_total: $("#discountAmount").text(),
-                    shipping: $("#shipping").val(),
-                    GrandTotal: $("#GrandTotal").text(),
-                    notes: $("#note").val(),
-                    paying_amount: $("#paying_amount").val(),
-                    payment_method_id: $("#payment_method_id").val(),
-                    account_id: $("#account_id").val(),
-                    sale_note: $("#sale_note").val(),
-                },
-                success: function(data) {
-                    if (data.success) {
-                        $("#form_Update_Detail").modal("hide");
-                        $("#form_Update_Detail").trigger("reset");
-                        toastr.success(data.message);
-                        window.open("{{ url('invoice_pos') }}/" + data.id, "_blank");
-                        window.location.reload();
-                    } else {
-                        toastr.error(data.message);
-                    }
-                },
-                error: function(data) {
-                    console.log(data);
+                var GrandTotalAmount = parseFloat($("#GrandTotal").text());
+                var paying_amount = parseFloat($("#paying_amount").val());
+                if (GrandTotalAmount > paying_amount) {
+                    toastr.warning("Paying amount cannot be greater than Grand Total");
+                    $("#paying_amount").val(GrandTotalAmount);
+                    $("#paying_amount").focus();
+                    return false;
                 }
-            })
+                $.ajax({
+                    url: "{{ url('pos/create_pos') }}",
+                    type: "POST",
+                    token: "{{ csrf_token() }}",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    data: {
+                        is_points: $("#is_points").val(),
+                        date: $("#date").val(),
+                        warehouse_id: $("#warehouse_id").val(),
+                        client_id: $("#customer_id").val(),
+                        tax_rate: $("#orderTax").val(),
+                        TaxNet: $("#TaxNet").text(),
+                        discount: $("#discount").val(),
+                        discount_type: $("#inputGroupSelect02").val(),
+                        discount_percent_total: $("#discountAmount").text(),
+                        shipping: $("#shipping").val(),
+                        GrandTotal: $("#GrandTotal").text(),
+                        notes: $("#note").val(),
+                        paying_amount: $("#paying_amount").val(),
+                        payment_method_id: $("#payment_method_id").val(),
+                        account_id: $("#account_id").val(),
+                        sale_note: $("#sale_note").val(),
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            $("#form_Update_Detail").modal("hide");
+                            $("#form_Update_Detail").trigger("reset");
+                            toastr.success(data.message);
+
+                            //Reset Page
+                            FlushCart();
+                            $("#customer_id").val('{{ $settings->client_id }}');
+                            GetUserPoints({{ $settings->client_id }});
+                            $("#is_points").prop('checked', false);
+                            $("#warehouse_id").attr("disabled", false);
+                            $("#warehouse_id").css("cursor", "pointer");
+                            $("#shipping").val('');
+                            $("#discount").val('');
+                            $("#orderTax").val('');
+                            $("#GrandTotal").text('');
+                            if ($("#inputGroupSelect02 option[value='percent']").length == 0) {
+                                $("#inputGroupSelect02").append(
+                                    '<option value="percent">%</option>');
+                            }
+
+                            window.open("{{ url('invoice_pos') }}/" + data.id, "_blank");
+                            // window.location.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+            });
         });
     </script>
 </body>
