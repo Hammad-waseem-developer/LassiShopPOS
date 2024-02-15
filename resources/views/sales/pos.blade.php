@@ -594,20 +594,20 @@
 
 
             // WHEN CLICK ON YES RADIO BUTTON
-            $(document).on("change", 'input[type="radio"][name="points"]', function() {
-                if ($(this).val() === "1") {
-                    var pointValue = {{ $settings->ponit_value }};
-                    var CustomerPoints = $("#customer_points").val()
-                    TotalPointsValue = pointValue * CustomerPoints;
-                    $("#discount").val(TotalPointsValue);
-                    $(elements.discountSelect).val("fixed");
-                    updateGrandTotalWithShippingAndTax();
-                } else {
-                    // WHEN CLICK ON NO RADIO BUTTON
-                    $("#discount").val("");
-                    updateGrandTotalWithShippingAndTax();
-                }
-            });
+            // $(document).on("change", 'input[type="radio"][name="points"]', function() {
+            //     if ($(this).val() === "1") {
+            //         var pointValue = {{ $settings->ponit_value }};
+            //         var CustomerPoints = $("#customer_points").val()
+            //         TotalPointsValue = pointValue * CustomerPoints;
+            //         $("#discount").val(TotalPointsValue);
+            //         $(elements.discountSelect).val("fixed");
+            //         updateGrandTotalWithShippingAndTax();
+            //     } else {
+            //         // WHEN CLICK ON NO RADIO BUTTON
+            //         $("#discount").val("");
+            //         updateGrandTotalWithShippingAndTax();
+            //     }
+            // });
 
 
             //Get User Points
@@ -759,6 +759,8 @@
             $("body").on("click", "#holdOrder", function() {
                 var reference_number = $('#reference-number').val();
                 var warehouse_id = $('#warehouse_id').val();
+                var client_id = $('#customer_id').val();
+                var is_points = $('#is_points').val();
                 var shipping = $('#shipping').val();
                 var orderTax = $('#orderTax').val();
                 var discount = $('#discount').val();
@@ -776,23 +778,27 @@
                     data: {
                         reference_number,
                         warehouse_id,
+                        client_id,
+                        is_points,
                         shipping,
                         orderTax,
                         discount,
                         discountType,
                         hold_products
                     },
-                    success: function(data) {
-                        if (data.message === 'success') {
+                    success: function(data1) {
+                        data = null;
+                        if (data1.message === 'success') {
                             toastr.success("Order Hold Successfully");
                             $("#exampleModal").modal("hide");
                             GetHoldList();
                             $("#shipping").val("");
+                            $("#customer_id").val("{{ $settings->client_id }}");
+                            $("#is_points").val("");
                             $("#orderTax").val("");
                             $("#discount").val("");
                             $("#GrandTotal").text("");
                             $("#discountType").val("");
-                            data.cart = null;
                             elements.cartItems.html("");
                             $("#cart-items").append(`
                             <div class="container mt-4">
@@ -802,8 +808,8 @@
                             </div>
                             `);
                         }
-                        if (data.message === 'error') {
-                            var errors = data.data;
+                        if (data1.message === 'error') {
+                            var errors = data1.data;
 
                             // Display each error message using Toastr
                             for (var key in errors) {
@@ -816,7 +822,7 @@
                             }
                         }
                     },
-                    error: function(data) {
+                    error: function(data1) {
                         toastr.error(data.error);
                         $("#exampleModal").modal("hide");
                     }
@@ -825,7 +831,6 @@
 
             $("body").on("click", "#editHold", function() {
                 var HoldId = $(this).data("id");
-
                 $.ajax({
                     url: "{{ route('edit_hold_order') }}",
                     type: "POST",
@@ -838,11 +843,19 @@
                         id: HoldId
                     },
                     success: function(data) {
+                        if (data.data.holdOrder.is_points == 1) {
+                            $("#is_points").prop('checked', true);
+                        }
+                        if (data.data.holdOrder.is_points == 0) {
+                            $("#is_points").prop('checked', false);
+                        }
                         $("#shipping").val(data.data.holdOrder.shipping);
                         $("#orderTax").val(data.data.holdOrder.orderTax);
                         $("#discount").val(data.data.holdOrder.discount);
                         $(elements.discountSelect).val(data.data.holdOrder.discountType);
                         $("#warehouse_id").val(data.data.holdOrder.warehouse_id);
+                        $("#customer_id").val(data.data.holdOrder.client_id);
+                        GetUserPoints(data.data.holdOrder.client_id);
                         $("#reference-number").val(data.data.holdOrder.reference_no);
                         const warehouseId = data.data.holdOrder.warehouse_id;
                         warehouse_id = warehouseId;
@@ -872,8 +885,6 @@
                                 console.log("Error:", data);
                             }
                         });
-
-                        // })
                     },
                     error: function(data) {
                         console.log(data);
@@ -1615,7 +1626,6 @@
                     } else {
                         toastr.error(data.message);
                     }
-                    console.log(data);
                 },
                 error: function(data) {
                     console.log(data);

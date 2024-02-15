@@ -12,6 +12,7 @@ class HoldOrder extends Model
     protected $table = 'hold_orders';
     protected $fillable = [
         'warehouse_id',
+        'client_id',
         'reference_no',
         'shipping',
         'orderTax',

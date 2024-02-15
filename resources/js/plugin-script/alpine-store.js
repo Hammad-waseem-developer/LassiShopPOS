@@ -24,4 +24,4 @@ document.addEventListener("alpine:init", () => {
       }
    });
 });
-console.log('I am from alpine js store');
+// console.log('I am from alpine js store');

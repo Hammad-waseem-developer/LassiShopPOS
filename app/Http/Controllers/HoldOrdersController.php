@@ -16,6 +16,8 @@ class HoldOrdersController extends Controller
         // dd($request->all());
         $validator = Validator::make($request->all(), [
             'warehouse_id' => 'required',
+            'client_id' => 'required',
+            'is_points' => 'required',
             'reference_number' => 'required',
             'shipping' => 'required',
             'orderTax' => 'required',
@@ -35,6 +37,8 @@ class HoldOrdersController extends Controller
         }
         $holdOrder = new HoldOrder();
         $holdOrder->warehouse_id = $request->warehouse_id;
+        $holdOrder->client_id = $request->client_id;
+        $holdOrder->is_points = $request->is_points;
         $holdOrder->reference_no = $request->reference_number;
         $holdOrder->shipping = $request->shipping;
         $holdOrder->orderTax = $request->orderTax;

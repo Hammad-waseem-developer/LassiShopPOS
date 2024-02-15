@@ -33,7 +33,7 @@ document.addEventListener("alpine:init", function () {
     }
   });
 });
-console.log('I am from alpine js store');
+// console.log('I am from alpine js store');
 
 /***/ })
 
