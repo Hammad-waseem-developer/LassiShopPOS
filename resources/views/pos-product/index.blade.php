@@ -22,14 +22,29 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                <div class="text-end mb-3">
-                    @can('products_add')
-                        <a href="{{ route('pos-product.create') }}" class=" btn btn-outline-primary btn-md m-1"><i
-                                class="i-Add me-2 font-weight-bold"></i>
-                            {{ __('translate.Create') }}</a>
-                            <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder" ><i
-                                class="i-Add me-2 font-weight-bold"></i>Print</button>
-                    @endcan
+                <div class="d-flex align-items-center justify-content-between text-end mb-3 mt-2">
+                    <div class="form-group d-flex align-items-start justify-content-center flex-column">
+                        <label for="warehouse_id">{{ __('translate.Warehouse') }}</label>
+                        <select class="form-select" style="width: 150px!important" name="warehouse_id"
+                            id="warehouse_id">
+                            <option selected disabled>Select Warehouse</option>
+                            @foreach ($warehouses as $warehouse)
+                                <option value="{{ $warehouse->id }}"
+                                    {{ $warehouse->id == $settings->warehouse_id ? 'selected' : '' }}>
+                                    {{ $warehouse->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="div">
+                        @can('products_add')
+                            <a href="{{ route('pos-product.create') }}" class=" btn btn-outline-primary btn-md m-1"><i
+                                    class="i-Add me-2 font-weight-bold"></i>
+                                {{ __('translate.Create') }}</a>
+                            <button id="printButton" class="btn btn-outline-success ms-3 fw-bolder"><i
+                                    class="i-Add me-2 font-weight-bold"></i>Print</button>
+                        @endcan
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -120,12 +135,19 @@
 
     $(document).ready(function() {
 
-        getData();
+        getData($("#warehouse_id").val());
 
-        function getData() {
+        function getData(id) {
             $.ajax({
                 type: "GET",
                 url: "{{ route('pos-product.getPosProducts') }}",
+                dataType: "json",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                data: {
+                    id: id
+                },
                 success: function(response) {
                     $("#table_body").empty();
                     $('#dataTable').DataTable().destroy();
@@ -184,40 +206,45 @@
             });
         }
 
-        $("#deleteBtn").click(function() {
-        var id = $("#deleteDepartmentId").val();
-        $.ajax({
-            type: "DELETE",
-            url: "{{ route('pos-product.delete') }}",
-            data: {
-                id: id,
-            },
-            dataType: "json",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                $("#deleteModal").modal("hide");
-                $("#deleteDepartmentId").val("");
-                $("#cancelBtn").click();
-                getData();
-                toastr.success(response.message);
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-                // Handle errors and display them on the same page
-                toastr.error('Something went wrong. Please try again later.');
+        $("#warehouse_id").on('change', function() {
+            var id = $("#warehouse_id").val();
+            getData(id);
+        });
 
-            }
+        $("#deleteBtn").click(function() {
+            var id = $("#deleteDepartmentId").val();
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('pos-product.delete') }}",
+                data: {
+                    id: id,
+                },
+                dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $("#deleteModal").modal("hide");
+                    $("#deleteDepartmentId").val("");
+                    $("#cancelBtn").click();
+                    getData();
+                    toastr.success(response.message);
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    // Handle errors and display them on the same page
+                    toastr.error('Something went wrong. Please try again later.');
+
+                }
+            })
         })
-    })
 
     });
 </script>
 
 {{-- print --}}
 <script>
-  document.getElementById("printButton").addEventListener("click", function() {
+    document.getElementById("printButton").addEventListener("click", function() {
         var table = document.getElementById("dataTable");
         if (table) {
             // Clone the table
@@ -225,13 +252,15 @@
 
             // Exclude the "image" column
             Array.from(tableClone.rows).forEach(function(row) {
-            row.deleteCell(5); // Remove the first column
-            row.deleteCell(1); // Remove the second column
-        });
-            
+                row.deleteCell(5); // Remove the first column
+                row.deleteCell(1); // Remove the second column
+            });
+
             var newWin = window.open('', 'Print-Window');
             newWin.document.open();
-            newWin.document.write('<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' + tableClone.outerHTML + '</body></html>');
+            newWin.document.write(
+                '<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"></head><body>' +
+                tableClone.outerHTML + '</body></html>');
             newWin.document.close();
             setTimeout(function() {
                 newWin.print();
@@ -240,5 +269,4 @@
         }
     });
 </script>
-
 @endsection

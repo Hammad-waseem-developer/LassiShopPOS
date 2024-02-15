@@ -69,18 +69,10 @@
                                 </ul>
                             </div>
                         </div>
-                        {{-- <button class="btn btn-light p-3 rounded-circle ms-3">
-                            @include('components.icons.full-screen', ['class' => 'width_20'])
-                        </button> --}}
                         <div style="position: relative;">
                             <span id="hold-order-count"
                                 style="user-select: none; position: absolute; top: -8px; right: -8px; background-color: rgb(252, 51, 51); color: white; border-radius: 50%; padding-left: 6px; padding-right: 6px;"></span>
                             <button class="btn btn-primary btn-sm ms-3" id="show-hold-order">
-                                {{-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-list" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                            </svg> --}}
                                 Hold Orders
                             </button>
                         </div>
@@ -1026,9 +1018,11 @@
             $("#warehouse_id").on("change", function() {
                 const warehouseId = $(this).val();
                 warehouse_id = warehouseId;
-                const categoryId = $(".category-item.CategorySelected").data(
-                    "id"); // Get the selected category ID
+                const categoryId = $(".category-item.CategorySelected").data("id");
+                console.log(categoryId, warehouseId);
                 ProductByCategory(categoryId, warehouseId, "Warehouse");
+                selectedWarehouse = warehouseId;
+                data = null;
             });
 
             // Handle click events on autocomplete results
@@ -1114,8 +1108,6 @@
                     } = $(this).data();
                     addToCart(id, price, name, img_path);
                     playClickSound();
-                    // $("#warehouse_id").attr("disabled", true);
-                    // $("#warehouse_id").css("cursor", "not-allowed");
                 });
 
                 $("body").on("click", "#DeleteProduct", function() {
@@ -1124,6 +1116,10 @@
                     updateGrandTotalWithShippingAndTax();
                     $("#GrandTotal").text(0);
                     $("#paying_amount_badge").text("Grand Total: " + 0);
+                    if (data == null) {
+                        $("#warehouse_id").attr("disabled", false);
+                        $("#warehouse_id").css("cursor", "pointer");
+                    }
                 });
 
                 $("body").on("click", "#addQty", function() {

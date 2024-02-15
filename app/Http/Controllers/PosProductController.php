@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Warehouse;
 use App\Models\NewProduct;
@@ -19,12 +20,13 @@ class PosProductController extends Controller
 {
     public function index()
     {
-        return view('pos-product.index');
+        $warehouses = Warehouse::all();
+        return view('pos-product.index', compact('warehouses'));
     }
 
-    public function getPosProducts()
+    public function getPosProducts(Request $request)
     {
-        $products = NewProduct::with('category')->get();
+        $products = NewProduct::with('category')->where('warehouse_id', $request->id)->with('Product_Deatils')->get();
         return response()->json($products);
     }
 
@@ -41,7 +43,7 @@ class PosProductController extends Controller
     {
         // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255|unique:new_products',
+            'name' => 'required|max:255',
             'category' => 'required',
             'warehouse' => 'required',
             'price' => 'required|min:1',
