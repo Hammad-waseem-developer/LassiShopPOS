@@ -270,6 +270,14 @@ class ClientController extends Controller
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ]);
+            }else{
+                Point::create([
+                    'user_id' => $client->id,
+                    'total_user_point' => 0,
+                    'remaining_user_point' => 0,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
             }
 
             return response()->json(['success' => true]);

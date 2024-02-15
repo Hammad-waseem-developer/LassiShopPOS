@@ -298,7 +298,7 @@
                                                         <span class="field_required">*</span></label>
                                                     <select name="payment_method_id" id="payment_method_id"
                                                         class="form-control">
-                                                        <option value="">Select Payment</option>
+                                                        <option selected disabled>Select Payment</option>
                                                         @foreach ($payment_methods as $payment_method)
                                                             <option value="{{ $payment_method->id }}">
                                                                 {{ $payment_method->title }}
@@ -1609,12 +1609,12 @@
                         date: $("#date").val(),
                         warehouse_id: $("#warehouse_id").val(),
                         client_id: $("#customer_id").val(),
-                        tax_rate: $("#orderTax").val(),
+                        tax_rate: ($("#orderTax").val() !== '') ? $("#orderTax").val() : 0,
                         TaxNet: $("#TaxNet").text(),
-                        discount: $("#discount").val(),
+                        discount: ($("#discount").val() !== '') ? $("#discount").val() : 0,
                         discount_type: $("#inputGroupSelect02").val(),
                         discount_percent_total: $("#discountAmount").text(),
-                        shipping: $("#shipping").val(),
+                        shipping: ($("#shipping").val() !== '') ? $("#shipping").val() : 0,
                         GrandTotal: $("#GrandTotal").text(),
                         notes: $("#note").val(),
                         paying_amount: $("#paying_amount").val(),
@@ -1649,8 +1649,12 @@
                         } else {
                             toastr.error(data.message);
                         }
+                        if(data.message === "The given data was invalid"){
+                            toastr.error(data.errors);
+                        }
                     },
                     error: function(data) {
+                        toastr.error(data.error);
                         console.log(data);
                     }
                 })

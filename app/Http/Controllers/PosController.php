@@ -42,6 +42,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
 
 class PosController extends Controller
@@ -138,48 +139,14 @@ class PosController extends Controller
     public function CreatePOS(Request $request)
     {
         // dd($request->all());
-        $settings = Setting::where('deleted_at', '=', null)->first();
-        $client_id = $request->client_id;
-
-        if ($request->is_points == 1) {
-            $userPoints = Point::where('user_id', $client_id)->first();
-
-            $pointsValue  = $settings->ponit_value;
-            $discountInDarhum = $request->discount;
-
-            $points = $discountInDarhum * $pointsValue;
-            
-            $points = $userPoints->remaining_user_point -= $points;
-
-            $update_remaining = Point::where('user_id', $client_id)->update(['remaining_user_point' => $points]);
-        }
-
-        if ($settings->on_purchase == 1) {
-            $GrandTotal = $request->GrandTotal;
-            $on_purchase_point = $settings->on_purchase_point;
-            $on_purchase_value = $settings->on_purchase_value;
-            $pointsEarned = floor($GrandTotal / $on_purchase_value) * $on_purchase_point;
-
-            // Fetch current remaining points
-            $point = Point::where('user_id', $client_id)->first();
-            $user_remaining_point = ($point !== null) ? $point->remaining_user_point : 0;
-            $user_total_point = ($point !== null) ? $point->total_user_point : 0;
-            
-            // Add pointsEarned to current remaining points
-            $user_remaining_point += $pointsEarned;
-            $user_total_point += $pointsEarned;
-            
-            // dd($user_total_point);
-
-            // Update remaining points in the database
-            Point::where('user_id', $client_id)->update(['remaining_user_point' => $user_remaining_point , 'total_user_point' => $user_total_point]);
-        }
-
-
-        request()->validate([
+        $validator = Validator::make($request->all(), [
             'client_id' => 'required',
             'warehouse_id' => 'required',
+            'payment_method_id' => 'required',
         ]);
+        if($validator->fails()){
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->first()]);
+        }
         if (Session::get('cart') == null) {
             return response()->json(['status' => 'error', 'message' => 'Please add some items!']);
         }
@@ -345,6 +312,45 @@ class PosController extends Controller
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ]);
+            }
+
+            //Points Work
+
+            $settings = Setting::where('deleted_at', '=', null)->first();
+            $client_id = $request->client_id;
+
+            if ($request->is_points == 1) {
+                $userPoints = Point::where('user_id', $client_id)->first();
+
+                $pointsValue  = $settings->on_purchase_point;
+                $discountInDarhum = $request->discount;
+
+                $points = $discountInDarhum * $pointsValue;
+
+                $points = $userPoints->remaining_user_point -= $points;
+
+                $update_remaining = Point::where('user_id', $client_id)->update(['remaining_user_point' => $points]);
+            }
+
+            if ($settings->on_purchase == 1) {
+                $GrandTotal = $request->GrandTotal;
+                $on_purchase_point = $settings->on_purchase_point;
+                $on_purchase_value = $settings->on_purchase_value;
+                $pointsEarned = floor($GrandTotal / $on_purchase_value) * $on_purchase_point;
+
+                // Fetch current remaining points
+                $point = Point::where('user_id', $client_id)->first();
+                $user_remaining_point = ($point !== null) ? $point->remaining_user_point : 0;
+                $user_total_point = ($point !== null) ? $point->total_user_point : 0;
+
+                // Add pointsEarned to current remaining points
+                $user_remaining_point += $pointsEarned;
+                $user_total_point += $pointsEarned;
+
+                // dd($user_total_point);
+
+                // Update remaining points in the database
+                Point::where('user_id', $client_id)->update(['remaining_user_point' => $user_remaining_point, 'total_user_point' => $user_total_point]);
             }
 
             return $order->id;
