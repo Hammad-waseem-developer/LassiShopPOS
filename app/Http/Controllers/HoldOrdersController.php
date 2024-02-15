@@ -17,7 +17,6 @@ class HoldOrdersController extends Controller
         $validator = Validator::make($request->all(), [
             'warehouse_id' => 'required',
             'client_id' => 'required',
-            'is_points' => 'required',
             'reference_number' => 'required',
             'shipping' => 'required',
             'orderTax' => 'required',

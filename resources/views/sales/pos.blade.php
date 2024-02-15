@@ -792,9 +792,10 @@
                             toastr.success("Order Hold Successfully");
                             $("#exampleModal").modal("hide");
                             GetHoldList();
+                            GetUserPoints({{ $settings->client_id }});
                             $("#shipping").val("");
                             $("#customer_id").val("{{ $settings->client_id }}");
-                            $("#is_points").val("");
+                            $("#is_points").prop('checked', false);
                             $("#orderTax").val("");
                             $("#discount").val("");
                             $("#GrandTotal").text("");
