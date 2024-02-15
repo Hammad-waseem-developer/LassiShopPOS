@@ -559,6 +559,8 @@
         };
         $(document).ready(function() {
 
+            data = null;
+
             $("#is_points").on("change", function() {
                 var value = this.value = this.checked ? 1 : 0
                 $("#is_points").val(value);
@@ -592,24 +594,6 @@
                 }
             });
 
-
-            // WHEN CLICK ON YES RADIO BUTTON
-            // $(document).on("change", 'input[type="radio"][name="points"]', function() {
-            //     if ($(this).val() === "1") {
-            //         var pointValue = {{ $settings->ponit_value }};
-            //         var CustomerPoints = $("#customer_points").val()
-            //         TotalPointsValue = pointValue * CustomerPoints;
-            //         $("#discount").val(TotalPointsValue);
-            //         $(elements.discountSelect).val("fixed");
-            //         updateGrandTotalWithShippingAndTax();
-            //     } else {
-            //         // WHEN CLICK ON NO RADIO BUTTON
-            //         $("#discount").val("");
-            //         updateGrandTotalWithShippingAndTax();
-            //     }
-            // });
-
-
             //Get User Points
             var client_id = $('#customer_id').val();
             GetUserPoints(client_id);
@@ -626,7 +610,18 @@
                 $("#discountType").val('');
                 $("#discountInput").val('');
                 $("#discountAmount").val('');
+                $("#customer_id").val('{{ $settings->client_id }}');
+                $("#warehouse_id").val('{{ $settings->warehouse_id }}');
+                GetUserPoints({{ $settings->client_id }});
+                $("#is_points").prop('checked', false);
+                $("#warehouse_id").attr("disabled", false);
+                $("#warehouse_id").css("cursor", "pointer");
+                if ($("#inputGroupSelect02 option[value='percent']").length == 0) {
+                    $("#inputGroupSelect02").append('<option value="percent">%</option>');
+                }
+
                 $("#exampleModal1").modal("hide");
+
 
                 toastr.success("Cart Reset Successfully");
             });
@@ -653,6 +648,7 @@
                         console.log(responseData);
                     }
                 })
+                data = null;
             }
 
             $('body').on('click', '#ResetPos', function() {
@@ -755,8 +751,16 @@
                 }
             });
 
+            $("#holdOrder").prop("disabled", true);
+            $("#reference-number").on("keyup", function() {
+                if ($(this).val() !== "") {
+                    $("#holdOrder").prop("disabled", false);
+                } else {
+                    $("#holdOrder").prop("disabled", true);
+                }
+            });
 
-            $("body").on("click", "#holdOrder", function() {
+            $("body").on("click", "#holdOrder", function(e) {
                 var reference_number = $('#reference-number').val();
                 var warehouse_id = $('#warehouse_id').val();
                 var client_id = $('#customer_id').val();
