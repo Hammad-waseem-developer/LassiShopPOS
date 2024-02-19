@@ -8,7 +8,7 @@ $setting = DB::table('settings')->where('deleted_at', '=', null)->first();
 <div x-data="{ isCompact: false }" :class="isCompact ? 'compact' : ''" class="sidebar-content bg-gray-900 card rounded-0">
     <div class="sidebar-header mb-5 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img class="app-logo me-2" width="100" src="{{ asset('images/' . $setting->logo) }}" alt="">
+           <a href="{{ url('/') }}"> <img class="app-logo me-2" width="100" src="{{ asset('images/' . $setting->logo) }}" alt=""></a>
         </div>
         <button @click="isCompact = !isCompact"
             class="compact-button btn border border-gray-600 d-none d-lg-flex align-items-center p-1 width_24">
