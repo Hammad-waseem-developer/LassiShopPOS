@@ -333,7 +333,7 @@
                                                 <!-- Sale note -->
                                                 <div class="form-group col-md-6">
                                                     <label>Sale Note <span class="field_required">*</span></label>
-                                                    <textarea class="form-control" name="note" id="note" cols="30" rows="10"></textarea>
+                                                    <textarea class="form-control sale_note" name="note" id="note" cols="30" rows="10"></textarea>
                                                     <span class="error"></span>
                                                 </div>
 
@@ -1638,7 +1638,13 @@
                             $("#shipping").val('');
                             $("#discount").val('');
                             $("#orderTax").val('');
+                            $("#payment_method_id").val('');
                             $("#GrandTotal").text('');
+                            $("#note").val('');
+                            $(".sale_note").val('');
+                            $("#paying_amount").val('');
+                            $("#paying_amount_badge").text('Grand Total:');
+
                             if ($("#inputGroupSelect02 option[value='percent']").length == 0) {
                                 $("#inputGroupSelect02").append(
                                     '<option value="percent">%</option>');

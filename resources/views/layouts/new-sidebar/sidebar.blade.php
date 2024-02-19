@@ -103,6 +103,7 @@ $setting = DB::table('settings')->where('deleted_at', '=', null)->first();
                 </li>
             @endif
             {{-- Points  Customer --}}
+            @if (auth()->user()->can('client_view_all'))
             <li class="">
                 {{-- <a href="{{ route('points.index') }}" class="nav-item"> --}}
                 <a href="{{ route('clients.points') }}" class="nav-item">
@@ -116,6 +117,7 @@ $setting = DB::table('settings')->where('deleted_at', '=', null)->first();
                     <span class="item-name">Customer Points</span> <!-- Display "Points" as the heading name -->
                 </a>
             </li>
+            @endif
             {{-- HRM --}}
             @if (auth()->user()->can('hrm') || auth()->user()->id == 1)
                 <li>
