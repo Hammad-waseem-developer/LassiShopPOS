@@ -406,6 +406,14 @@
                                                                 class="checkmark"></span>
                                                         </label>
                                                     </div>
+                                                    <div class="form-check form-check-inline w-100">
+                                                        <label class="checkbox checkbox-primary" for="view-orderList">
+                                                            <input type="checkbox" name="permissions[]"
+                                                                id="view-orderList"
+                                                                value="view-orderList"><span>View Order List</span><span
+                                                                class="checkmark"></span>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

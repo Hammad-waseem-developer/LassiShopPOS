@@ -59,7 +59,7 @@
                 {{ __('translate.POS') }}
             </a>
         @endcan
-        @can('pos')
+        @can('view-orderList')
             <a href="{{ route('OrderListShow') }}" class="btn btn-outline-success ms-3 fw-bolder">
                 Order List
             </a>
