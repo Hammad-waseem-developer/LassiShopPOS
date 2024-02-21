@@ -172,7 +172,7 @@
                             // Convert status to text and use a badge
                             var statusText = '';
                             var badgeClass = '';
-                            switch (data) {
+                            switch (parseInt(data)) {
                                 case 1:
                                     statusText = 'Approved';
                                     badgeClass = 'badge-success';

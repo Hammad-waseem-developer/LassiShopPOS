@@ -197,7 +197,7 @@
         })
 
         getData();
-
+       
         function getData() {
             $('#client_list_table').DataTable().destroy();
             var editRoute = '{{ route('leaveRequest.edit', ['id' => ':id']) }}';
@@ -214,6 +214,7 @@
                             // Concatenate first name and last name
                             var fullName = full.employee.first_name + ' ' + full.employee
                                 .last_name;
+                                console.log('3ff3',data);
 
                             // Use a badge to display the concatenated name
                             return '<span class="">' + fullName + '</span>';
@@ -240,7 +241,7 @@
                             // Convert status to text and use a badge
                             var statusText = '';
                             var badgeClass = '';
-                            switch (data) {
+                            switch (parseInt(data)) {
                                 case 1:
                                     statusText = 'Approved';
                                     badgeClass = 'badge-success';
