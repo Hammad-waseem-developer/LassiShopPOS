@@ -848,10 +848,16 @@
                     success: function(data) {
                         if (data.data.holdOrder.is_points == 1) {
                             $("#is_points").prop('checked', true);
+                            $("#inputGroupSelect02 option[value='percent']").remove();
                         }
                         if (data.data.holdOrder.is_points == 0) {
                             $("#is_points").prop('checked', false);
+                            if ($("#inputGroupSelect02 option[value='percent']").length == 0) {
+                                $("#inputGroupSelect02").append(
+                                    '<option value="percent">%</option>');
+                            }
                         }
+
                         $("#shipping").val(data.data.holdOrder.shipping);
                         $("#orderTax").val(data.data.holdOrder.orderTax);
                         $("#discount").val(data.data.holdOrder.discount);
@@ -1655,7 +1661,7 @@
                         } else {
                             toastr.error(data.message);
                         }
-                        if(data.message === "The given data was invalid"){
+                        if (data.message === "The given data was invalid") {
                             toastr.error(data.errors);
                         }
                     },
