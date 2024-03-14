@@ -107,6 +107,12 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    {{-- <input type="search" class="form-control" id="customerSearch" name="customer_id" />
+                                    <ul class="customer-list">
+                                        <li>
+                                            
+                                        </li>
+                                    </ul> --}}
                                     <button class="btn btn-primary btn-sm" id="addCustomer">Add</button>
                                 </div>
 
@@ -363,181 +369,185 @@
                                     </div>
                                     <div class="modal-body">
                                         <form id="client_form">
-                                        <div class="row">                         
-                                            <div class="form-group col-md-4">
-                                                <label for="username">{{ __('translate.FullName') }} <span
-                                                        class="field_required">*</span></label>
-                                                <input type="text" class="form-control" name="username" id="username" placeholder="{{ __('translate.FullName') }}">                                            
-                                                <span class="error">  </span>
-                                            </div>
-                                           
-                                            <div class="form-group col-md-4">
-                                                <label for="Phone">{{ __('translate.Phone') }}</label>
-                                                <input type="text"  class="form-control" id="Phone" name="phone"
-                                                    placeholder="{{ __('translate.Enter_Phone') }}">
-                                                <span class="error">  </span>
-                                            </div>
-    
-                                            <div class="form-group col-md-4">
-                                                <label for="city">{{ __('translate.City') }}</label>
-                                                <input type="text"  class="form-control" id="city" name="city" 
-                                                    placeholder="{{ __('translate.Enter_City') }}">
-                                                <span class="error" >  </span>
-                                            </div>
-    
-                                            <div class="form-group col-md-4">
-                                                <label for="email">{{ __('translate.Email') }}</label>
-                                                <input type="text" class="form-control" id="email"
-                                                    id="email" placeholder="{{ __('translate.Enter_email_address') }}">
-                                                <span class="error" > </span>
-                                            </div>
-    
-                                            <div class="form-group col-md-4">
-                                                <label for="photo">{{ __('translate.Image') }}</label>
-                                                <input name="photo"  type="file" class="form-control"
-                                                    id="photo">
-                                                <span class="error">  </span>
-                                            </div>
-    
-                                            <div class="form-group col-md-8">
-                                                <label for="address">{{ __('translate.Address') }}</label>
-                                                <textarea  class="form-control" name="address"
-                                                    id="address"
-                                                    placeholder="{{ __('translate.Address') }}"></textarea>
-                                            </div>
-    
-                                        </div>
-                                    
-                                        <div class="row mt-3">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="username">{{ __('translate.FullName') }} <span
+                                                            class="field_required">*</span></label>
+                                                    <input type="text" class="form-control" name="username"
+                                                        id="username" placeholder="{{ __('translate.FullName') }}">
+                                                    <span class="error"> </span>
+                                                </div>
 
-                                            <div class="col-md-6">
-                                                <button type="button" class="btn btn-primary" :disabled="SubmitProcessing" id="save_client">
-                                                    <span  class="spinner-border spinner-border-sm"
-                                                        role="status" aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
-                                                    {{ __('translate.Submit') }}
-                                                </button>
-                                            
+                                                <div class="form-group col-md-4">
+                                                    <label for="Phone">{{ __('translate.Phone') }}</label>
+                                                    <input type="text" class="form-control" id="Phone"
+                                                        name="phone"
+                                                        placeholder="{{ __('translate.Enter_Phone') }}">
+                                                    <span class="error"> </span>
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+                                                    <label for="city">{{ __('translate.City') }}</label>
+                                                    <input type="text" class="form-control" id="city"
+                                                        name="city"
+                                                        placeholder="{{ __('translate.Enter_City') }}">
+                                                    <span class="error"> </span>
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+                                                    <label for="email">{{ __('translate.Email') }}</label>
+                                                    <input type="text" class="form-control" id="email"
+                                                        id="email"
+                                                        placeholder="{{ __('translate.Enter_email_address') }}">
+                                                    <span class="error"> </span>
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+                                                    <label for="photo">{{ __('translate.Image') }}</label>
+                                                    <input name="photo" type="file" class="form-control"
+                                                        id="photo">
+                                                    <span class="error"> </span>
+                                                </div>
+
+                                                <div class="form-group col-md-8">
+                                                    <label for="address">{{ __('translate.Address') }}</label>
+                                                    <textarea class="form-control" name="address" id="address" placeholder="{{ __('translate.Address') }}"></textarea>
+                                                </div>
+
                                             </div>
+
+                                            <div class="row mt-3">
+
+                                                <div class="col-md-6">
+                                                    <button type="button" class="btn btn-primary"
+                                                        :disabled="SubmitProcessing" id="save_client">
+                                                        <span class="spinner-border spinner-border-sm" role="status"
+                                                            aria-hidden="true"></span> <i
+                                                            class="i-Yes me-2 font-weight-bold"></i>
+                                                        {{ __('translate.Submit') }}
+                                                    </button>
+
+                                                </div>
                                         </form>
-                                        </div>
-
-
                                     </div>
-                                </div>
-                            </div>
-                        </div>
 
-
-                        <!-- Hold Modal -->
-                        <div class="modal fade" style="overflow-y: hidden!important" id="exampleModal"
-                            tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-sm">
-                                <div class="modal-content">
-
-                                    <div class="modal-body text-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70"
-                                            class="text-warning" fill="currentColor"
-                                            class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                                        </svg>
-                                        <h4 class="text-center my-3">Hold Invoice ? Same Reference will replace the old
-                                            list if exist!!</h4>
-                                        <input type="text" id="reference-number" required class="form-control"
-                                            placeholder="Enter Reference Number">
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-center">
-                                        <button type="button" class="btn btn-danger"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" id="holdOrder">Save
-                                            changes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Show Hold Orders Modal -->
-                        <div class="modal fade" id="Show_Hold" tabindex="-1" aria-labelledby="Show_HoldModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="Show_HoldModalLabel">Hold list</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Reference</th>
-                                                    <th scope="col">Date</th>
-                                                    <th scope="col">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="hold_list">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Reset Modal -->
-                        <div class="modal fade" style="overflow-y: hidden!important" id="exampleModal1"
-                            tabindex="-1" aria-labelledby="exampleModal1Label" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-sm">
-                                <div class="modal-content text-center p-3">
-
-                                    <div class="modal-body text-center">
-                                        <i class="fa-solid fa-arrow-rotate-right text-danger fa-5x"></i>
-                                        <h4 class="text-center my-3">Are you sure you want to reset Products ?</h4>
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-center">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">No</button>
-                                        <button type="button" class="btn btn-danger" id="resetBtn">Yes
-                                            Reset</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-3">
-                            <div class="row">
-                                <div class="col-12 col-lg-8">
-                                    <div class="row" id="products-box">
-
-                                        <div class="d-flex justify-content-center">
-                                        </div>
-
-                                    </div>
-                                    <!-- Add this container for pagination links -->
-                                    <div id="pagination-container"
-                                        class="mt-4 d-flex justify-content-center align-items-center mb-5">
-                                        <h4>Pagination</h4>
-                                        <!-- Pagination links will be inserted here -->
-                                    </div>
-                                </div>
-
-                                <div class="d-md-block col-12 col-lg-4">
-                                    <div class="card category-card">
-                                        <div class="category-head">
-                                            <h5 class="fw-semibold m-0">{{ __('translate.All_Category') }}</h5>
-                                        </div>
-                                        <ul class="p-0" id="CategoryUl">
-                                            {{-- Category Print Here Using Ajax --}}
-                                        </ul>
-                                    </div>
 
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
+
+
+                    <!-- Hold Modal -->
+                    <div class="modal fade" style="overflow-y: hidden!important" id="exampleModal" tabindex="-1"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-body text-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70"
+                                        class="text-warning" fill="currentColor"
+                                        class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                    </svg>
+                                    <h4 class="text-center my-3">Hold Invoice ? Same Reference will replace the old
+                                        list if exist!!</h4>
+                                    <input type="text" id="reference-number" required class="form-control"
+                                        placeholder="Enter Reference Number">
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-danger"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="holdOrder">Save
+                                        changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Show Hold Orders Modal -->
+                    <div class="modal fade" id="Show_Hold" tabindex="-1" aria-labelledby="Show_HoldModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Show_HoldModalLabel">Hold list</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Reference</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="hold_list">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reset Modal -->
+                    <div class="modal fade" style="overflow-y: hidden!important" id="exampleModal1" tabindex="-1"
+                        aria-labelledby="exampleModal1Label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                            <div class="modal-content text-center p-3">
+
+                                <div class="modal-body text-center">
+                                    <i class="fa-solid fa-arrow-rotate-right text-danger fa-5x"></i>
+                                    <h4 class="text-center my-3">Are you sure you want to reset Products ?</h4>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">No</button>
+                                    <button type="button" class="btn btn-danger" id="resetBtn">Yes
+                                        Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-3">
+                        <div class="row">
+                            <div class="col-12 col-lg-8">
+                                <div class="row" id="products-box">
+
+                                    <div class="d-flex justify-content-center">
+                                    </div>
+
+                                </div>
+                                <!-- Add this container for pagination links -->
+                                <div id="pagination-container"
+                                    class="mt-4 d-flex justify-content-center align-items-center mb-5">
+                                    <h4>Pagination</h4>
+                                    <!-- Pagination links will be inserted here -->
+                                </div>
+                            </div>
+
+                            <div class="d-md-block col-12 col-lg-4">
+                                <div class="card category-card">
+                                    <div class="category-head">
+                                        <h5 class="fw-semibold m-0">{{ __('translate.All_Category') }}</h5>
+                                    </div>
+                                    <ul class="p-0" id="CategoryUl">
+                                        {{-- Category Print Here Using Ajax --}}
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
             </div>
+            </section>
         </div>
+    </div>
     </div>
     <audio id="clickSound" src="{{ asset('assets/audio/Beep.wav') }}"></audio>
 
@@ -1754,44 +1764,65 @@
                 e.preventDefault();
             });
 
-            // $("#Client_Add").click(function(e) {
-
-            // });
- 
+// Post Customer 
             $('#save_client').click(function() {
-            var formData = new FormData($('#client_form')[0]);
-            $.ajax({
-                type: 'POST',
-                url: '{{ route("customeradd") }}',
-                headers: {
+                var formData = new FormData($('#client_form')[0]);
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('customeradd') }}',
+                    headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.success) {
-                        $('#Client_Add').modal('hide'); 
-                        toastr.success('{{ __('translate.Created_in_successfully') }}');       
-                        $('#client_form').trigger('reset');
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            $('#Client_Add').modal('hide');
+                            toastr.success('{{ __('translate.Created_in_successfully') }}');
+                            $('#client_form').trigger('reset');
 
-                    } else {
-                        // Handle errors
-                        toastr.success('Failed to add client. Please try again.');
+                        } else {
+                            // Handle errors
+                            toastr.success('Failed to add client. Please try again.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('An error occurred. Please try again.');
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    alert('An error occurred. Please try again.');
-                }
+                });
             });
+
+            // Search cuistomer
+            // document.getElementById("customerSearch").addEventListener("keyup", myFunction);
+
+            // function myFunction() {
+            //     $.ajax({
+            //         type: "GET",
+            //         url: "{{ route('searchCustomer') }}",
+            //         data: {
+            //             keyword: $("#customerSearch").val(),
+            //         },
+            //         success: function(data) {
+            //             data.forEach(function(customer) {
+            //                 console.log(customer)
+            //                 const ulList = document.querySelector('.customer-list') 
+            //                  ulList.innerHTML = '<li class="list-group-item">' + customer
+            //                     .username + '</li>';
+            //             });
+
+            //         },
+            //         error: function(data) {
+            //             console.log(data);
+            //         },
+
+
+            //     })
+            // }
+
+
         });
-            
-        });
-
-
-
-        
     </script>
 </body>
 

@@ -285,4 +285,14 @@ class PosProductController extends Controller
         return abort('403', __('You are not authorized'));
 
     }
+
+    public function searchCustomer(Request $request)
+    {
+        $search = $request->input('keyword');
+        $customers = Client::where('username', 'like', '%' . $search . '%')
+                           ->orWhere('phone', 'like', '%' . $search . '%')
+                           ->get();
+        return response()->json($customers);
+    }
+    
 }

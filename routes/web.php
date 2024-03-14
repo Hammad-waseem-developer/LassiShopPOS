@@ -397,6 +397,7 @@ if ($installed === false) {
             });
 
             Route::post('customeradd', 'PosProductController@addCustomer')->name('customeradd');
+            Route::get('searchcustomer', 'PosProductController@searchCustomer')->name('searchCustomer');
 
             //------------------------------------Points Routes---------------------------------\\
              Route::get('clients/points', 'PointController@points')->name('clients.points');
