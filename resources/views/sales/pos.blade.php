@@ -96,7 +96,7 @@
                                     </select>
                                 </div>
 
-                                <div class="filter-box">
+                                <div class="filter-box d-flex ">
                                     <label>{{ __('translate.Customer') }} <span class="field_required">*</span></label>
                                     <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
@@ -107,6 +107,7 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <button class="btn btn-primary btn-sm" id="addCustomer">Add</button>
                                 </div>
 
                                 <!-- warehouse -->
@@ -345,6 +346,22 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="Client_Add" tabindex="-1" role="dialog"
+                            aria-labelledby="Client_Add" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Create cLIENT</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
                                     </div>
                                 </div>
                             </div>
@@ -1670,6 +1687,11 @@
                         console.log(data);
                     }
                 })
+            });
+
+            $("#addCustomer").click(function(e) {
+                $("#Client_Add").modal("show");
+                e.preventDefault();
             });
         });
     </script>
