@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationsController;
+use FontLib\Table\Type\post;
 
 // use App\Http\Controllers\DesignationController;
 
@@ -394,6 +395,8 @@ if ($installed === false) {
                 Route::delete('/delete', 'PosProductController@delete')->name('pos-product.delete');
                 Route::post('/product-ingredients', 'PosProductController@product_ingredients')->name('pos-product.product_ingredients');
             });
+
+            Route::post('customeradd', 'PosProductController@addCustomer')->name('customeradd');
 
             //------------------------------------Points Routes---------------------------------\\
              Route::get('clients/points', 'PointController@points')->name('clients.points');

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Unit;
 use App\Models\Brand;
+use App\Models\Point;
+use App\Models\Client;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Category;
@@ -11,8 +13,10 @@ use App\Models\Warehouse;
 use App\Models\NewProduct;
 use Illuminate\Http\Request;
 use App\Models\UserWarehouse;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use App\Models\NewProductDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -209,5 +213,76 @@ class PosProductController extends Controller
         }
         $product->delete();
         return response()->json(['status' => 'success', 'message' => 'Product deleted successfully']);
+    }
+
+    public function getNumberOrder()
+    {
+        $last = DB::table('clients')->latest('id')->first();
+
+        if ($last) {
+            $code = $last->code + 1;
+        } else {
+            $code = 1;
+        }
+        return $code;
+    }
+
+    public function addCustomer( Request $request )
+    {
+        // dd()
+        $user_auth = auth()->user();
+        if ($user_auth->can('client_add')) {
+
+            $setting = Setting::where('deleted_at', '=', null)->first();
+
+            $request->validate([
+                'username' => 'required',
+                'photo'          => 'nullable|image|mimes:jpeg,png,jpg,bmp,gif,svg|max:2048',
+            ]);
+
+            if ($request->hasFile('photo')) {
+
+                $image = $request->file('photo');
+                $filename = time() . '.' . $image->extension();
+                $image->move(public_path('/images/clients'), $filename);
+            } else {
+                $filename = 'no_avatar.png';
+            }
+
+            $client = Client::create([
+
+                'user_id'        => $user_auth->id,
+                'username'       => $request['username'],
+                'code'           => $this->getNumberOrder(),
+                'email'          => $request['email'],
+                'city'           => $request['city'],
+                'phone'          => $request['phone'],
+                'address'        => $request['address'],
+                'status'         => 1,
+                'photo'          => $filename,
+            ]);
+
+            if ($setting->on_register == 1) {
+                Point::create([
+                    'user_id' => $client->id,
+                    'total_user_point' => $setting->on_register_ponit,
+                    'remaining_user_point' => $setting->on_register_ponit,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }else{
+                Point::create([
+                    'user_id' => $client->id,
+                    'total_user_point' => 0,
+                    'remaining_user_point' => 0,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+
+            return response()->json(['success' => true]);
+        }
+        return abort('403', __('You are not authorized'));
+
     }
 }

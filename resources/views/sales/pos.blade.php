@@ -357,11 +357,71 @@
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Create cLIENT</h5>
+                                        <h5 class="modal-title">Create Client</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
+                                        <form id="client_form">
+                                        <div class="row">                         
+                                            <div class="form-group col-md-4">
+                                                <label for="username">{{ __('translate.FullName') }} <span
+                                                        class="field_required">*</span></label>
+                                                <input type="text" class="form-control" name="username" id="username" placeholder="{{ __('translate.FullName') }}">                                            
+                                                <span class="error">  </span>
+                                            </div>
+                                           
+                                            <div class="form-group col-md-4">
+                                                <label for="Phone">{{ __('translate.Phone') }}</label>
+                                                <input type="text"  class="form-control" id="Phone" name="phone"
+                                                    placeholder="{{ __('translate.Enter_Phone') }}">
+                                                <span class="error">  </span>
+                                            </div>
+    
+                                            <div class="form-group col-md-4">
+                                                <label for="city">{{ __('translate.City') }}</label>
+                                                <input type="text"  class="form-control" id="city" name="city" 
+                                                    placeholder="{{ __('translate.Enter_City') }}">
+                                                <span class="error" >  </span>
+                                            </div>
+    
+                                            <div class="form-group col-md-4">
+                                                <label for="email">{{ __('translate.Email') }}</label>
+                                                <input type="text" class="form-control" id="email"
+                                                    id="email" placeholder="{{ __('translate.Enter_email_address') }}">
+                                                <span class="error" > </span>
+                                            </div>
+    
+                                            <div class="form-group col-md-4">
+                                                <label for="photo">{{ __('translate.Image') }}</label>
+                                                <input name="photo"  type="file" class="form-control"
+                                                    id="photo">
+                                                <span class="error">  </span>
+                                            </div>
+    
+                                            <div class="form-group col-md-8">
+                                                <label for="address">{{ __('translate.Address') }}</label>
+                                                <textarea  class="form-control" name="address"
+                                                    id="address"
+                                                    placeholder="{{ __('translate.Address') }}"></textarea>
+                                            </div>
+    
+                                        </div>
+                                    
+                                        <div class="row mt-3">
+
+                                            <div class="col-md-6">
+                                                <button type="button" class="btn btn-primary" :disabled="SubmitProcessing" id="save_client">
+                                                    <span  class="spinner-border spinner-border-sm"
+                                                        role="status" aria-hidden="true"></span> <i class="i-Yes me-2 font-weight-bold"></i>
+                                                    {{ __('translate.Submit') }}
+                                                </button>
+                                            
+                                            </div>
+                                        </form>
+                                        </div>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -1693,7 +1753,45 @@
                 $("#Client_Add").modal("show");
                 e.preventDefault();
             });
+
+            // $("#Client_Add").click(function(e) {
+
+            // });
+ 
+            $('#save_client').click(function() {
+            var formData = new FormData($('#client_form')[0]);
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("customeradd") }}',
+                headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        $('#Client_Add').modal('hide'); 
+                        toastr.success('{{ __('translate.Created_in_successfully') }}');       
+                        $('#client_form').trigger('reset');
+
+                    } else {
+                        // Handle errors
+                        toastr.success('Failed to add client. Please try again.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred. Please try again.');
+                }
+            });
         });
+            
+        });
+
+
+
+        
     </script>
 </body>
 
