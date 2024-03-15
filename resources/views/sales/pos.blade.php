@@ -41,6 +41,56 @@
     <script src="{{ asset('js/plugin-script/alpine-data.js') }}"></script>
     <script src="{{ asset('js/plugin-script/alpine-store.js') }}"></script>
 
+    <style>
+        /* Customize Select2 dropdown appearance */
+        .select2-container {
+            width: 100%;
+            /* Make it responsive */
+            max-width: 800px!important;
+            /* Set a maximum width if needed */
+        }
+
+        /* Customize Select2 dropdown appearance when closed */
+        .select2-container--default .select2-selection--single {
+            height: auto;
+            font-size: 14px;
+            border: initial;
+            outline: initial !important;
+            background: #F4F7FB;
+            padding: 12px;
+            border: 1px solid #C1CDD7;
+            color: #2B3445;
+            transition: all 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        /* Customize Select2 dropdown appearance when open */
+        .select2-container--default.select2-container--open .select2-selection--single {
+            height: auto;
+            border: 1px solid #ced4da;
+            background: #F4F7FB;
+            color: #2B3445;
+            padding: 12px;
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.16);
+        }
+
+        /* Customize Select2 dropdown arrow when open */
+        .select2-container--default .select2-selection__arrow {
+            top: 25%!important;
+        }
+
+        /* Customize Select2 dropdown arrow icon when open */
+        .select2-container--default.select2-container--open .select2-selection__arrow b {
+            border-color: #6c757d transparent transparent;
+            /* Bootstrap 5 default arrow color */
+            border-width: 6px 6px 0;
+        }
+
+        .select2-selection--single {
+            height: auto;
+        }
+    </style>
 </head>
 
 <body class="sidebar-toggled sidebar-fixed-page pos-body">
@@ -84,7 +134,7 @@
                         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                             <form>
 
-                                <!-- Customer -->
+                                <!-- warehouse -->
                                 <div class="filter-box">
                                     <label>Warehouse <span class="field_required">*</span></label>
                                     <select name="warehouse_id" class="form-control" id="warehouse_id">
@@ -98,8 +148,10 @@
                                     </select>
                                 </div>
 
-                                <div class="filter-box d-flex ">
-                                    <label>{{ __('translate.Customer') }} <span class="field_required">*</span></label>
+                                <!-- Customer -->
+                                <div class="filter-box d-flex justify-content-between align-items-center">
+                                    <label for="customer_id" style="z-index: 1">{{ __('translate.Customer') }} <span
+                                            class="field_required">*</span></label>
                                     <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
                                         @foreach ($clients as $client)
@@ -109,16 +161,9 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    {{-- <input type="search" class="form-control" id="customerSearch" name="customer_id" />
-                                    <ul class="customer-list">
-                                        <li>
-
-                                        </li>
-                                    </ul> --}}
                                     <button class="btn btn-primary btn-sm" id="addCustomer">Add</button>
                                 </div>
 
-                                <!-- warehouse -->
 
                                 <!-- card -->
                                 <div class="card m-0 card-list-products">
@@ -1799,35 +1844,6 @@
                     }
                 });
             });
-
-            // Search cuistomer
-            // document.getElementById("customerSearch").addEventListener("keyup", myFunction);
-
-            // function myFunction() {
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "{{ route('searchCustomer') }}",
-            //         data: {
-            //             keyword: $("#customerSearch").val(),
-            //         },
-            //         success: function(data) {
-            //             data.forEach(function(customer) {
-            //                 console.log(customer)
-            //                 const ulList = document.querySelector('.customer-list')
-            //                  ulList.innerHTML = '<li class="list-group-item">' + customer
-            //                     .username + '</li>';
-            //             });
-
-            //         },
-            //         error: function(data) {
-            //             console.log(data);
-            //         },
-
-
-            //     })
-            // }
-
-
         });
     </script>
 </body>
