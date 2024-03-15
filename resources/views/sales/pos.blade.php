@@ -18,7 +18,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+        integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/bootstrap-vue.min.css') }}">
@@ -100,17 +102,17 @@
                                     <label>{{ __('translate.Customer') }} <span class="field_required">*</span></label>
                                     <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
-                                        @foreach ($clients as $clients)
-                                            <option value="{{ $clients->id }}"
-                                                {{ $clients->id == $settings->client_id ? 'selected' : '' }}>
-                                                {{ $clients->username }}
+                                        @foreach ($clients as $client)
+                                            <option value="{{ $client->id }}"
+                                                {{ $client->id == $settings->client_id ? 'selected' : '' }}>
+                                                {{ $client->username }}|{{ $client->phone }}
                                             </option>
                                         @endforeach
                                     </select>
                                     {{-- <input type="search" class="form-control" id="customerSearch" name="customer_id" />
                                     <ul class="customer-list">
                                         <li>
-                                            
+
                                         </li>
                                     </ul> --}}
                                     <button class="btn btn-primary btn-sm" id="addCustomer">Add</button>
@@ -596,11 +598,15 @@
 
 
     <script src="{{ asset('assets/js/compact-layout.js') }}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+        integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript">
         $(function() {
             "use strict";
-
+            $(document).ready(function() {
+                $("#customer_id").select2();
+            });
             $(document).ready(function() {
 
                 flatpickr("#datetimepicker", {
@@ -1016,7 +1022,7 @@
                                 <td style="font-size: 10px; text-align-center !important;">N/A</td>
                                 <td style="font-size: 10px; text-align-center !important;">N/A</td>
                                 <td style="font-size: 10px; text-align-center !important;">N/A</td>
-                            </tr>                              
+                            </tr>
                             `);
                         } else {
                             UserPointsValue = data[0].remaining_user_point * pointsValue;
@@ -1764,7 +1770,7 @@
                 e.preventDefault();
             });
 
-// Post Customer 
+            // Post Customer
             $('#save_client').click(function() {
                 var formData = new FormData($('#client_form')[0]);
                 $.ajax({
@@ -1807,7 +1813,7 @@
             //         success: function(data) {
             //             data.forEach(function(customer) {
             //                 console.log(customer)
-            //                 const ulList = document.querySelector('.customer-list') 
+            //                 const ulList = document.querySelector('.customer-list')
             //                  ulList.innerHTML = '<li class="list-group-item">' + customer
             //                     .username + '</li>';
             //             });

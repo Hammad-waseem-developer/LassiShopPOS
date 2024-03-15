@@ -94,7 +94,7 @@ class PosController extends Controller
                 $default_Client = '';
             }
 
-            $clients = Client::where('deleted_at', '=', null)->get(['id', 'username']);
+            $clients = Client::where('deleted_at', '=', null)->get(['id', 'username', 'phone']);
             $payment_methods = PaymentMethod::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id', 'title']);
             $accounts = Account::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id', 'account_name']);
 
@@ -144,7 +144,7 @@ class PosController extends Controller
             'warehouse_id' => 'required',
             'payment_method_id' => 'required',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->first()]);
         }
         if (Session::get('cart') == null) {
@@ -322,7 +322,7 @@ class PosController extends Controller
             if ($request->is_points == 1) {
                 $userPoints = Point::where('user_id', $client_id)->first();
 
-                $pointsValue  = $settings->on_purchase_point;
+                $pointsValue = $settings->on_purchase_point;
                 $discountInDarhum = $request->discount;
 
                 $points = $discountInDarhum * $pointsValue;
