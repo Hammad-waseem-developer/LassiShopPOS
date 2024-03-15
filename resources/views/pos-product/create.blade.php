@@ -86,6 +86,18 @@
                                 <span class="help-block text-danger">{{ $errors->first('price') }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-4 {{ $errors->has('online_product_price') ? 'has-error' : '' }}">
+                            <label for="price">{{ __('Online Product Price') }}
+                                <span class="field_required">*</span>
+                            </label>
+                            <input type="text" class="form-control" name="online_product_price"
+                                value="{{ old('online_product_price') }}">
+                            <div class="error-message" id="price-error"></div>
+                            @if ($errors->has('online_product_price'))
+                                <span
+                                    class="help-block text-danger">{{ $errors->first('online_product_price') }}</span>
+                            @endif
+                        </div>
                     </div>
                     <hr>
                     <div class="row mb-4">

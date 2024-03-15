@@ -51,6 +51,7 @@ class PosProductController extends Controller
             'category' => 'required',
             'warehouse' => 'required',
             'price' => 'required|min:1',
+            'online_product_price' => 'required|min:1',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'ingredient_id' => 'required',
             'ingredient_id.*' => [
@@ -68,6 +69,8 @@ class PosProductController extends Controller
             'warehouse.required' => 'The warehouse field is required.',
             'price.required' => 'The price field is required.',
             'price.min' => 'The price must be at least 1.',
+            'online_product_price.required' => 'The online product price field is required.',
+            'online_product_price.min' => 'The online product price must be at least 1.',
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be in one of the formats: jpeg, png, jpg, gif, svg.',
             'image.max' => 'The image file size must be less than 2048 KB.',
@@ -83,6 +86,7 @@ class PosProductController extends Controller
         $product->category_id = $request->category;
         $product->warehouse_id = $request->warehouse;
         $product->price = $request->price;
+        $product->online_product_price = $request->online_product_price;
         if ($request->image != null) {
             $image = $request->file('image');
             $filename = time() . '.' . $image->extension();
@@ -131,6 +135,7 @@ class PosProductController extends Controller
             'category' => 'required',
             'warehouse' => 'required',
             'price' => 'required|min:1',
+            'online_product_price' => 'required|min:1',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'ingredient_id' => 'required',
             'ingredient_id.*' => [
@@ -145,6 +150,8 @@ class PosProductController extends Controller
             'warehouse.required' => 'The warehouse field is required.',
             'price.required' => 'The price field is required.',
             'price.min' => 'The price must be at least 1.',
+            'online_product_price.required' => 'The online product price field is required.',
+            'online_product_price.min' => 'The online product price must be at least 1.',
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be in one of the formats: jpeg, png, jpg, gif, svg.',
             'image.max' => 'The image file size must be less than 2048 KB.',
@@ -164,6 +171,7 @@ class PosProductController extends Controller
         $product->category_id = $request->category;
         $product->warehouse_id = $request->warehouse;
         $product->price = $request->price;
+        $product->online_product_price = $request->online_product_price;
         if ($request->new_image != null) {
             $image = $request->file('image');
             // dd($image);
@@ -294,5 +302,5 @@ class PosProductController extends Controller
                            ->get();
         return response()->json($customers);
     }
-    
+
 }

@@ -17,8 +17,9 @@ class NewProduct extends Model
         'name',
         'img_path',
         'price',
+        'online_product_price',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function Product_Deatils()
