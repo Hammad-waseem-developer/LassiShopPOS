@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Events\OrderListEvent;
@@ -12,8 +13,9 @@ class OrderListController extends Controller
     //-------------- Get Order ---------------\\
     public function OrderList()
     {
+        $orders = Order::get();
         $newOrderList = Session::get('OrderList');
-        return response()->json(['OrderList' => $newOrderList]);
+        return response()->json(['OrderList' => $newOrderList, 'orders' => $orders]);
     }
 
     public function OrderListShow()
@@ -29,7 +31,7 @@ class OrderListController extends Controller
         $productId = $request->order_id;
         $OrderList = Session::get('OrderList');
 
-        if (isset($OrderList[$productId]) && $OrderList[$productId]['quantity'] > 0) {
+        if (isset ($OrderList[$productId]) && $OrderList[$productId]['quantity'] > 0) {
             // Reduce the quantity
             $OrderList[$productId]['quantity'] -= 1;
 
@@ -56,7 +58,7 @@ class OrderListController extends Controller
         $OrderList = Session::get('OrderList');
         $originalQuantity = Session::get('originalQuantity_' . $productId);
 
-        if ($originalQuantity !== null && isset($OrderList[$productId]) && $OrderList[$productId]['quantity'] < $originalQuantity) {
+        if ($originalQuantity !== null && isset ($OrderList[$productId]) && $OrderList[$productId]['quantity'] < $originalQuantity) {
             // Increase the quantity
             $OrderList[$productId]['quantity'] += 1;
 

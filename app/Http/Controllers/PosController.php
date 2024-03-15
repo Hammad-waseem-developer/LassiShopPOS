@@ -395,16 +395,16 @@ class PosController extends Controller
 
             // Update the session with the modified OrderList
             Session::put($sessionKey, $orderList[$orderId]);
-
+            $orders = Order::get();
             // Broadcast the event for the modified or new order
-            event(new OrderListEvent($orderList[$orderId]));
+            event(new OrderListEvent($orderList[$orderId],$orders));
         }
 
         // Set the 'OrderList' session with the aggregated data
         Session::put('OrderList', $orderList);
 
         // Broadcast the event with the entire orderList data
-        event(new OrderListEvent($orderList));
+        event(new OrderListEvent($orderList,$orders));
 
         Session::forget('cart');
 

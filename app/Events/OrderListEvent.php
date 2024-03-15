@@ -13,9 +13,11 @@ class OrderListEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $orderList;
+    public $orders;
 
-    public function __construct($orderList)
+    public function __construct($orderList,$orders)
     {
         $this->orderList = $orderList;
+        $this->orders = $orders;
     }
 }
