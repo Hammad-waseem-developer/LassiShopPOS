@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use DB;
 use PDF;
 use Config;
@@ -173,12 +174,17 @@ class PosController extends Controller
             $order->user_id = Auth::user()->id;
 
             $order->save();
-
             $data = Session::get('cart');
             foreach ($data as $key => $value) {
                 //Order Details
 
                 $newProductDetails = NewProductDetail::where('new_product_id', $value['id'])->get();
+                $orders = Order::create([
+                    'new_product_id' => $newProductDetails[0]->new_product_id,
+                    'user_id' => auth()->user()->id,
+                    'order_no' => $order->Ref,
+                    'quantity' => $value['quantity'],
+                ]);
 
                 foreach ($newProductDetails as $newProductDetail) {
                     $unit = Unit::where('id', $newProductDetail->unit_id)->first();
@@ -363,7 +369,7 @@ class PosController extends Controller
             $sessionKey = 'OrderList_' . $orderId;
 
             // Check if the product already exists in OrderList
-            if (isset($orderList[$orderId])) {
+            if (isset ($orderList[$orderId])) {
                 // Update the quantity if the product exists
                 $orderList[$orderId]['quantity'] += $order['quantity'];
 
