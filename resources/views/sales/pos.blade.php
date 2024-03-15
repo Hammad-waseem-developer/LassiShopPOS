@@ -180,7 +180,10 @@
                                         <div class="col-md-8">
                                             <div class="summery-item mb-2 row">
                                                 <span
-                                                    class="title mr-2 col-lg-12 col-sm-12">{{ __('translate.Shipping') }}</span>
+                                                    class="title mr-2 col-lg-12 col-sm-12">
+                                                    {{-- {{ __('translate.Shipping') }} --}}
+                                                    Delivery Charge
+                                                </span>
 
                                                 <div class="col-lg-8 col-sm-12">
                                                     <div class="input-group text-right">

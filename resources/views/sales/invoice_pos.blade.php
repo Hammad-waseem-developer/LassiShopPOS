@@ -29,14 +29,20 @@
     <div id="invoice-POS">
       <div>
         <div class="info">
-          <h2 class="text-center">@{{setting.CompanyName}}</h2>
+          <div class="box" style="margin-bottom:20px!important; display: flex!important; align-items: center; justify-content: center; flex-direction: column">
+            <img src="{{ asset('images/'.$settings->logo) }}" class="img-fluid img-thumbnail" style="width: 100px;" alt="">
+            <h1 class="text-center" style="">@{{setting.CompanyName}}</h1>
+            <span class="text-center" style="margin-bottom: 10px">Ntn # 28159432-4</span>
+            <span class="text-center">@{{setting.CompanyAdress}}</span>
+          </div>
+          <hr>
 
           {{-- <p dir="{{ $languageDirection }}">  --}}
           <p> 
             <span>{{ __('translate.date') }} : @{{sale.date}} <br></span>
             <span>{{ __('translate.Sale') }}: @{{sale.Ref}} <br></span>
-            <span v-show="pos_settings.show_address">{{ __('translate.Address') }} : @{{setting.CompanyAdress}}
-              <br></span>
+            {{-- <span v-show="pos_settings.show_address">{{ __('translate.Address') }} : @{{setting.CompanyAdress}}
+              <br></span> --}}
             <span v-show="pos_settings.show_email">{{ __('translate.Email') }} : @{{setting.email}} <br></span>
             <span v-show="pos_settings.show_phone">{{ __('translate.Phone') }} : @{{setting.CompanyPhone}}
               <br></span>
@@ -64,6 +70,18 @@
               </td>
             </tr> --}}
 
+            <tr>
+
+            </tr>
+            <tr style="background-color: #eee;">
+              <td colspan="3" style="font-weight: bold">
+                Product
+              </td>
+              <td class="product_detail_invoice" style="font-weight: bold">
+                Total
+              </td>
+            </tr>
+
             @foreach ($posProduct as $product)
             <tr>
               <td colspan="3">
@@ -75,6 +93,11 @@
                 {{$product->newProduct->price * $product->qty}}
               </td>
             @endforeach
+
+            <tr>
+              <td colspan="4" style="text-align: center; background-color: #ff894e; color:white;">Proceed to Transaction</td>
+            </tr>
+          
 
             <tr class="mt-10" v-show="pos_settings.show_discount">
               <td colspan="3" class="total">{{ __('translate.Tax') }}</td>
@@ -93,7 +116,10 @@
             </tr>
 
             <tr class="mt-10" v-show="pos_settings.show_discount">
-              <td colspan="3" class="total">{{ __('translate.Shipping') }}</td>
+              <td colspan="3" class="total">
+                {{-- {{ __('translate.Shipping') }} --}}
+                Delivery Charge
+              </td>
               <td class="total text-right">
                 @{{sale.shipping}}</td>
             </tr>
@@ -139,7 +165,8 @@
 
         <div id="legalcopy" class="ms-2"  v-show="pos_settings.show_note">
           <p class="legal">
-            <strong>{{ __('translate.Thank_You_For_Shopping_With_Us_Please_Come_Again') }}</strong>
+            {{-- <strong>{{ __('translate.Thank_You_For_Shopping_With_Us_Please_Come_Again') }}</strong> --}}
+            <strong>Thank you! We hope to see you again soon.</strong>
           </p>
         </div>
 
