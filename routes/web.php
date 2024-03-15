@@ -195,6 +195,7 @@ if ($installed === false) {
             Route::get('GetCategories', 'PosController@GetCategories')->name('GetCategories');
             Route::post('flushCart', 'PosController@flushCart')->name('flushCart');
             Route::post('getUserPoints', 'PosController@getUserPoints')->name('getUserPoints');
+            Route::get('getClients', 'PosController@getClients')->name('getClients');
 
             //---------------------- Hold Order ----------------------\\
             //------------------------------------------------------------------\\

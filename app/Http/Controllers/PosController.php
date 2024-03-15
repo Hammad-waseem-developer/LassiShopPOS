@@ -129,6 +129,13 @@ class PosController extends Controller
         }
     }
 
+    public function getClients(Request $request)
+    {
+
+        $clients = Client::where('deleted_at', '=', null)->get();
+        return response()->json($clients);
+    }
+
     public function getProducts()
     {
         $products = NewProduct::get();

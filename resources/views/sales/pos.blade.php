@@ -46,7 +46,7 @@
         .select2-container {
             width: 100%;
             /* Make it responsive */
-            max-width: 800px!important;
+            max-width: 800px !important;
             /* Set a maximum width if needed */
         }
 
@@ -77,7 +77,7 @@
 
         /* Customize Select2 dropdown arrow when open */
         .select2-container--default .select2-selection__arrow {
-            top: 25%!important;
+            top: 25% !important;
         }
 
         /* Customize Select2 dropdown arrow icon when open */
@@ -154,12 +154,12 @@
                                             class="field_required">*</span></label>
                                     <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="">Select Customer</option>
-                                        @foreach ($clients as $client)
+                                        {{-- @foreach ($clients as $client)
                                             <option value="{{ $client->id }}"
                                                 {{ $client->id == $settings->client_id ? 'selected' : '' }}>
                                                 {{ $client->username }}|{{ $client->phone }}
                                             </option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                     <button class="btn btn-primary btn-sm" id="addCustomer">Add</button>
                                 </div>
@@ -468,9 +468,7 @@
                                                 <div class="col-md-6">
                                                     <button type="button" class="btn btn-primary"
                                                         :disabled="SubmitProcessing" id="save_client">
-                                                        <span class="spinner-border spinner-border-sm" role="status"
-                                                            aria-hidden="true"></span> <i
-                                                            class="i-Yes me-2 font-weight-bold"></i>
+                                                        <i class="i-Yes me-2 font-weight-bold"></i>
                                                         {{ __('translate.Submit') }}
                                                     </button>
 
@@ -679,6 +677,7 @@
             addQuantity: "{{ route('add_qty') }}",
             removeQuantity: "{{ route('remove_qty') }}",
             getUserPoints: "{{ route('getUserPoints') }}",
+            getClients: "{{ route('getClients') }}",
         };
 
         const elements = {
@@ -728,6 +727,32 @@
             var client_id = $('#customer_id').val();
             GetUserPoints(client_id);
 
+            //Get Clients
+            function GetClients() {
+                $.ajax({
+                    type: "GET",
+                    url: routes.getClients,
+                    success: function(response) {
+                        $("#customer_id").empty();
+                        response.forEach(element => {
+                            let selected = element.id == {{ $settings->client_id }} ?
+                                'selected' : '';
+                            $("#customer_id").append(
+                                `<option value="${element.id}" ${selected}>${element.username} | ${element.phone}</option>`
+                                );
+                        });
+                    },
+                    error: function(data) {
+                        console.log("Error:", data);
+                    }
+                });
+            }
+
+
+            //Get Clients
+            GetClients();
+
+            //Reset Cart
             FlushCart();
 
             $("body").on("click", "#resetBtn", function() {
@@ -1832,7 +1857,7 @@
                             $('#Client_Add').modal('hide');
                             toastr.success('{{ __('translate.Created_in_successfully') }}');
                             $('#client_form').trigger('reset');
-
+                            GetClients();
                         } else {
                             // Handle errors
                             toastr.success('Failed to add client. Please try again.');
