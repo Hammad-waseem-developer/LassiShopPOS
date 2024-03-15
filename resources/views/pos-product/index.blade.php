@@ -56,6 +56,7 @@
                                 <th>Name</th>
                                 <th>Category</th>
                                 <th>Price</th>
+                                <th>Online Price</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -177,6 +178,9 @@
                             },
                             {
                                 data: 'price'
+                            },
+                            {
+                                data: 'online_product_price'
                             },
                             {
                                 data: null,

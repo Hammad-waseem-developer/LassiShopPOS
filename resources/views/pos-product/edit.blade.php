@@ -96,6 +96,15 @@
                             <div class="error-message" id="price-error"></div>
 
                         </div>
+                        <div class="form-group col-md-4">
+                            <label for="online_product_price">{{ __('Online Product Price') }}
+                                <span class="field_required">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="online_product_price" value="{{ $product->online_product_price }}"
+                                name="online_product_price" value="{{ old('online_product_price') }}">
+                            <div class="error-message" id="price-error"></div>
+
+                        </div>
                     </div>
                     <div class="row mb-4">
                         <div class="col-md-12 d-flex justify-content-between align-items-center">
