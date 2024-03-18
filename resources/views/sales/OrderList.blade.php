@@ -238,10 +238,10 @@
 
         <div class="new-align-boxes">
             <div class="main-align-orders-box" id="orderListContainer">
-                <div class="customer-details">
+                {{-- <div class="customer-details"> --}}
                         {{-- <p class="oderNo">Order#01</p>
                         <p class="counter">0123456789</p> --}}
-                    </div>
+                    {{-- </div> --}}
                     {{-- <div class="main-oder-box"> --}}
                         {{-- <div class="main-img-box" id="orderListContainer">
                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" alt="">
@@ -308,140 +308,7 @@
 
     <script>
         $(document).ready(function() {
-            // var orderLists = [];
-
-            // // Convert object to array
-            // const orderList = Object.values(orderLists);
-
-            // function updateOrderListCards(orderList, currentPage, itemsPerPage) {
-            //     var container = $('#orderListContainer');
-            //     var paginationDiv = $('#paginationContainer');
-            //     container.empty();
-
-            //     if (!orderList || orderList.length === 0) {
-            //         container.append('<p class="h4 text-center mt-5 mb-5 text-white">No orders found.</p>');
-            //         return;
-            //     }
-
-            //     var startIndex = (currentPage - 1) * itemsPerPage;
-            //     var endIndex = startIndex + itemsPerPage;
-            //     var paginatedOrderList = orderList.slice(startIndex, endIndex);
-
-            //     $.each(paginatedOrderList, function(index, item) {
-            //         var card = $('<div class="card p-2 text-center" style="width: 18rem; height: 20rem;">');
-            //         card.append('<img src="/images/products/' + item.img_path +
-            //             '" class="card-img-top image img-fluid m-0 p-0" alt="Product Image">');
-            //         card.append('<div class="card-body m-0 p-0">');
-            //         card.append('<h4 class="card-title m-0 p-0">' + item.name + '</h4>');
-            //         card.append('<p class="card-text p-0 mb-2">Quantity: ' + item.quantity + '</p>');
-
-            //         var buttonContainer = $(
-            //             '<div class="d-flex justify-content-center align-items-center gap-2">');
-            //         var completeOrderBtn1 = $(
-            //             '<a href="#" id="completeOrder" data-id="' + item.id +
-            //             '" class="btn btn-success">Complete Order</a>');
-            //         var completeOrderBtn2 = $('<a href="#" id="undoOrder" data-id="' + item.id +
-            //             '" class="btn btn-danger">Undo</a>');
-
-            //         buttonContainer.append(completeOrderBtn1);
-            //         buttonContainer.append(completeOrderBtn2);
-
-            //         card.append(buttonContainer);
-            //         card.append('</div>');
-            //         container.append(card);
-            //     });
-
-            //     // Add pagination controls
-            //     var totalPages = Math.ceil(orderList.length / itemsPerPage);
-            //     var paginationContainer = $(
-            //         '<div id="paginationContainer" class="d-flex justify-content-center mt-3">');
-
-            //     for (var i = 1; i <= totalPages; i++) {
-            //         var pageLink = $('<a href="#" class="btn btn-outline-primary mx-1">' + i + '</a>');
-            //         if (i === currentPage) {
-            //             pageLink.addClass('active');
-            //         }
-            //         paginationContainer.append(pageLink);
-            //     }
-
-            //     paginationDiv.empty();
-            //     paginationDiv.append(paginationContainer);
-            // }
-
-            // // Example usage:
-            // var currentPage = 1;
-            // var itemsPerPage = 6;
-
-
-
-
-            // var orderLists = [];
-            // const orderList = Object.values(orderLists);
-
-            // function updateOrderListCards(orderList, currentPage, itemsPerPage) {
-            //     var container = $('#orderListContainer');
-            //     var paginationDiv = $('#paginationContainer');
-            //     var mainDiv = $('.main-align-orders-box');
-            //     // container.empty();
-
-            //     if (!orderList || orderList.length === 0) {
-            //         container.append('<p class="h4 text-center mt-5 mb-5 text-white">No orders found.</p>');
-            //         return;
-            //     }
-
-            //     var startIndex = (currentPage - 1) * itemsPerPage;
-            //     var endIndex = startIndex + itemsPerPage;
-            //     var paginatedOrderList = orderList.slice(startIndex, endIndex);
-
-            //     $.each(paginatedOrderList, function(index, item) {
-            //          mainDiv.html(`
-        //          <div class="customer-details">
-        //         <p class="oderNo">${item.order_no}</p>
-        //         <p class="counter">Counter</p>
-        //     </div>
-        //          <div class="main-oder-box" >
-        //             <div class="main-img-box"  id="orderListContainer">
-        //                 <img src="{{ asset('images/') }}/${item.new_product.img_path}" class="img-fluid" alt="">
-        //                 <div class="content">
-        //                     <h6>${item.new_product.name}</h6>
-        //                     <p class="count">${item.quantity}</p>
-        //                     <div class="btn-align-box">
-        //                         <button class="t-btn t-btn-1">button-01</button>
-        //                         <button class="t-btn t-btn-2 ">button-02</button>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //          `);
-            //         container.append(mainDiv);
-            //         console.log(paginatedOrderList);
-            //     });
-
-            //     // Add pagination controls
-            //     var totalPages = Math.ceil(orderList.length / itemsPerPage);
-            //     var paginationContainer = $('<div class="pagenations">');
-
-            //     for (var i = 1; i <= totalPages; i++) {
-            //         var pageLink = $('<a href="#" class="page-link">' + i + '</a>');
-            //         if (i === currentPage) {
-            //             pageLink.addClass('active');
-            //         }
-            //         paginationContainer.append(pageLink);
-            //     }
-
-            //     paginationDiv.empty();
-            //     paginationDiv.append(paginationContainer);
-            // }
-
-            // // Example usage:
-            // var currentPage = 1;
-            // var itemsPerPage = 6;
-
-
-            // updateOrderListCards(orderList, currentPage, itemsPerPage);
-
-
-
+       
 
 
             // function fetchOrderList() {
@@ -478,26 +345,31 @@
                         container.empty();
                         if (response && response.orders) {
                             var orders = response.orders;
+                            var currentOrderNo = null;
+                            var currentOrderBox = null;
                             $.each(orders, function(index, item) {
-                        
-                        var html = `
-                     
-                            <p class="oderNo">${item.order_no}</p>
-                        <div class="main-oder-box">
-                            <div class="main-img-box">
-                                <img src="{{ asset('images/') }}/${item.new_product.img_path}" class="img-fluid" alt="">
-                                <div class="content">
-                                    <h6>${item.new_product.name}</h6>
-                                    <p class="count">${item.quantity}</p>
-                                    <div class="btn-align-box">
-                                        <button class="t-btn t-btn-1">button-01</button>
-                                        <button class="t-btn t-btn-2">button-02</button>
+                                if (item.order_no !== currentOrderNo) {
+                                    currentOrderBox = $('<div class="main-order-box"></div>');
+                                    currentOrderBox.append('<p class="orderNo">' + item.order_no + '</p>');
+                                    $('#orderListContainer').append(currentOrderBox);
+                                    currentOrderNo = item.order_no;
+                                }
+                                var itemHtml = `
+                                    <div class="main-oder-box">
+                                        <div class="main-img-box">
+                                            <img src="{{ asset('images/products') }}/${item.new_product.img_path}" class="img-fluid" alt="">
+                                            <div class="content">
+                                                <h6>${item.new_product.name}</h6>
+                                                <p class="count">${item.quantity}</p>
+                                                <div class="btn-align-box">
+                                                    <button class="t-btn t-btn-1">button-01</button>
+                                                    <button class="t-btn t-btn-2">button-02</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                                container.append(html);
+                                `;
+                                currentOrderBox.append(itemHtml);
                             });
                         }
                     },
