@@ -48,6 +48,121 @@
             max-width: 270px;
             max-height: 200px;
         }
+        .order-list-sec .main-img-box img {
+    max-width: 550px;
+    height: 300px;
+    object-fit: cover;
+    width: 550px !important;
+}
+.order-list-sec .main-img-box h6 {
+    color: black;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.order-list-sec .main-img-box {
+    background-color: white;
+    border-radius: 10px;
+    max-width: 550px !important;
+    width: 550px !important;
+    /* display: flex !important; */
+    flex-direction: column;
+    display: inline-flex !important;
+}
+/* width */
+.order-list-sec .main-oder-box::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.order-list-sec .main-oder-box::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(128, 128, 128, 0); 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.order-list-sec .main-oder-box::-webkit-scrollbar-thumb {
+  background: rgb(0, 0, 0); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.order-list-sec .main-oder-box::-webkit-scrollbar-thumb:hover {
+  background: #2b2b2b; 
+}
+
+.order-list-sec .main-img-box p {
+    font-size: 18px;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+
+
+.order-list-sec .main-img-box .btn-align-box button {
+    background-color: #bf1e2e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 25px;
+    transform: .3s;
+}
+
+
+.order-list-sec .main-oder-box {
+    background-color: #bf1e2e;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 25px;
+    width: 590px;
+    overflow: auto;
+    margin: auto;
+    align-content: center;
+    margin-top: 0px;
+}
+
+
+.order-list-sec .main-img-box .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+.order-list-sec .customer-details {
+    background-color: #bf1e2e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px 10px 0px 0px;
+    max-width: 590px;
+    margin: auto;
+    padding: 10px 20px;
+    margin-bottom: -10px;
+}
+
+.order-list-sec .customer-details p {
+    margin: 0;
+    color: white;
+}
+.order-list-sec .main-img-box .btn-align-box button:hover {
+    background-color: black;
+}
+.order-list-sec .main-align-orders-box {
+    width: 610px;
+    display: block;
+    margin: auto;
+    background-color: #bf1e2e;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+
     </style>
 
     {{-- Alpine Js --}}
@@ -58,8 +173,112 @@
 
 </head>
 
-<body class="sidebar-toggled sidebar-fixed-page pos-body">
+<body class="sidebar-toggled sidebar-fixed-page pos-body order-list-sec">
     <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a href="#"><img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" width="120px"
+                    alt=""></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="main-align-orders-box">
+                    <div class="customer-details">
+                        <p>Order#01</p>
+                        <p class="counter">0123456789</p> 
+                     </div>
+                     <div class="main-oder-box">
+                         <div class="main-img-box">
+                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" 
+                         alt="">
+                             <div class="content">
+                                 <h6>Main Lessi</h6>
+                                 <p class="count">3</p>
+                                 <div class="btn-align-box">
+                                     <button class="t-btn t-btn-1">button-01</button>
+                                     <button class="t-btn t-btn-2 ">button-02</button>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="main-img-box">
+                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" 
+                         alt="">
+                             <div class="content">
+                                 <h6>Main Lessi</h6>
+                                 <p class="count">3</p>
+                                 <div class="btn-align-box">
+                                     <button class="t-btn t-btn-1">button-01</button>
+                                     <button class="t-btn t-btn-2 ">button-02</button>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="main-img-box">
+                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" 
+                         alt="">
+                             <div class="content">
+                                 <h6>Main Lessi</h6>
+                                 <p class="count">3</p>
+                                 <div class="btn-align-box">
+                                     <button class="t-btn t-btn-1">button-01</button>
+                                     <button class="t-btn t-btn-2 ">button-02</button>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="main-img-box">
+                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" 
+                         alt="">
+                             <div class="content">
+                                 <h6>Main Lessi</h6>
+                                 <p class="count">3</p>
+                                 <div class="btn-align-box">
+                                     <button class="t-btn t-btn-1">button-01</button>
+                                     <button class="t-btn t-btn-2 ">button-02</button>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="main-img-box">
+                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" 
+                         alt="">
+                             <div class="content">
+                                 <h6>Main Lessi</h6>
+                                 <p class="count">3</p>
+                                 <div class="btn-align-box">
+                                     <button class="t-btn t-btn-1">button-01</button>
+                                     <button class="t-btn t-btn-2 ">button-02</button>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="main-align-orders-box">
+                    <div class="customer-details">
+                        <p>Order#02</p>
+                        <p class="counter">0123456789</p> 
+                     </div>
+                     <div class="main-oder-box">
+                         <div class="main-img-box">
+                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" 
+                         alt="">
+                             <div class="content">
+                                 <h6>Main Lessi</h6>
+                                 <p class="count">3</p>
+                                 <div class="btn-align-box">
+                                     <button class="t-btn t-btn-1">button-01</button>
+                                     <button class="t-btn t-btn-2 ">button-02</button>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+                </div>
+            
+        </div>
+    </div>
+    {{-- <div class="container">
         <div class="row">
             <div class="col-md-12 text-center mt-5 mb-5">
                 <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" width="120px"
@@ -83,7 +302,10 @@
                     <!-- Pagination controls will be dynamically updated here -->
                 </div>
             </div>
-        </div>
+        </div> --}}
+
+
+
     </div>
 
     <script src="{{ asset('assets/js/vue.js') }}"></script>
