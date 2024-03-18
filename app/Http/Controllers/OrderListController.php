@@ -14,8 +14,9 @@ class OrderListController extends Controller
     public function OrderList()
     {
         $orders = Order::get();
-        $newOrderList = Session::get('OrderList');
-        return response()->json(['OrderList' => $newOrderList, 'orders' => $orders]);
+        // $newOrderList = Session::get('OrderList');
+        // return response()->json(['OrderList' => $newOrderList, 'orders' => $orders]);
+        return response()->json(['orders' => $orders]);
     }
 
     public function OrderListShow()
