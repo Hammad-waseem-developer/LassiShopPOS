@@ -57,53 +57,54 @@
         }
 
         .order-list-sec .main-img-box h6 {
-            color: black;
+            color: rgb(255, 255, 255);
             font-size: 20px;
             font-weight: 600;
         }
 
-        .order-list-sec .main-img-box {
+        /* .order-list-sec .main-img-box {
             background-color: white;
             border-radius: 10px;
             max-width: 550px !important;
             width: 550px !important;
-            /* display: flex !important; */
+            display: flex !important;
             flex-direction: column;
-        }
+        } */
 
         /* width */
-        .order-list-sec .main-oder-box::-webkit-scrollbar {
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box::-webkit-scrollbar {
             width: 5px;
-            height: 5px;
+            height: 10px;
         }
 
         /* Track */
-        .order-list-sec .main-oder-box::-webkit-scrollbar-track {
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box::-webkit-scrollbar-track {
             box-shadow: inset 0 0 5px rgba(128, 128, 128, 0);
             border-radius: 10px;
         }
 
         /* Handle */
-        .order-list-sec .main-oder-box::-webkit-scrollbar-thumb {
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box::-webkit-scrollbar-thumb {
             background: rgb(0, 0, 0);
             border-radius: 10px;
         }
 
         /* Handle on hover */
-        .order-list-sec .main-oder-box::-webkit-scrollbar-thumb:hover {
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box::-webkit-scrollbar-thumb:hover {
             background: #2b2b2b;
         }
 
         .order-list-sec .main-img-box p {
-            font-size: 18px;
-            margin: 0;
-            margin-bottom: 10px;
-        }
-
+    font-size: 18px;
+    margin: 0;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: 900;
+}
 
 
         .order-list-sec .main-img-box .btn-align-box button {
-            background-color: #bf1e2e;
+            background-color: #000000;
             color: white;
             border: none;
             border-radius: 10px;
@@ -113,7 +114,7 @@
         }
 
 
-        .order-list-sec .main-oder-box {
+        /* .order-list-sec .main-oder-box {
             background-color: #bf1e2e;
             padding: 20px;
             border-radius: 10px;
@@ -128,7 +129,7 @@
             margin: auto;
             align-content: center;
             margin-top: 0px;
-        }
+        } */
 
         .order-list-sec .main-img-box {
             width: 100% !important;
@@ -162,29 +163,30 @@
         }
 
         .order-list-sec .main-img-box .btn-align-box button:hover {
-            background-color: black;
+            background-color: rgb(255, 255, 255);
+            color: #bf1e2e;
         }
 
-        .order-list-sec .main-align-orders-box {
+        /* .order-list-sec .main-align-orders-box {
             width: 610px;
             display: block;
             background-color: #bf1e2e;
             padding: 10px;
             border-radius: 10px;
-        }
+        } */
 
-        .order-list-sec .new-align-boxes {
+        /* .order-list-sec .new-align-boxes {
             display: flex;
             justify-content: space-between;
             column-gap: 40px;
             flex-wrap: wrap;
             row-gap: 40px;
-        }
+        } */
 
-        .order-list-sec .new-align-boxes .main-align-orders-box {
+        /* .order-list-sec .new-align-boxes .main-align-orders-box {
             width: 30%;
             max-width: 30%;
-        }
+        } */
 
         .order-list-sec .pagenations {
             display: flex;
@@ -217,6 +219,59 @@
         .order-list-sec .pagenations a:hover {
             color: #bf1e2e;
         }
+        .order-list-sec .new-align-boxes .main-align-orders-box {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    column-gap: 30px;
+    row-gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-list-sec .new-align-boxes .main-align-orders-box  .main-order-box {
+    display: flex;
+    width: 30% !important;
+    max-width: 30% !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    overflow-x: scroll;
+    justify-content: flex-start;
+    column-gap: 20px;
+    margin: 15px 0;
+    position: relative;
+    background-color: #bf1e2e;
+    padding: 0;
+    border-radius: 10px;
+}
+
+.order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box {
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex;
+}
+
+.order-list-sec .new-align-boxes .main-align-orders-box .main-order-box p.orderNo {
+    color: white !important;
+    position: absolute;
+    background-color: green;
+    top: 0px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box .main-img-box img {
+    width: 389px !important;
+    height: 300px;
+    object-fit: cover !important;
+    max-width: 400px !important;
+    margin-top: 40px;
+}
     </style>
 
     {{-- Alpine Js --}}
