@@ -158,13 +158,17 @@ class EmployeeController extends Controller
         return abort('403', __('You are not authorized'));
     }
 
-    public function getData()
+    public function getData(Request $request)
     {
         if (auth()->user()->can('employee_view_own')) {
             $employees = Employee::where('user_id', auth()->user()->id)->with(['office', 'designation', 'department'])->get();
             return response()->json(['data' => $employees]);
         }
         if (auth()->user()->can('employee_view_all')) {
+            if($request->start_date && $request->end_date){
+                $employees = Employee::whereBetween('created_at', [$request->start_date, $request->end_date])->with(['office', 'designation', 'department'])->get();
+                return response()->json(['data' => $employees]);
+            }
             $employees = Employee::with(['office', 'designation', 'department'])->get();
             return response()->json(['data' => $employees]);
         }
