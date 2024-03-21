@@ -379,4 +379,15 @@ class EmployeeController extends Controller
         }
         return abort('403', __('You are not authorized!'));
     }
+
+    // public function employeesPrint(Request $request)
+    // {
+    //     $filteredData = json_decode($request->query('data'), true);
+      
+
+    //     return view('hrm.employee.employees_print')->with('filteredData', $filteredData);
+    // }
+
+
+    
 }

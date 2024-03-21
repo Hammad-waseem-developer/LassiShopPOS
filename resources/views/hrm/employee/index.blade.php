@@ -38,6 +38,14 @@
                                 {{ __('translate.Filter') }}</a>
                         @endif
 
+                        @if (auth()->user()->can('employee_view_all'))
+                            {{-- <a class="btn btn-outline-primary fw-bolder btn-md m-1" id="Print_Employee"><i
+                                    class="i-Add me-2 font-weight-bold"></i>
+                                {{ __('Print') }}</a> --}}
+
+                            <button id="printButton" class="btn btn-outline-primary fw-bolder btn-md m-1"><i
+                                    class="i-Add me-2 font-weight-bold"></i>Print</button>
+                        @endif
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="#" onclick="ExportToExcel('xlsx')">excel</a>
                             {{-- <a class="dropdown-item" href="#">pdf</a> --}}
@@ -118,13 +126,13 @@
                         <div class="form-group col-md-6">
                             <label for="start_date">{{ __('translate.From_Date') }}
                             </label>
-                            <input type="text" class="form-control date" name="start_date" id="start_date"
+                            <input type="date" class="form-control date" name="start_date" id="start_date"
                                 placeholder="{{ __('translate.From_Date') }}" value="">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="end_date">{{ __('translate.To_Date') }} </label>
-                            <input type="text" class="form-control date" name="end_date" id="end_date"
+                            <input type="date" class="form-control date" name="end_date" id="end_date"
                                 placeholder="{{ __('translate.To_Date') }}" value="">
                         </div>
 
@@ -147,7 +155,7 @@
             </div>
         </div>
     </div>
-
+    {{-- filter modal end --}}
 </div>
 {{-- Sessions messages will be here --}}
 @if (Session::has('success'))
@@ -283,6 +291,26 @@
         });
 
 
+        // print data 
+        // $('#Print_Employee').on('click', function() {
+        //     var start_date = $('#start_date').val();
+        //     var end_date = $('#end_date').val();
+
+        //     // AJAX request to get filtered data
+        //     $.ajax({
+        //         url: '{{ route('employees.getData') }}',
+        //         type: 'GET',
+        //         data: {
+        //             start_date: start_date,
+        //             end_date: end_date
+
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //             window.location.href = '{{ route('employees.show.print') }}' + '?data=' + JSON.stringify(data);
+        //             }
+        //     });
+        // });
 
         $('body').on('click', '#deleteBtn', function() {
             var id = $('#deleteDepartmentId').val();
@@ -397,14 +425,20 @@
             $('#filter_purchase_modal').modal('show');
         });
 
+        $('#Clear_Form').on('click', function() {
+            // Reset the values of filter inputs
+            $('#start_date').val('');
+            $('#end_date').val('');
+
+            $('#filter').trigger('click');
+        });
+
     });
 
 
     function ExportToExcel(type, fn, dl) {
         // Clone the table element
         var elt = document.getElementById('client_list_table').cloneNode(true);
-
-        // Remove the last column (Action column) from the cloned table
         var headers = elt.getElementsByTagName('th');
         var rows = elt.getElementsByTagName('tr');
         for (var i = 0; i < rows.length; i++) {
@@ -433,5 +467,33 @@
             }) :
             XLSX.writeFile(wb, fn || fileName);
     }
+</script>
+<script>
+    document.getElementById("printButton").addEventListener("click", function() {
+        var table = document.getElementById("client_list_table");
+        if (table) {
+            // Clone the table
+            var tableClone = table.cloneNode(true);
+
+            // Exclude the "image" column
+            //     Array.from(tableClone.rows).forEach(function(row) {
+            //     row.deleteCell(8); // Remove the first column
+
+            // });
+
+            var newWin = window.open('', 'Print-Window');
+            newWin.document.open();
+            newWin.document.write(`<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+                </head><body>
+                <center class="mt-5">
+                <h1>Employee Report</h1>
+                </center> ` + tableClone.outerHTML + `</body></html>`);
+            newWin.document.close();
+            setTimeout(function() {
+                newWin.print();
+                newWin.close();
+            }, 10);
+        }
+    });
 </script>
 @endsection

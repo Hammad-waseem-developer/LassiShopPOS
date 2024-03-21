@@ -333,7 +333,7 @@ if ($installed === false) {
                 Route::get('/employee/show/{id}', 'EmployeeController@show')->name('employees.show');
                 Route::put('/employee/{employee}', 'EmployeeController@update')->name('employees.update');
                 Route::post('/employee/delete', 'EmployeeController@deleteEmployee')->name('employees.delete');
-
+                // Route::get('/employee/print', 'EmployeeController@employeesPrint')->name('employees.show.print');
                 // Route::get('/employee/store', 'EmployeeController@store')->name('employee.store');
 
                 // Attendance Routes
