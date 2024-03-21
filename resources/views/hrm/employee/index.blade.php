@@ -299,27 +299,6 @@
         });
 
 
-        // print data 
-        // $('#Print_Employee').on('click', function() {
-        //     var start_date = $('#start_date').val();
-        //     var end_date = $('#end_date').val();
-
-        //     // AJAX request to get filtered data
-        //     $.ajax({
-        //         url: '{{ route('employees.getData') }}',
-        //         type: 'GET',
-        //         data: {
-        //             start_date: start_date,
-        //             end_date: end_date
-
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //             window.location.href = '{{ route('employees.show.print') }}' + '?data=' + JSON.stringify(data);
-        //             }
-        //     });
-        // });
-
         $('body').on('click', '#deleteBtn', function() {
             var id = $('#deleteDepartmentId').val();
             var departmentId = $('#deleteDepartmentId').val();
