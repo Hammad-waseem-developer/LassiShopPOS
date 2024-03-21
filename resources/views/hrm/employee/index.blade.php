@@ -39,10 +39,6 @@
                         @endif
 
                         @if (auth()->user()->can('employee_view_all'))
-                            {{-- <a class="btn btn-outline-primary fw-bolder btn-md m-1" id="Print_Employee"><i
-                                    class="i-Add me-2 font-weight-bold"></i>
-                                {{ __('Print') }}</a> --}}
-
                             <button id="printButton" class="btn btn-outline-primary fw-bolder btn-md m-1"><i
                                     class="i-Add me-2 font-weight-bold"></i>Print</button>
                         @endif
@@ -185,6 +181,18 @@
 
 <script>
     $(document).ready(function() {
+
+
+        $('#Clear_Form').on('click', function() {
+            // Reset the values of filter inputs
+            $('#start_date').val('');
+            $('#end_date').val('');
+
+            $('#filter').trigger('click');
+
+            getData();
+        });
+
         var editRoute = '{{ route('employees.edit', ['id' => ':id']) }}';
         var showRoute = '{{ route('employees.show', ['id' => ':id']) }}';
         $('body').on('click', '#delete', function() {
@@ -425,13 +433,7 @@
             $('#filter_purchase_modal').modal('show');
         });
 
-        $('#Clear_Form').on('click', function() {
-            // Reset the values of filter inputs
-            $('#start_date').val('');
-            $('#end_date').val('');
-
-            $('#filter').trigger('click');
-        });
+      
 
     });
 

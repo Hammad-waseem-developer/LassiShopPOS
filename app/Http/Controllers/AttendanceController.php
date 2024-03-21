@@ -72,9 +72,27 @@ class AttendanceController extends Controller
         return abort('403', __('You are not authorized'));
     }
 
-    public function getData()
-    {
+    public function getData(Request $request)
+    {   
         if (auth()->user()->can('attendance_view_all')) {
+
+            if($request->start_date && $request->end_date){
+                $att = Attendance::all();
+                foreach ($att as $value) {
+                    $clockIn = Carbon::parse($value->clock_in);
+                    $clockOut = Carbon::parse($value->clock_out);
+
+                    if ($clockOut->lessThan($clockIn)) {
+                        $clockOut->addDay();
+                    }
+
+                    $workDuration = $clockOut->diffInHours($clockIn);
+                    $value->work_duration = $workDuration;
+                    $value->save();
+                }
+                $attendance = Attendance::whereBetween('date', [$request->start_date, $request->end_date])->with(['company', 'employee', 'office'])->get();
+                return response()->json(['data' => $attendance]);
+            }
             $att = Attendance::all();
             foreach ($att as $value) {
                 $clockIn = Carbon::parse($value->clock_in);

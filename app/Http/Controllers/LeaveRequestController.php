@@ -224,7 +224,7 @@ class LeaveRequestController extends Controller
         return abort('403', __('You are not authorized'));
     }
 
-    public function getData()
+    public function getData(Request $request)
     {
         if (auth()->user()->can('leaverequest_view_own')) {
             $leaveRequest = LeaveRequest::whereHas('employee', function ($query) {
@@ -236,6 +236,10 @@ class LeaveRequestController extends Controller
             return response()->json(['data' => $leaveRequest]);
         }
         if (auth()->user()->can('leaverequest_view_all')) {
+            if($request->start_date && $request->end_date){
+                $leaveRequest = LeaveRequest::with(['employee', 'company', 'department', 'leave'])->whereBetween('start_date', [$request->start_date, $request->end_date])->get();
+                return response()->json(['data' => $leaveRequest]);
+            }
             $leaveRequest = LeaveRequest::with(['employee', 'company', 'department', 'leave'])->get();
             return response()->json(['data' => $leaveRequest]);
         }
