@@ -366,8 +366,8 @@
 
     <script>
         Pusher.logToConsole = true;
-        var pusher = new Pusher('7eb1185740c6df0f3cda', {
-            cluster: 'ap2',
+        var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
+            cluster: "{{env('PUSHER_APP_CLUSTER')}}",
         });
 
         var channel = pusher.subscribe('order-list');
