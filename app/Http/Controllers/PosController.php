@@ -33,7 +33,7 @@ use App\Models\PosSaleItems;
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
 use App\Models\UserWarehouse;
-use App\Events\OrderListEvent;
+use App\Events\OrderList;
 use App\Models\ProductVariant;
 use App\Models\NewProductDetail;
 use App\Models\product_warehouse;
@@ -193,7 +193,6 @@ class PosController extends Controller
                     'quantity' => $value['quantity'],
                     'orignal_quantity' => $value['quantity'],
                 ]);
-
                 foreach ($newProductDetails as $newProductDetail) {
                     $unit = Unit::where('id', $newProductDetail->unit_id)->first();
                     $productWarehouse = product_warehouse::where('product_id', $newProductDetail->base_product_id)
@@ -377,7 +376,7 @@ class PosController extends Controller
             $sessionKey = 'OrderList_' . $orderId;
 
             // Check if the product already exists in OrderList
-            if (isset ($orderList[$orderId])) {
+            if (isset($orderList[$orderId])) {
                 // Update the quantity if the product exists
                 $orderList[$orderId]['quantity'] += $order['quantity'];
 
@@ -398,14 +397,14 @@ class PosController extends Controller
             Session::put($sessionKey, $orderList[$orderId]);
             $orders = Order::get();
             // Broadcast the event for the modified or new order
-            event(new OrderListEvent($orderList[$orderId],$orders));
+            event(new OrderList($orderList[$orderId],$orders));
         }
 
         // Set the 'OrderList' session with the aggregated data
         Session::put('OrderList', $orderList);
 
         // Broadcast the event with the entire orderList data
-        event(new OrderListEvent($orderList,$orders));
+        event(new OrderList($orderList[$orderId],$orders));
 
         Session::forget('cart');
 

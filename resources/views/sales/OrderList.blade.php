@@ -366,17 +366,16 @@
 
     <script>
         Pusher.logToConsole = true;
-
-        var pusher = new Pusher('855e0b56d33bae2f4149', {
+        var pusher = new Pusher('7eb1185740c6df0f3cda', {
             cluster: 'ap2',
-            encrypted: true
         });
 
         var channel = pusher.subscribe('order-list');
-        channel.bind('App\\Events\\OrderListEvent', function(orderList) {
-            console.log(orderList)
-        });
 
+        channel.bind('order-list', function(data) {
+            console.log('Received OrderList:', data);
+
+        });
         $(document).ready(function() {
 
             // function fetchOrderList() {
@@ -435,7 +434,7 @@
                                             <div class="btn-align-box">
                                                 <button class="t-btn t-btn-1" id="undoOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Undo</button>
                                                 <button class="t-btn t-btn-2" id="completeOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Complete</button>
-                                                <p class="counter" getTime(item.created_at)>${formattedTimeDifference}</p> 
+                                                <p class="counter" getTime(item.created_at)>${formattedTimeDifference}</p>
                                             </div>
                                         </div>
                                     </div>
