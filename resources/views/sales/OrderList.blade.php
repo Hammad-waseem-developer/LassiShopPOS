@@ -262,8 +262,8 @@
             left: 0;
             right: 0;
             margin: auto;
-            text-align: center;
-            padding: 10px 0;
+            text-align: left;
+            padding: 10px 10px 10px 20px;
         }
 
         .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box .main-img-box img {
@@ -363,18 +363,18 @@
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-   
+
     <script>
         Pusher.logToConsole = true;
-    
+
         var pusher = new Pusher('855e0b56d33bae2f4149', {
-          cluster: 'ap2',
-          encrypted: true
+            cluster: 'ap2',
+            encrypted: true
         });
-        
+
         var channel = pusher.subscribe('order-list');
         channel.bind('App\\Events\\OrderListEvent', function(orderList) {
-           console.log(orderList)
+            console.log(orderList)
         });
 
         $(document).ready(function() {
@@ -423,21 +423,24 @@
                                     $('#orderListContainer').append(currentOrderBox);
                                     currentOrderNo = item.order_no;
                                 }
+                                var formattedTimeDifference = updateCounter(item.created_at);
+                                updateCounter(formattedTimeDifference);
                                 var itemHtml = `
-                                    <div class="main-oder-box">
-                                        <div class="main-img-box">
-                                            <img src="{{ asset('images/products') }}/${item.new_product.img_path}" class="img-fluid" alt="">
-                                            <div class="content">
-                                                <h6>${item.new_product.name}</h6>
-                                                <p class="count">${item.quantity}</p>
-                                                <div class="btn-align-box">
-                                                    <button class="t-btn t-btn-1" id="undoOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Undo</button>
-                                                    <button class="t-btn t-btn-2" id="completeOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Complete</button>
-                                                </div>
+                                <div class="main-oder-box">
+                                    <div class="main-img-box">
+                                        <img src="{{ asset('images/products') }}/${item.new_product.img_path}" class="img-fluid" alt="">
+                                        <div class="content">
+                                            <h6>${item.new_product.name}</h6>
+                                            <p class="count">${item.quantity}</p>
+                                            <div class="btn-align-box">
+                                                <button class="t-btn t-btn-1" id="undoOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Undo</button>
+                                                <button class="t-btn t-btn-2" id="completeOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Complete</button>
+                                                <p class="counter" getTime(item.created_at)>${formattedTimeDifference}</p> 
                                             </div>
                                         </div>
                                     </div>
-                                `;
+                                </div>
+                            `;
                                 currentOrderBox.append(itemHtml);
                             });
                         }
@@ -447,6 +450,23 @@
                     }
                 });
             }
+
+            function updateCounter(getTime) {
+                const orderCreatedAt = new Date(getTime);
+                const currentTime = new Date();
+
+                const timeDifference = currentTime - orderCreatedAt;
+
+                const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                var formattedTimeDifference = `${hours} hours ${minutes} minutes ${seconds} seconds`;
+                document.querySelectorAll('.counter').textContent = formattedTimeDifference;
+                return formattedTimeDifference;
+            }
+
+            setInterval(updateCounter, 1000);
 
             fetchOrderList();
 
