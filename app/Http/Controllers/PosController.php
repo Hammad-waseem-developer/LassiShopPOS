@@ -191,6 +191,7 @@ class PosController extends Controller
                     'user_id' => auth()->user()->id,
                     'order_no' => $order->Ref,
                     'quantity' => $value['quantity'],
+                    'orignal_quantity' => $value['quantity'],
                 ]);
 
                 foreach ($newProductDetails as $newProductDetail) {

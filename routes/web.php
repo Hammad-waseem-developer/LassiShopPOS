@@ -212,8 +212,14 @@ if ($installed === false) {
             // Route::post('OrderList', 'OrderListController@OrderList')->name('OrderList');
             Route::get('OrderList', 'OrderListController@OrderList')->name('OrderList');
             Route::get('OrderListShow', 'OrderListController@OrderListShow')->name('OrderListShow');
-            Route::post('complete-order', 'OrderListController@completeOrder')->name('complete_order');
+            // Route::post('complete-order', 'OrderListController@completeOrder')->name('complete_order');
+            // Route::post('complete-order/{id}', 'OrderListController@completeOrder')->name('complete_order');
             Route::post('undo-order', 'OrderListController@undoOrder')->name('undo_order');
+
+            Route::match(['get', 'post'],'complete/order/{orderId}/{productId}', 'OrderListController@completedOrder')->name('complete.order.pos');
+            Route::match(['get', 'post'],'undo/order/{orderId}/{productId}', 'OrderListController@undoOrder')->name('undo.order.pos');
+
+
 
             //---------------------- Notification ----------------------\\
             Route::get('/fetch-notifications', 'NotificationController@fetchNotifications')->name('fetch-notifications');

@@ -95,12 +95,12 @@
         }
 
         .order-list-sec .main-img-box p {
-    font-size: 18px;
-    margin: 0;
-    margin-bottom: 10px;
-    color: white;
-    font-weight: 900;
-}
+            font-size: 18px;
+            margin: 0;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 900;
+        }
 
 
         .order-list-sec .main-img-box .btn-align-box button {
@@ -219,59 +219,60 @@
         .order-list-sec .pagenations a:hover {
             color: #bf1e2e;
         }
+
         .order-list-sec .new-align-boxes .main-align-orders-box {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    flex-direction: row;
-    column-gap: 30px;
-    row-gap: 30px;
-    justify-content: center;
-    align-items: center;
-}
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            flex-direction: row;
+            column-gap: 30px;
+            row-gap: 30px;
+            justify-content: center;
+            align-items: center;
+        }
 
-.order-list-sec .new-align-boxes .main-align-orders-box  .main-order-box {
-    display: flex;
-    width: 30% !important;
-    max-width: 30% !important;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    overflow-x: scroll;
-    justify-content: flex-start;
-    column-gap: 20px;
-    margin: 15px 0;
-    position: relative;
-    background-color: #bf1e2e;
-    padding: 0;
-    border-radius: 10px;
-}
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box {
+            display: flex;
+            width: 30% !important;
+            max-width: 30% !important;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            overflow-x: scroll;
+            justify-content: flex-start;
+            column-gap: 20px;
+            margin: 15px 0;
+            position: relative;
+            background-color: #bf1e2e;
+            padding: 0;
+            border-radius: 10px;
+        }
 
-.order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box {
-    max-width: 100% !important;
-    width: 100% !important;
-    display: flex;
-}
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box {
+            max-width: 100% !important;
+            width: 100% !important;
+            display: flex;
+        }
 
-.order-list-sec .new-align-boxes .main-align-orders-box .main-order-box p.orderNo {
-    color: white !important;
-    position: absolute;
-    background-color: green;
-    top: 0px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    text-align: center;
-    padding: 10px 0;
-}
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box p.orderNo {
+            color: white !important;
+            position: absolute;
+            background-color: green;
+            top: 0px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            text-align: center;
+            padding: 10px 0;
+        }
 
-.order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box .main-img-box img {
-    width: 389px !important;
-    height: 300px;
-    object-fit: cover !important;
-    max-width: 400px !important;
-    margin-top: 40px;
-}
+        .order-list-sec .new-align-boxes .main-align-orders-box .main-order-box .main-oder-box .main-img-box img {
+            width: 389px !important;
+            height: 300px;
+            object-fit: cover !important;
+            max-width: 400px !important;
+            margin-top: 40px;
+        }
     </style>
 
     {{-- Alpine Js --}}
@@ -294,11 +295,11 @@
         <div class="new-align-boxes">
             <div class="main-align-orders-box" id="orderListContainer">
                 {{-- <div class="customer-details"> --}}
-                        {{-- <p class="oderNo">Order#01</p>
+                {{-- <p class="oderNo">Order#01</p>
                         <p class="counter">0123456789</p> --}}
-                    {{-- </div> --}}
-                    {{-- <div class="main-oder-box"> --}}
-                        {{-- <div class="main-img-box" id="orderListContainer">
+                {{-- </div> --}}
+                {{-- <div class="main-oder-box"> --}}
+                {{-- <div class="main-img-box" id="orderListContainer">
                             <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" alt="">
                             <div class="content">
                                 <h6>Main Lessi</h6>
@@ -309,7 +310,7 @@
                                 </div>
                             </div>
                         </div> --}}
-                    {{-- </div> --}}
+                {{-- </div> --}}
             </div>
         </div>
 
@@ -363,7 +364,7 @@
 
     <script>
         $(document).ready(function() {
-       
+
 
 
             // function fetchOrderList() {
@@ -405,7 +406,8 @@
                             $.each(orders, function(index, item) {
                                 if (item.order_no !== currentOrderNo) {
                                     currentOrderBox = $('<div class="main-order-box"></div>');
-                                    currentOrderBox.append('<p class="orderNo">' + item.order_no + '</p>');
+                                    currentOrderBox.append('<p class="orderNo">' + item
+                                        .order_no + '</p>');
                                     $('#orderListContainer').append(currentOrderBox);
                                     currentOrderNo = item.order_no;
                                 }
@@ -417,8 +419,8 @@
                                                 <h6>${item.new_product.name}</h6>
                                                 <p class="count">${item.quantity}</p>
                                                 <div class="btn-align-box">
-                                                    <button class="t-btn t-btn-1">button-01</button>
-                                                    <button class="t-btn t-btn-2">button-02</button>
+                                                    <button class="t-btn t-btn-1" id="undoOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Undo</button>
+                                                    <button class="t-btn t-btn-2" id="completeOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Complete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -442,13 +444,17 @@
             // }, 5000);
 
             $("body").on('click', '#completeOrder', function() {
-                var orderId = $(this).data('id');
+                var orderId = $(this).data('orderid'); // Note the lowercase 'o' in 'orderid'
+                var productId = $(this).data('id');
+                console.log(orderId, productId);
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('complete_order') }}',
+                    url: '{{ route('complete.order.pos', ['orderId' => '__orderId__', 'productId' => '__productId__']) }}'
+                        .replace('__orderId__', orderId).replace('__productId__', productId),
                     data: {
                         _token: '{{ csrf_token() }}',
-                        order_id: orderId
+                        order_id: orderId,
+                        product_id: productId
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -464,9 +470,30 @@
             });
 
             $("body").on('click', '#undoOrder', function() {
-                var orderId = $(this).data('id');
-                undoOrder(orderId);
-            });
+                var orderId = $(this).data('orderid'); // Note the lowercase 'o' in 'orderid'
+                var productId = $(this).data('id');
+                console.log(orderId, productId);
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('undo.order.pos', ['orderId' => '__orderId__', 'productId' => '__productId__']) }}'
+                        .replace('__orderId__', orderId).replace('__productId__', productId),
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        order_id: orderId,
+                        product_id: productId
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        fetchOrderList();
+                    },
+                    error: function(error) {
+                        console.error('Error fetching OrderList:', error);
+                    }
+                });
+            });;
 
             function undoOrder(orderId) {
                 $.ajax({
@@ -499,9 +526,26 @@
                     updateOrderListCards(orderLists, currentPage, itemsPerPage);
                 }
             });
+
+
+
         });
     </script>
+    {{-- <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script>
+    var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+    cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+    encrypted: true
+});
 
+var channel = pusher.subscribe('order-channel');
+channel.bind('App\\Events\\OrderListEvent', function(data) {
+
+    var orderList = data.orderList;
+    var orders = data.orders;
+    updateOrderList(orderList);
+});
+</script> --}}
 
 </body>
 

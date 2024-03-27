@@ -27,51 +27,88 @@ class OrderListController extends Controller
         ]);
     }
 
-    public function completeOrder(Request $request)
+
+    public function completedOrder($orderId,$productId)
     {
-        $productId = $request->order_id;
-        $OrderList = Session::get('OrderList');
-
-        if (isset ($OrderList[$productId]) && $OrderList[$productId]['quantity'] > 0) {
-            // Reduce the quantity
-            $OrderList[$productId]['quantity'] -= 1;
-
-            // Remove the product if the quantity becomes zero
-            if ($OrderList[$productId]['quantity'] == 0) {
-                unset($OrderList[$productId]);
-            }
-
-            // Update the session
-            Session::put('OrderList', $OrderList);
-
-            // Broadcast the event
-            event(new OrderListEvent($OrderList));
-
+        $OrderList = Order::where('new_product_id' , $productId)->where('id' , $orderId)->first();
+        // dd($OrderList);
+        if($OrderList->quantity > 0)
+        {
+            $OrderList->quantity -= 1;
+            $OrderList->save();
             return response()->json(['OrderList' => $OrderList]);
         }
+        else{
+            $OrderList->delete();
+            return response()->json(['OrderList' => $OrderList]);
+        }
+        return response()->json(['error' => 'Order not found']);
+    }
+    public function undoOrder($orderId,$productId)
+    {
+        $OrderList = Order::where('new_product_id' , $productId)->where('id' , $orderId)->first();
+        // dd($OrderList);
 
+        if($OrderList->quantity < $OrderList->orignal_quantity)
+        {
+            $OrderList->quantity += 1;
+            $OrderList->save();
+            return response()->json(['OrderList' => $OrderList]);
+        }
+        else{
+            // $OrderList->delete();
+            return response()->json(['OrderList' => $OrderList]);
+        }
         return response()->json(['error' => 'Order not found']);
     }
 
-    public function undoOrder(Request $request)
-    {
-        $productId = $request->order_id;
-        $OrderList = Session::get('OrderList');
-        $originalQuantity = Session::get('originalQuantity_' . $productId);
+//     public function completeOrder(Request $request)
+//     {
+//         $productId = $request->order_id;
+// // Session::forget('OrderList');
+//         $OrderList = Session::get('OrderList');
+//         dd($OrderList);
 
-        if ($originalQuantity !== null && isset ($OrderList[$productId]) && $OrderList[$productId]['quantity'] < $originalQuantity) {
-            // Increase the quantity
-            $OrderList[$productId]['quantity'] += 1;
+//         if (isset ($OrderList[$productId]) && $OrderList[$productId]['quantity'] > 0) {
+//             // Reduce the quantity
+//             $OrderList[$productId]['quantity'] -= 1;
 
-            // Update the session
-            Session::put('OrderList', $OrderList);
+//             // Remove the product if the quantity becomes zero
+//             if ($OrderList[$productId]['quantity'] == 0) {
+//                 unset($OrderList[$productId]);
+//             }
 
-            // Broadcast the event
-            event(new OrderListEvent($OrderList));
+//             // Update the session
+//             Session::put('OrderList', $OrderList);
 
-            return response()->json(['OrderList' => $OrderList]);
-        } else {
-            return response()->json(['error' => 'Invalid undo operation']);
-        }
-    }
+//             // Broadcast the event
+//             event(new OrderListEvent($OrderList));
+
+//             return response()->json(['OrderList' => $OrderList]);
+//         }
+
+//         return response()->json(['error' => 'Order not found']);
+//     }
+
+//     public function undoOrder(Request $request)
+//     {
+//         $productId = $request->order_id;
+//         $OrderList = Session::get('OrderList');
+//         $originalQuantity = Session::get('originalQuantity_' . $productId);
+
+//         if ($originalQuantity !== null && isset ($OrderList[$productId]) && $OrderList[$productId]['quantity'] < $originalQuantity) {
+//             // Increase the quantity
+//             $OrderList[$productId]['quantity'] += 1;
+
+//             // Update the session
+//             Session::put('OrderList', $OrderList);
+
+//             // Broadcast the event
+//             event(new OrderListEvent($OrderList));
+
+//             return response()->json(['OrderList' => $OrderList]);
+//         } else {
+//             return response()->json(['error' => 'Invalid undo operation']);
+//         }
+//     }
 }
