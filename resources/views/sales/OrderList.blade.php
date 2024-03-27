@@ -361,11 +361,23 @@
 
     <script src="{{ asset('assets/js/compact-layout.js') }}"></script>
 
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
+   
     <script>
+        Pusher.logToConsole = true;
+    
+        var pusher = new Pusher('855e0b56d33bae2f4149', {
+          cluster: 'ap2',
+          encrypted: true
+        });
+        
+        var channel = pusher.subscribe('order-list');
+        channel.bind('App\\Events\\OrderListEvent', function(orderList) {
+           console.log(orderList)
+        });
+
         $(document).ready(function() {
-
-
 
             // function fetchOrderList() {
             //     $.ajax({
