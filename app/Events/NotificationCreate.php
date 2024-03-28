@@ -10,8 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationCreate
-{
+
+class NotificationCreate implements ShouldBroadcast
+{ 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
@@ -20,10 +21,10 @@ class NotificationCreate
      * @return void
      */
 
-    public $data;
-    public function __construct($data)
+    public $newNotification;
+    public function __construct($newNotification)
     {
-        $this->data = $data;
+        $this->newNotification = $newNotification;
     }
 
     /**
@@ -31,8 +32,13 @@ class NotificationCreate
      *
      * @return \Illuminate\Broadcasting\Channel|array
      */
-    // public function broadcastOn()
-    // {
-    //     return new PrivateChannel('channel-name');
-    // }
+    public function broadcastOn()
+    {
+        return ['notification-show'];
+    }
+
+    public function broadcastAs()
+    {
+        return 'notification-show';
+    }
 }

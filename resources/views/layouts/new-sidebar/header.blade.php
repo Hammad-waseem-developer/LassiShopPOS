@@ -78,16 +78,18 @@
         <!-- Notification container -->
         <div class="notification">
             <a href="#">
-                <div class="notBtn" href="#" id="notification-container" data-unread-count="{{ $unreadNotificationsCount }}">
+                <div class="notBtn" href="#" id="notification-container"
+                    data-unread-count="{{ $unreadNotificationsCount }}">
                     <!-- Number supports double digits and automatically hides itself when there is nothing between divs -->
                     <i class="fa fa-bell text-dark pt-2 ps-2" style="font-size: 20px !important;"></i>
                     <div class="box">
                         <a href="javascript:void(0)">
                             <div class="row">
                                 <div class="col-md-8"></div>
-                                <div class="col-md-4"> <label for="markread" id="markread" class="mt-2">Mark All As Read</label></div>
-                                </div>
-                           
+                                <div class="col-md-4"> <label for="markread" id="markread" class="mt-2">Mark All As
+                                        Read</label></div>
+                            </div>
+
                         </a>
                         <div class="display">
                             <!-- Notification list will be dynamically appended here -->
@@ -156,7 +158,20 @@
 <script>
     var initialUnreadCount = {{ $unreadNotificationsCount ?? 0 }};
 </script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script>
+    Pusher.logToConsole = false;
+    var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+        cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+    });
+
+    var channel = pusher.subscribe('notification-show');
+
+    channel.bind('notification-show', function(data) {
+        console.log(data);
+    });
+
+
      document.getElementById('markread').addEventListener('click', function() {
         // Send an AJAX request to update notification statuses
         var xhr = new XMLHttpRequest();
@@ -179,98 +194,32 @@
 
         xhr.send();
     });
-    // $(document).ready(function() {
+
+
+
+
+    // document.addEventListener('DOMContentLoaded', function() {
     //     function fetchNotifications() {
-    //         $.ajax({
-    //             url: '{{ route('fetch-notifications') }}',
-    //             method: 'GET',
-    //             dataType: 'json',
-    //             headers: {
-    //                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    //             },
-    //             success: function(response) {
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open('GET', '{{ route('fetch-notifications') }}', true);
+    //         xhr.setRequestHeader('Content-Type', 'application/json');
+    //         xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+    //         xhr.onload = function() {
+    //             if (xhr.status >= 200 && xhr.status < 300) {
+    //                 var response = JSON.parse(xhr.responseText);
     //                 updateNotifications(response.unreadNotificationsCount, response.notifications);
-    //             },
-    //             error: function(error) {
-    //                 console.error('Error fetching notifications:', error);
+    //             } else {
+    //                 console.error('Error fetching notifications:', xhr.statusText);
     //             }
-    //         });
+    //         };
+
+    //         xhr.onerror = function() {
+    //             console.error('Network error while fetching notifications');
+    //         };
+
+    //         xhr.send();
     //     }
-
-    //     function updateNotifications(unreadNotificationsCount, notifications) {
-    //         var notificationContainer = document.getElementById('notification-container');
-
-    //         if (unreadNotificationsCount > 0) {
-    //             $("#notification-container").addClass('notBtn1');
-    //             // toastr.warning(unreadNotificationsCount + ' new notifications.');
-    //         }
-
-    //         if (unreadNotificationsCount == 0) {
-    //             $("#notification-container").removeClass('notBtn1');
-    //         }
-
-    //         if (notificationContainer) {
-    //             var notificationList = $('.display'); // Use jQuery selector to get the display element
-    //             if (notificationList) {
-    //                 notificationList.empty(); // Clear existing content
-    //                 notifications.forEach(function(notification) {
-    //                     var notificationDiv = $('<div>').addClass('sec');
-    //                     if (notification.notification_detail.some(detail => detail.user_id ===
-    //                             {{ Auth::user()->id }} && detail.status === 0)) {
-    //                         notificationDiv.addClass('new');
-    //                     }
-
-    //                     var link = $('<a>');
-    //                     var txtDiv = $('<div>').addClass('txt').text(notification.messages);
-    //                         var subTxtDiv = $('<div>').addClass('txt sub').text(moment(notification.created_at).fromNow());
-
-    //                     if (notification.notification_detail.some(detail => detail.user_id ===
-    //                             {{ Auth::user()->id }} && detail.status === 0)) {
-    //                         txtDiv.addClass('boldtxt');
-    //                         subTxtDiv.append(' (unread)');
-    //                     }
-
-    //                     link.append(txtDiv, subTxtDiv);
-    //                     notificationDiv.append(link,
-    //                     subTxtDiv); // Append subTxtDiv to notificationDiv here
-    //                     notificationList.append(notificationDiv);
-    //                 });
-    //             }
-
-    //         }
-
-    //     }
-
-
-    //     updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
-
-    //     setInterval(fetchNotifications, 5000);
-    // });
-
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        function fetchNotifications() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '{{ route('fetch-notifications') }}', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    var response = JSON.parse(xhr.responseText);
-                    updateNotifications(response.unreadNotificationsCount, response.notifications);
-                } else {
-                    console.error('Error fetching notifications:', xhr.statusText);
-                }
-            };
-
-            xhr.onerror = function() {
-                console.error('Network error while fetching notifications');
-            };
-
-            xhr.send();
-        }
 
         function updateNotifications(unreadNotificationsCount, notifications) {
             var notificationContainer = document.getElementById('notification-container');
@@ -376,8 +325,9 @@
 
         updateNotifications({{ $unreadNotificationsCount }}, {!! json_encode($notifications) !!});
 
-        setInterval(fetchNotifications, 5000);
-    });
+
+    // });
+
 </script>
 <style>
     .box::-webkit-scrollbar-track {

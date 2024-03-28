@@ -19,3 +19,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('order-list', function ($data) {
     return true;
 });
+Broadcast::channel('notification-show', function ($data) {
+    return true;
+});
