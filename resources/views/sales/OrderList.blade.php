@@ -293,24 +293,7 @@
         </div>
 
         <div class="new-align-boxes">
-            <div class="main-align-orders-box" id="orderListContainer">
-                {{-- <div class="customer-details"> --}}
-                {{-- <p class="oderNo">Order#01</p>
-                        <p class="counter">0123456789</p> --}}
-                {{-- </div> --}}
-                {{-- <div class="main-oder-box"> --}}
-                {{-- <div class="main-img-box" id="orderListContainer">
-                            <img src="{{ asset('images/') }}/{{ $settings->logo }}" class="img-fluid" alt="">
-                            <div class="content">
-                                <h6>Main Lessi</h6>
-                                <p class="count">3</p>
-                                <div class="btn-align-box">
-                                    <button class="t-btn t-btn-1">button-01</button>
-                                    <button class="t-btn t-btn-2 ">button-02</button>
-                                </div>
-                            </div>
-                        </div> --}}
-                {{-- </div> --}}
+            <div class="main-align-orders-box" id="orderListContainer">              
             </div>
         </div>
 
@@ -322,7 +305,6 @@
             <a href="#">3</a>
             <a href="#">4</a>
             <button class="next-btn" id="next-pagi">Next</button>
-
         </div>
     </div>
 
@@ -366,114 +348,67 @@
 
     <script>
         Pusher.logToConsole = true;
-        var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
-            cluster: "{{env('PUSHER_APP_CLUSTER')}}",
+        var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+            cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
         });
 
         var channel = pusher.subscribe('order-list');
 
-        channel.bind('order-list', function(data) {
-            console.log('Received OrderList:', data);
+       // Function to update the counter
+function updateCounter(getTime, counterElement) {
+    const orderCreatedAt = new Date(getTime);
+    setInterval(function() {
+        const currentTime = new Date();
+        const timeDifference = currentTime - orderCreatedAt;
 
+        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        var formattedTimeDifference = `${hours} hours ${minutes} minutes ${seconds} seconds`;
+        counterElement.text(formattedTimeDifference);
+    }, 1000);
+}
+
+channel.bind('order-list', function(data) {
+    if (data && data.orders) {
+        var orders = data.orders;
+        var container = $('#orderListContainer');
+        container.empty(); 
+        var currentOrderNo = null;
+        var currentOrderBox = null;
+        $.each(orders, function(index, item) {
+            if (item.order_no !== currentOrderNo) {
+                currentOrderBox = $('<div class="main-order-box"></div>');
+                currentOrderBox.append('<p class="orderNo">' + item.order_no + '</p>');
+                container.append(currentOrderBox);
+                currentOrderNo = item.order_no;
+            }
+            var itemHtml = `
+                <div class="main-oder-box">
+                    <div class="main-img-box">
+                        <img src="{{ asset('images/products') }}/${item.new_product.img_path}" class="img-fluid" alt="">
+                        <div class="content">
+                            <h6>${item.new_product.name}</h6>
+                            <p class="count">${item.quantity}</p>
+                            <div class="btn-align-box">
+                                <button class="t-btn t-btn-1" id="undoOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Undo</button>
+                                <button class="t-btn t-btn-2" id="completeOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Complete</button>
+                                <p class="counter"></p> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            currentOrderBox.append(itemHtml); 
+            var counterElement = currentOrderBox.find('.counter'); 
+            updateCounter(item.created_at, counterElement); 
         });
+    }
+});
+
+
         $(document).ready(function() {
-
-            // function fetchOrderList() {
-            //     $.ajax({
-            //         type: 'POST',
-            //         url: '{{ route('OrderList') }}',
-            //         data: {
-            //             _token: '{{ csrf_token() }}'
-            //         },
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            //         },
-            //         dataType: 'json',
-            //         success: function(response) {
-            //             var orderListArray = Object.values(response.orders);
-            //             orderLists = orderListArray;
-            //             updateOrderListCards(orderLists, currentPage, itemsPerPage);
-            //         },
-            //         error: function(error) {
-            //             console.error('Error fetching OrderList:', error);
-            //         }
-            //     });
-
-            // }
-
-
-            function fetchOrderList() {
-                $.ajax({
-                    url: "{{ route('OrderList') }}",
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        var container = $('#orderListContainer');
-                        container.empty();
-                        if (response && response.orders) {
-                            var orders = response.orders;
-                            var currentOrderNo = null;
-                            var currentOrderBox = null;
-                            $.each(orders, function(index, item) {
-                                if (item.order_no !== currentOrderNo) {
-                                    currentOrderBox = $('<div class="main-order-box"></div>');
-                                    currentOrderBox.append('<p class="orderNo">' + item
-                                        .order_no + '</p>');
-                                    $('#orderListContainer').append(currentOrderBox);
-                                    currentOrderNo = item.order_no;
-                                }
-                                var formattedTimeDifference = updateCounter(item.created_at);
-                                updateCounter(formattedTimeDifference);
-                                var itemHtml = `
-                                <div class="main-oder-box">
-                                    <div class="main-img-box">
-                                        <img src="{{ asset('images/products') }}/${item.new_product.img_path}" class="img-fluid" alt="">
-                                        <div class="content">
-                                            <h6>${item.new_product.name}</h6>
-                                            <p class="count">${item.quantity}</p>
-                                            <div class="btn-align-box">
-                                                <button class="t-btn t-btn-1" id="undoOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Undo</button>
-                                                <button class="t-btn t-btn-2" id="completeOrder" data-id="${item.new_product_id}" data-orderId="${item.id}">Complete</button>
-                                                <p class="counter" getTime(item.created_at)>${formattedTimeDifference}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                                currentOrderBox.append(itemHtml);
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            }
-
-            function updateCounter(getTime) {
-                const orderCreatedAt = new Date(getTime);
-                const currentTime = new Date();
-
-                const timeDifference = currentTime - orderCreatedAt;
-
-                const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-                var formattedTimeDifference = `${hours} hours ${minutes} minutes ${seconds} seconds`;
-                document.querySelectorAll('.counter').textContent = formattedTimeDifference;
-                return formattedTimeDifference;
-            }
-
-            setInterval(updateCounter, 1000);
-
-            fetchOrderList();
-
-            // Set interval to fetch order list every 5 seconds
-            // setInterval(function() {
-            //     fetchOrderList();
-            // }, 5000);
-
             $("body").on('click', '#completeOrder', function() {
                 var orderId = $(this).data('orderid'); // Note the lowercase 'o' in 'orderid'
                 var productId = $(this).data('id');
@@ -501,7 +436,7 @@
             });
 
             $("body").on('click', '#undoOrder', function() {
-                var orderId = $(this).data('orderid'); // Note the lowercase 'o' in 'orderid'
+                var orderId = $(this).data('orderid'); 
                 var productId = $(this).data('id');
                 console.log(orderId, productId);
                 $.ajax({
