@@ -11,12 +11,10 @@ class OrderList implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $orderList;
     public $orders;
 
-    public function __construct($orderList,$orders)
+    public function __construct($orders)
     {
-        $this->orderList = $orderList;
         $this->orders = $orders;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderList;
 use App\Models\Order;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -21,6 +22,8 @@ class OrderListController extends Controller
 
     public function OrderListShow()
     {
+        $orders = Order::get();
+        event(new OrderList($orders));
         $settings = Setting::where('deleted_at', '=', null)->first();
         return view('sales.OrderList', [
             'settings' => $settings

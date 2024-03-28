@@ -307,8 +307,6 @@
             <button class="next-btn" id="next-pagi">Next</button>
         </div>
     </div>
-
-
     <script src="{{ asset('assets/js/vue.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-vue.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
@@ -347,14 +345,13 @@
 
 
     <script>
-        Pusher.logToConsole = false;
+        Pusher.logToConsole = true;
         var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
             cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
         });
 
         var channel = pusher.subscribe('order-list');
 
-        // Function to update the counter
         function updateCounter(getTime, counterElement) {
             const orderCreatedAt = new Date(getTime);
             setInterval(function() {
@@ -369,12 +366,14 @@
                 counterElement.text(formattedTimeDifference);
             }, 1000);
         }
-
         channel.bind('order-list', function(data) {
-            if (data && data.orders) {
+            fetchOrderList(data);
+        });
+       function fetchOrderList(data) {
+        if (data && data.orders) {
                 var orders = data.orders;
                 var container = $('#orderListContainer');
-                container.empty();
+                // container.empty();
                 var currentOrderNo = null;
                 var currentOrderBox = null;
                 $.each(orders, function(index, item) {
@@ -405,10 +404,10 @@
                     updateCounter(item.created_at, counterElement);
                 });
             }
-        });
-
+    }
 
         $(document).ready(function() {
+
             $("body").on('click', '#completeOrder', function() {
                 var orderId = $(this).data('orderid'); // Note the lowercase 'o' in 'orderid'
                 var productId = $(this).data('id');
@@ -453,6 +452,7 @@
                     },
                     dataType: 'json',
                     success: function(response) {
+                        console.log(response);
                         fetchOrderList();
                     },
                     error: function(error) {
@@ -474,6 +474,7 @@
                     },
                     dataType: 'json',
                     success: function(response) {
+                        console.log(response);
                         fetchOrderList();
                     },
                     error: function(error) {
